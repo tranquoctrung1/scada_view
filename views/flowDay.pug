@@ -1,0 +1,2914 @@
+extends ./partial/layout.pug
+block linkcss
+	link(rel="stylesheet", href="/css/flowDay.css")
+	link(rel="stylesheet", href="/css/pageCommon.css")
+block content
+	.container-fluid
+		.row.title-pressure
+			h3 Tổng Hợp Sản Lượng Ngày
+		.row.info
+			.col-12.info__col
+				.start-date
+					span.ml-2.mr-3 Ngày lấy dữ liệu
+					input#startDate(type='date' name='startDate' value='' min='1970-01-01T00:00' max='')
+				.btn-view
+					button.btn.btn-primary.btn-sm#btnViewTotalFlow Xem
+					button.ml-3.btn.btn-success.btn-sm#btnExportTotalFlow Xuất
+
+		.row.result.pl-1.pr-1
+			.loading
+				img#loading.hide(src='/images/loading.svg')
+			.col-12.p-0.table-data
+				.row
+					table#tableData.table.table-striped.table-hover.table-bordered.text-center
+						thead
+							tr
+								th(scope='col' rowspan="2") Vị trí khu vực đơn vị quản lý
+								th(scope='col' rowspan="2") Model Meter
+								th(scope='col' rowspan="2") Cỡ đồng hồ
+								th(scope='col' rowspan="2") Mã vị trí
+								th(scope='col' rowspan="2") ID Logger
+								th(scope='col' rowspan="2") Vị trí đồng hồ tổng
+								th(scope='col' rowspan="2") Tổng lưu lượng
+								th.text-center(scope='col' colspan="25") Tổng thời gian trong 01 ngày
+							tr 
+								th(scope='col') 0:00
+								th(scope='col') 1:00
+								th(scope='col') 2:00
+								th(scope='col') 3:00
+								th(scope='col') 4:00
+								th(scope='col') 5:00
+								th(scope='col') 6:00
+								th(scope='col') 7:00
+								th(scope='col') 8:00
+								th(scope='col') 9:00
+								th(scope='col') 10:00
+								th(scope='col') 11:00
+								th(scope='col') 12:00
+								th(scope='col') 13:00
+								th(scope='col') 14:00
+								th(scope='col') 15:00
+								th(scope='col') 16:00
+								th(scope='col') 17:00
+								th(scope='col') 18:00
+								th(scope='col') 19:00
+								th(scope='col') 20:00
+								th(scope='col') 21:00
+								th(scope='col') 22:00
+								th.text-center(scope='col') 23:00
+						tbody
+							tr#tdns_tb 
+								td.fwb NMN Thủ Đức (*)
+								td Ventury
+								td 2000
+								td tdns_tb 
+								td
+								td SL SX NMN TĐ ra ML (tính toán)
+							tr#1157
+								td.fwb BOO Thủ Đức TM1
+								td 
+								td 1400
+								td ws8004 
+								td 1157
+								td ĐHT SX NMN BOO TM1
+							tr#1481
+								td.fwb BOO Thủ Đức TM2
+								td 
+								td 1400
+								td ws8007
+								td 1481
+								td ĐHT SX NMN BOO TM2
+							tr#1486
+								td.fwb Thủ Đức 3
+								td 
+								td 1800
+								td ws8010
+								td 1486
+								td ĐHT SX NMN TD3 
+							tr#1487
+								td.fwb NMN Tân Hiệp 
+								td 
+								td 1600
+								td ws8002
+								td 1487
+								td ĐHT SX NMN TH
+							tr#1485
+								td.fwb NMN Tân Hiệp 2 TM1
+								td 
+								td 1600
+								td ws8008
+								td 1485
+								td ĐHT SX NMN TH2 TM1
+							tr#1554
+								td.fwb NMN Tân Hiệp 2 TM2
+								td 
+								td 1600
+								td ws8011
+								td 1554
+								td ĐHT SX NMN TH2 TM2
+							tr#1516
+								td.fwb NMN Kênh Đông
+								td 
+								td 1200
+								td ws8005
+								td 1516
+								td ĐHT SX NMN Kênh Đông
+							tr
+								td.fwb Đối chứng BOO
+							tr#1364
+								td 1
+								td AQM
+								td 600
+								td bo1013
+								td 1364
+								td Vuon uom CTPT CN Tan Thuan (2)
+							tr#1365
+								td 2
+								td SIE
+								td 600
+								td bo1016
+								td 1365
+								td Vuon uom BOO (2). [10.7728N 106.7394E]
+							tr#1366
+								td 3
+								td AQM
+								td 1000
+								td bo1017
+								td 1366
+								td Đối diện 284 Huynh Tan Phat - Nguyen Van Linh (2)
+							tr#1368
+								td 4
+								td SIE
+								td 600
+								td bo1019
+								td 1368
+								td Nguyen Van Linh - Nguyen Huu Tho (2)
+							tr#1369
+								td 5
+								td SIE
+								td 400
+								td bo1020
+								td 1369
+								td Nguyen Huu Tho - Pham Huu Lau (2)
+							tr#1370
+								td 6
+								td SIE
+								td 800
+								td bo1021
+								td 1370
+								td Nguyen Van Tao - cau Ba Chiem D800 (2)
+							tr#1371
+								td 7
+								td SIE
+								td 600
+								td bo1022
+								td 1371
+								td Nguyen Van Linh - Nguyen Luong Bang (2)
+							tr#1372
+								td 8
+								td AQM
+								td 600
+								td bo1029
+								td 1372
+								td Xa lo Ha Noi (doi dien NMN BOO) (2)
+							tr#1373
+								td 9
+								td SIE
+								td 500
+								td bo1043
+								td 1373
+								td Do Xuan Hop - gan Song hanh XLHN (2)
+							tr#1541
+								td 10
+								td AQM
+								td 500
+								td bo1044
+								td 1541
+								td Nga ba Cat Lai - XLHN
+							tr#1489
+								td.fwb Đông Nam
+								td AQM3
+								td 300
+								td cc1001
+								td 1489
+								td ĐH NT KCN Đông Nam (CPĐT XDSG VRG)
+							tr#1507
+								td.fwb Lê Minh Xuân 3
+								td AQM
+								td 450
+								td bc2045
+								td 1507
+								td ĐHT KCN Lê Minh Xuân 3 (VRG)
+							tr#1514
+								td.fwb Nhựt Thành
+								td SIE
+								td 200
+								td bc2044
+								td 1514
+								td KCN An Hạ (Sie D200)
+							tr#1453
+								td.fwb Hiệp Phước
+								td SIE
+								td 300
+								td nb1028
+								td 1453
+								td Khu CN Hiệp Phước (Siemens-Dn300)
+							tr#1483
+								td.fwb Hiệp Phước
+								td AQM3
+								td 300
+								td nb1032
+								td 1483
+								td Khu CN Hiệp Phước GĐ2 (AQM3-Dn300)
+							tr
+								td.fwb CN Thủ Đức
+							tr#1225 
+								td 1
+								td AQM 
+								td 400
+								td td1001
+								td 1225
+								td Tran Nao - cau Sai Gon [KV - zz/20zz]
+							tr#1461
+								td 2
+								td AQM 
+								td 100
+								td td1004
+								td 1461
+								td Khu vuc nha may nuoc Binh An [10.8908N 106.8214E]
+							tr#1219
+								td 3
+								td AQM 
+								td 100
+								td td1005
+								td 1219
+								td Khu vuc Binh Thang - co khi Ngoc Man
+							tr#1462
+								td 4
+								td AQM 
+								td 300
+								td td1006
+								td 1462
+								td 48/9 XLHN - khu pho Hiep Thang (khu vuc Gian Dan)
+							tr#1306
+								td 5
+								td Bad
+								td 300
+								td td1007
+								td 1306
+								td Khu vuc Dai hoc Quoc Gia - doi dien Suoi Tien. [10.8669 N 106.8016 E)
+							tr#1396
+								td 6
+								td SIE
+								td 250
+								td td1008
+								td 1396
+								td Song hanh XL Ha Noi - Duong so 17 (Khu vuc XL Dai Han)
+							tr#1397
+								td 7
+								td SIE
+								td 400
+								td td1010
+								td 1397
+								td Khuon vien NMN Thu Duc
+							tr#1177
+								td 8
+								td AICHI
+								td 300
+								td td1011
+								td 1177
+								td Nguyen Van Ba - gan Hong Duc
+							tr#1198
+								td 9
+								td AQM
+								td 400
+								td td1012
+								td 1198
+								td XLHN - Do Xuan Hop - Nguyen Van Ba (Khu vuc Nga tu Binh Thai) [10.8349 N 106.7653 E] [KV 11/2021]
+							tr#1463
+								td 10
+								td AQM
+								td 250
+								td td1014
+								td 1463
+								td RMK (9 Nguyen Van Ba - Tram thu phi XLHN) [10.8234 N 106.7589 E]
+							tr#1398
+								td 11
+								td AQM
+								td 250
+								td td1016
+								td 1398
+								td C/x An Binh - Cat Lai. [10.8076N 106.7547E]
+							tr#1399
+								td 12
+								td AQM
+								td 300
+								td td1017
+								td 1399
+								td Song hanh XLNH - gan Vo Truong Toan. (Riverside)
+							tr#1400
+								td 13
+								td SIE
+								td 400
+								td td1018
+								td 1400
+								td XLHN - gan Thao Dien (Khu vuc An Dien - An Phu) [10.8013 N 106.7387 E]
+							tr#1117
+								td 14
+								td ISO
+								td 500
+								td td1020
+								td 1117
+								td Mai Chi Tho - Luong Dinh Cua (Lien tinh lo 25B)
+							tr#1220
+								td 15
+								td AQM
+								td 250
+								td td1025
+								td 1220
+								td Vo Van Ngan (via he) - Le Van Chi
+							tr#1135
+								td 16
+								td AQM
+								td 350
+								td td1026
+								td 1135
+								td Nguyen Xien - XLHN
+							tr#1199
+								td 17
+								td SIE
+								td 600
+								td td1027
+								td 1199
+								td Cau Binh Phuoc (TD)
+							tr#1218
+								td 18
+								td AQM
+								td 500
+								td td1028
+								td 1218
+								td Thap cat ap Thu Duc
+							tr#1267
+								td 19
+								td AQM
+								td 600
+								td td1029
+								td 1267
+								td Xa lo Ha Noi (doi dien NMN BOO)
+							tr#1401
+								td 20
+								td SIE
+								td 500
+								td td1030
+								td 1401
+								td Truyen tai dien 4 - Nguyen Van Ba [10.8304 N 106.7627 E]
+							tr#1467
+								td 21
+								td AQM
+								td 150
+								td td1032
+								td 1467
+								td Nga ba Tan Van - chung cu Samsora Riverside [10.8998N 106.8337E]
+							tr
+								td 22
+								td KXD
+								td 1200
+								td td1041
+								td 
+								td Luong Dinh Cua - Mai Chi Tho (Tinh lo 25B) (D1200 AQP) [BC - 11/2022]
+							tr#1304
+								td 23
+								td SIE
+								td 500
+								td td1043
+								td 1304
+								td 5 Do Xuan Hop - Song hanh XLHN
+							tr#1305
+								td 24
+								td AQM
+								td 500
+								td td1044
+								td 1305
+								td Nga ba Cat Lai - XLHN
+							tr#1303
+								td 25
+								td SIE
+								td 500
+								td td1047
+								td 1303
+								td 63 Quoc lo 13 - Kha Van Can (Tram xang dau Forimex)
+							tr#1402
+								td 26
+								td AQM
+								td 600
+								td td1048
+								td 1402
+								td 1A Le Van Viet - Song hanh XLHN
+							tr#1284
+								td 27
+								td SIE
+								td 800
+								td td1049
+								td 1284
+								td Linh Dong - duong 28
+							tr#1571
+								td 28
+								td AQM
+								td 500
+								td td1051
+								td 1571
+								td 7 Dang Van Bi - Nguyen Van Ba
+							tr#1572
+								td 29
+								td AQM
+								td 500
+								td td1052
+								td 1572
+								td Vo Van Ngan - Le Van Chi
+							tr#1578
+								td 30
+								td AQM
+								td 250
+								td td1053
+								td 1578
+								td Chan Cau Sai Gon - Nguyen Van Huong [10.8003 N 106.7292 E]
+							tr#1579
+								td 31
+								td SIE
+								td 400
+								td td1054
+								td 1579
+								td 132 Xa lo Ha Noi (Cay xang Dong Hoa, Di An, Binh Duong)
+							tr#sumOutletTD
+								td 
+								td.fwb(colspan="5") Cộng Outlet
+							tr#1479
+								td 32
+								td SIE
+								td 400
+								td td2019
+								td 1479
+								td Quoc lo 13 - cau Binh Trieu 1 (phía Tp Thủ Đức)
+							tr#sumTachMangTD
+								td 
+								td.fwb(colspan="5") Cộng tách mạng
+							tr#sumTD
+								td 
+								td.fwb(colspan="5") Cộng
+							tr
+								td.fwb CN Gia Định
+							tr#1178
+								td 1
+								td SIE
+								td 450
+								td gd1004
+								td 1178
+								td 200 Trần Huy Liệu - Hoàng Văn Thụ [KV - 6/2020]
+							tr#1153
+								td 2
+								td AQM
+								td 250
+								td gd1005
+								td 1153
+								td 5 Hoang Van Thu - Phan Dinh Phung
+							tr#1286
+								td 3
+								td AQM
+								td 500
+								td gd1006
+								td 1286
+								td 356 Phan Dinh Phung - Phan Dang Luu. [KV 3/2022]
+							tr#1287
+								td 4
+								td AQM
+								td 500
+								td gd1007
+								td 1287
+								td 360 Nguyen Kiem - Phan Dang Luu 
+							tr#1288 
+								td 5
+								td SIE
+								td 300
+								td gd1011
+								td 1288
+								td 1A Phan Xich Long - Phan Dang Luu
+							tr#1191
+								td 6
+								td AQM
+								td 300
+								td gd1012
+								td 1191
+								td Thich Quang Duc - gan Phan Dang Luu. [KV - 4/2021]
+							tr#1213
+								td 7
+								td SIE
+								td 300
+								td gd1013
+								td 1213
+								td 38 Phan Dang Luu - Nguyen Van Dau. [KV - 9/2021]
+							tr
+								td 8
+								td KXD
+								td 300
+								td gd1014
+								td 
+								td 12C Phan Dang Luu - Hoang Hoa Tham [bc039 - 10/2021]
+							tr#1290
+								td 9
+								td AQM
+								td 300
+								td gd1015
+								td 1290
+								td No Trang Long - Phan Dang Luu. [KV -5/2021]
+							tr#1227
+								td 10
+								td KROHN 
+								td 300
+								td gd1016
+								td 1227
+								td Phan Dang Luu - Le Van Duyet (Dinh Tien Hoang)
+							tr#1291
+								td 11
+								td KROHN 
+								td 300
+								td gd1017
+								td 1291
+								td 386A Bui Huu Nghia - Bach Dang
+							tr
+								td 12
+								td KXD
+								td 300
+								td gd1019
+								td 
+								td 50 Dien Bien Phu. [bc031 - 10/2021]
+							tr#1292
+								td 13
+								td AQM 
+								td 300
+								td gd1020
+								td 1292
+								td 281 Dien Bien Phu - UBND P15 Bình Thạnh
+							tr
+								td 14
+								td KXD
+								td 250
+								td gd1021
+								td
+								td Hang Xanh , P17 BT (245D XVNT). [bc029 - 10/2021]
+							tr#1172
+								td 15
+								td SIE 
+								td 300
+								td gd1022
+								td 1172
+								td 301-303 XVNT - Hang Xanh. P24
+							tr#1210
+								td 16
+								td AQM
+								td 400
+								td gd1023
+								td 1210
+								td 298 XVNT - Dien Bien Phu (Hang Xanh, P.21)
+							tr
+								td 17
+								td KXD
+								td 300
+								td gd1024
+								td 
+								td 11 Bach Dang. [bc055 - 9/2016]
+							tr#1134
+								td 18
+								td AQM
+								td 500
+								td gd1025
+								td 1134
+								td 297B Ung Van Khiem - Cau Sai Gon [10.7995 N 106.7240 E]
+							tr#1295
+								td 19
+								td AQM
+								td 600
+								td gd1026
+								td 1295
+								td Phan Dinh Giot - Phan Thuc Duyen. (doi dien san QK7) [KV -6/2021]
+							tr#1222
+								td 20
+								td AQM
+								td 300
+								td gd1032
+								td 1222
+								td 194 Hoang Van Thu
+							tr
+								td 21
+								td KXD
+								td 300
+								td gd1033
+								td 
+								td Hoang Minh Giam - Dao Duy Anh. [bc056 - 6/2016]
+							tr#1297
+								td 22
+								td AQM
+								td 400
+								td gd1034
+								td 1297
+								td Phan Van Tri- Cau Hang Trong 2
+							tr#1298
+								td 23
+								td AQM
+								td 150
+								td gd1035
+								td 1298
+								td Luong Ngoc Quyen - Nguyen Xi. [KV - 9/2021]
+							tr#1299
+								td 24
+								td AQM
+								td 500
+								td gd1036
+								td 1299
+								td 385 Nguyen Xi - Luong Ngoc Quyen
+							tr#1522
+								td 25
+								td AQM
+								td 500
+								td gd1037
+								td 1522
+								td 2 Le Quang Dinh - Bach Dang (thay the cho vi tri gd1018). [KV - 10/2021]
+							tr#sumOutletGD
+								td 
+								td.fwb(colspan="5") Cộng Oulet
+							tr
+								td 26
+								td 
+								td 250
+								td gd2003
+								td 
+								td 192 Le Van Sy - Dang Van Ngu [bc125 - 01/2023]
+							tr#1152
+								td 27
+								td AICHI
+								td 300
+								td gd2030
+								td 1152
+								td 3A Nguyen Van Nghi - Luong Ngoc Quyen. [KV - 12/2020]
+							tr
+								td 28
+								td KXD
+								td 200
+								td gd2031
+								td 
+								td [Đã bít huỷ] Phan Van Tri -Cau Hang trong 1. [bc073]
+							tr#1248
+								td 29
+								td AQM
+								td 400
+								td gd2033
+								td 1248
+								td 18 Nguyen Kiem. [KV - 1/2022]
+							tr#1302
+								td 30
+								td AQM
+								td 450
+								td sg2002
+								td 1302
+								td 196 Tran Quoc Thao - cau Le Van Sy (D450)
+							tr#3091
+								td 31
+								td AQM
+								td 250
+								td sg2025
+								td 3091
+								td 105 Tran Quang Dieu - Hoang Sa. (3JQ2A) [KV - 01/2023]
+							tr#1226
+								td 32
+								td AQM
+								td 600
+								td sg2026
+								td 1226
+								td 384/1B Nam Ky Khoi Nghia - Cau Cong Ly (sẽ đổi thành gd10xx)
+							tr#1479_02
+								td 33
+								td SIE
+								td 400
+								td td2019
+								td 1479
+								td Quoc lo 13 - cau Binh Trieu 1 (phía Tp Thủ Đức)
+							tr#sumTachMangGD
+								td 
+								td.fwb(colspan="5") Cộng tách mạng
+							tr#sumGD
+								td 
+								td.fwb(colspan="5") Cộng
+							tr
+								td.fwb CN Trung An
+							tr#1241
+								td 1
+								td AQM
+								td 200
+								td ta1001
+								td 1241
+								td Vuon Lai - QL1A (cong vien)
+							tr#1224
+								td 2
+								td AQM
+								td 300
+								td ta1002
+								td 1224
+								td Ha Huy Giap - QL1A (1) (ben xe Nga Tu Ga)
+							tr#1224
+								td 3
+								td AQM
+								td 300
+								td ta1003
+								td 1229
+								td TO KY- QL1A
+							tr
+								td 4
+								td AQM
+								td 200
+								td ta1004
+								td 
+								td 4A duong Song Hanh - QL1A (chan cau vuot An Suong) [KV zz/zzzz]
+							tr#1231
+								td 5
+								td AQM
+								td 300
+								td ta1005
+								td 1231
+								td 19G1 QL1A - duong Song Hanh (chan cau vuot An Suong 2)
+							tr#1232
+								td 6
+								td AQM
+								td 400
+								td ta1006
+								td 1232
+								td 1152 Quoc lo 1A - To Ngoc Van
+							tr#1230
+								td 7
+								td AQM
+								td 500
+								td ta1007
+								td 1230
+								td To Ky - QL1A 2
+							tr#1233
+								td 8
+								td AQM
+								td 400
+								td ta1008
+								td 1233
+								td Ha Huy Giap - QL1a (2) (tiem tap hoa)
+							tr#1236
+								td 9
+								td AQM
+								td 400
+								td ta1010
+								td 1236
+								td Le Thi Rieng - 1454 QL1A
+							tr#1243
+								td 10
+								td AQM
+								td 200
+								td ta1011
+								td 1243
+								td Quoc lo 1A - Tan Thoi Hiep (Metro)
+							tr#1234
+								td 11
+								td AQM
+								td 200
+								td ta1012
+								td 1234
+								td Vuon Lai - QL1A (2) - phia Cho
+							tr#1244
+								td 12
+								td AQM
+								td 200
+								td ta1013
+								td 1244
+								td 1402/3C Quốc lộ 1A - cầu Bình Phước (TA)
+							tr#1212
+								td 13
+								td AQM
+								td 400
+								td ta1014
+								td 1212
+								td Nguyen Thai Son - Nguyen Kiem 1 (trong tham co)
+							tr#1574
+								td 14
+								td AQM
+								td 400
+								td ta1015
+								td 1574
+								td Nguyen Kiem - Nguyen Thai Son 2 (duoi long duong)
+							tr#1235
+								td 15
+								td ISO
+								td 400
+								td ta1016
+								td 1235
+								td 27 Nguyen Thai Son - Pham Ngu Lao 1 (phia Nguyen Van Nghi) 
+							tr#1237
+								td 16
+								td ISO
+								td 400
+								td ta1017
+								td 1237
+								td 21 Nguyen Thai Son - Pham Ngu Lao 2 (phia Hoang Minh Giam) [KV zz/zzzz]
+							tr
+								td 17
+								td KXD
+								td 400
+								td ta1018
+								td 
+								td 186 Nguyen Van Nghi - Nguyen Thai Son (phia cho Go Vap). [bc017 - 5/2021]
+							tr#1194
+								td 18
+								td SIE
+								td 400
+								td ta1019
+								td 1194
+								td 362A Nguyen Van Nghi - Nguyen Thai Son (phia tiem vang PNJ)
+							tr#1239
+								td 19
+								td SIE
+								td 400
+								td ta1020
+								td 1239
+								td Phan Van Tri - Nguyen Oanh [KV zz/zzzz]
+							tr#1176
+								td 20
+								td AQM
+								td 400
+								td ta1021
+								td 1176
+								td Quoc lo 1A- Le Van Khuong
+							tr#1533
+								td 21
+								td AQM
+								td 400
+								td ta1022
+								td 1533
+								td Quoc lo 1 - Song Hanh (chung cu An Suong)
+							tr#1240
+								td 22
+								td SIE
+								td 300
+								td ta1023
+								td 1240
+								td 2384 Quoc lo 1A - Phuong Trung My Tay, Q.12 [KV zz/zzzz]
+							tr#1204
+								td 23
+								td AQM
+								td 200
+								td ta1024
+								td 1204
+								td 1816/3D QL1a, phuong An Phu Dong
+							tr#1245
+								td 24
+								td AQM
+								td 300
+								td ta1025
+								td 1245
+								td Quoc Lo 1A - cho An Suong
+							tr#1201
+								td 25
+								td AICHI
+								td 200
+								td ta1026
+								td 1201
+								td Quoc lo 22 - Quoc lo 1A
+							tr#1540
+								td 26
+								td AQM
+								td 500
+								td ta1027
+								td 1540
+								td 12/6 Phan Van Hon - Nguyen Anh Thu [KV zz/zzzz]
+							tr#1457
+								td 27
+								td ISO
+								td 400
+								td ta1028
+								td 1457
+								td 2 To Ky - Nguyen Anh Thu. [KV]
+							tr#1458
+								td 28
+								td AQM
+								td 400
+								td ta1029
+								td 1458
+								td Nguyen Anh Thu - Huong lo 80B (Nga ba Dong  Quan)
+							tr#1393
+								td 29
+								td SIE
+								td 400
+								td ta1030
+								td 1393
+								td Le Van Khuong - Nguyen Anh Thu (phia H. Cu Chi)
+							tr#1459
+								td 30
+								td AQM
+								td 400
+								td ta1031
+								td 1459
+								td Le Van Khuong - Nguyen Anh Thu (Phia QL 1A) [KV zz/zzzz]
+							tr#1394
+								td 31
+								td Bad
+								td 600
+								td ta1032
+								td 1394
+								td Ly Thuong Kiet - Song hanh Quoc lo 22 (phia Nguyen Van Bua)
+							tr#1460
+								td 32
+								td AQM
+								td 500
+								td ta1033
+								td 1460
+								td Ly Thuong Kiet - Song hanh Quoc lo 22 (phia cho Hoc Mon)
+							tr#1395
+								td 33
+								td AQM
+								td 400
+								td ta1035
+								td 1395
+								td Nguyen Oanh - Le Thi Hong
+							tr#1478
+								td 34
+								td AQM
+								td 400
+								td ta1036
+								td 1478
+								td 543/2A Le Duc Tho - Phan Van Tri
+							tr#1520
+								td 35
+								td KROHN
+								td 150
+								td ta1037
+								td 1520
+								td 18 Phan Van Tri - Khu Dan cu Cityland (sẽ đổi thành ta20xx)
+							tr#1529
+								td 36
+								td AQM
+								td 350
+								td ta1038
+								td 1529
+								td Quoc lo 1A - Truong Chinh
+							tr#1530
+								td 37
+								td SIE
+								td 400
+								td ta1039
+								td 1530
+								td Quoc lo 1A - Truong Thi Hoa (cap cho Le Duc Tho)
+							tr#1580
+								td 38
+								td AQM
+								td 200
+								td ta1040
+								td 1580
+								td Thanh Xuan 13 - Quoc lo 1A (Khu dan cu Go Sao)
+							tr#1585
+								td 39
+								td AQM
+								td 400
+								td ta1041
+								td 1585
+								td Duong Thi Muoi - Nguyen Anh Thu [KV zz/zzzz]
+							tr#sumOutletTA
+								td
+								td.fwb(colspan="5") Cộng Oulet
+							tr#1152_02
+								td 40
+								td AICHI
+								td 300
+								td gd2030
+								td 1152
+								td 3A Nguyen Van Nghi - Luong Ngoc Quyen. [KV - 12/2020]
+							tr
+								td 41
+								td KXD
+								td 300
+								td gd2031
+								td 
+								td [Đã bít huỷ] Phan Van Tri -Cau Hang trong 1. [bc073]
+							tr#1248_02
+								td 42
+								td AQM
+								td 400
+								td gd2033
+								td 1248
+								td 18 Nguyen Kiem. [KV - 1/2022]
+							tr
+								td 43
+								td KXD
+								td 300
+								td th2002
+								td 
+								td 181 Phan Huy Ich - Huynh Van Nghe. [bc053 - 5/2016]
+							tr#sumTachMangTA
+								td 
+								td.fwb(colspan="5") Cộng tách mạng 
+							tr#sumTA
+								td 
+								td.fwb(colspan="5") Cộng
+							tr 
+								td.fwb CN Bến Thành
+							tr#3101
+								td 1
+								td AQM
+								td 300
+								td pt1001_3K01
+								td 3101
+								td 277B CMT8 - Vong xoay Dan chu
+							tr#1181
+								td 2
+								td AQM
+								td 300
+								td sg1001
+								td 1181
+								td 268 Tran Hung Dao - So Cong an TP (THD-N
+							tr#1182
+								td 3
+								td SIE
+								td 300
+								td sg1003_3BT45
+								td 1182
+								td 243 CMT8 - Tu Xuong (D300)
+							tr#1312
+								td 4
+								td AICHI
+								td 300
+								td sg1004
+								td 1312
+								td Nguyen Binh  Khiem - Nguyen Du(So thu)
+							tr#1334
+								td 5
+								td AQM
+								td 300
+								td sg1005
+								td 1334
+								td Nguyen Cong Tru - 15 Pasteur 
+							tr
+								td 6
+								td KXD
+								td 500
+								td sg1007
+								td 
+								td Nguyen Cong Tru - 6 Pasteur [bc063 - 10/2015]
+							tr#1314
+								td 7
+								td AQM
+								td 350
+								td sg1009
+								td 1314
+								td 82 Ho Hao Hon
+							tr#1454
+								td 8
+								td AQM
+								td 300
+								td sg1010
+								td 1454
+								td Doi dien 252/1 Ly Chinh Thang - gan Nguyen Phuc Nguyen
+							tr#1320
+								td 9
+								td AQM
+								td 250
+								td sg1016
+								td 1320
+								td 94 Nam Ky Khoi Nghia - Le Loi (Sai Gon Center)
+							tr#1335
+								td 10
+								td Bad
+								td 300
+								td sg1017
+								td 1335
+								td Tran Hung Dao - 157 Nguyen Thai Hoc
+							tr#1333
+								td 11
+								td AQM
+								td 250
+								td sg1019
+								td 1333
+								td 7 Nguyen Thi Minh Khai - Nguyen Binh Khiem
+							tr#1321
+								td 12
+								td AQM
+								td 250
+								td sg1020
+								td 1321
+								td 8B Nguyen Thi Minh Khai - Nguyen Binh Khiem
+							tr#1322
+								td 13
+								td AQM
+								td 200
+								td sg1021
+								td 1322
+								td Nguyen Binh Khiem - Nguyen Thi Minh Khai
+							tr#1066
+								td 14
+								td AQM
+								td 250
+								td sg1022
+								td 1066
+								td 3 Nguyen Dinh Chieu - Nguyen Binh Khiem (1F03B)
+							tr#1324
+								td 15
+								td AQM
+								td 250
+								td sg1025
+								td 1324
+								td Le Thanh Ton - 111 Hai Ba Trung
+							tr#1539
+								td 16
+								td AQM
+								td 250
+								td sg1026
+								td 1539
+								td Le Thanh Ton - Dong Khoi
+							tr
+								td 17
+								td AQM
+								td 250
+								td sg1031
+								td 
+								td 330 Tran Hung Dao (1G13A) [KV zz/zzzz]
+							tr
+								td 18
+								td KXD
+								td 250
+								td sg1032
+								td 
+								td 60 Nguyen Van Cu - Tran Hung Dao (cho NanCy) (1C12A) [bc027 - 7/2021]
+							tr#1327
+								td 19
+								td AQM
+								td 300
+								td sg1034
+								td 1327
+								td Dinh Tien Hoang - Vo Thi Sau
+							tr#1328
+								td 20
+								td AQM
+								td 250
+								td sg1035
+								td 1328
+								td Pham Ngoc Thach - 91 Vo Thi Sau
+							tr#1330
+								td 21
+								td ISO
+								td 400
+								td sg1037
+								td 1330
+								td Tran Quoc Thao - Vo Thi Sau
+							tr#3063
+								td 22
+								td AQM
+								td 250
+								td sg1038
+								td 3063
+								td Nam Ky Khoi Nghia - Vo Thi Sau (3F02B)
+							tr#1081
+								td 23
+								td AICHI
+								td 250
+								td sg1041
+								td 1081
+								td Calmette - 112 Nguyen Thai Binh
+							tr#1092
+								td 24
+								td AQM
+								td 300
+								td sg1043
+								td 1092
+								td Yersin - Tran Hung Dao
+							tr#1022
+								td 25
+								td AQM
+								td 250
+								td sg1044
+								td 1022
+								td 167 Nguyen Thai Hoc - Tran Hung Dao
+							tr#1084
+								td 26
+								td AQM
+								td 250
+								td sg1045
+								td 1084
+								td 51 Nam Ky Khoi Nghia - Nguyen Thai Binh (1H01B)
+							tr#3082
+								td 27
+								td AQM
+								td 200
+								td sg1048
+								td 3082
+								td 66 Tran Quoc Toan - Huynh Tinh Cua (3H02)
+							tr#1527
+								td 28
+								td AQM
+								td 250
+								td sg1049
+								td 1527
+								td 416A Hai Ba Trung - Tran Quang Khai (1K01)
+							tr#1528
+								td 29
+								td AQM
+								td 250
+								td sg1050
+								td 1528
+								td 342 Hai Ba Trung - Ba Le Chan (1K02B)
+							tr#3081
+								td 30
+								td SIE
+								td 200
+								td sg1051
+								td 3081
+								td Ly Chinh Thang - 447 Hai Ba Trung (3H01)
+							tr#1014
+								td 31
+								td AICHI
+								td 250
+								td sg1052
+								td 1014
+								td Ton Duc Thang - 2 Le Thanh Ton (sg1023)
+							tr#1558
+								td 32
+								td AQM
+								td 300
+								td sg1053
+								td 1558
+								td Vo Van Tan - Truong Dinh
+							tr#1559
+								td 33
+								td AQM
+								td 300
+								td sg1054
+								td 1559
+								td Ton That Tung -145 Nguyen Thi Minh Khai
+							tr#1560
+								td 34
+								td AICHI
+								td 250
+								td sg1055
+								td 1560
+								td CMT8 - 194 Vo Van Tan
+							tr
+								td 35
+								td KXD
+								td 300
+								td sg1056
+								td 
+								td 2 Nguyen Thuong Hien - Nguyen Thi Minh Khai. [bc019 - 6/2021]
+							tr#3053
+								td 36
+								td AQM
+								td 150
+								td sg1058
+								td 3053
+								td 191 Vo Van Tan (3E-12C)
+							tr#3022
+								td 37
+								td AQM
+								td 200
+								td sg1059
+								td 3022
+								td 2A Nguyen Thien Thuat (3B-02)
+							tr#3054
+								td 38
+								td AICHI
+								td 250
+								td sg1060
+								td 3054
+								td Cao Thang - 456A Nguyen Thi Minh Khai (3E-12D)
+							tr#10721
+								td 39
+								td AQM
+								td 250
+								td sg1061
+								td 10721
+								td Cong Quynh - Nguyen Thi Minh Khai (1G-02A) (phia CMT8)
+							tr
+								td 40
+								td KXD
+								td 300
+								td sg1062
+								td 
+								td Pham Viet Chanh - Nguyen Thi Minh Khai. [bc018 - 6/2021]
+							tr#1563
+								td 41
+								td AQM
+								td 200
+								td sg1063
+								td 1563
+								td Cong Quynh - Nguyen Thi Minh Khai (phia Cao Thang). [KV - 12/2022]
+							tr#1564
+								td 42
+								td SIE
+								td 300
+								td sg1064
+								td 1564
+								td Vo Van Tan - Pasteur
+							tr
+								td 43
+								td KXD
+								td 250
+								td sg1065
+								td 
+								td 256 Pasteur. [bc025 - 7/2021]
+							tr
+								td 44
+								td KXD
+								td 250
+								td sg1066
+								td 
+								td 228A Pasteur - Dien Bien Phu. [bc026 - 7/2021]
+							tr#sumOutletBT
+								td
+								td.fwb(colspan="5") Cộng Oulet
+							tr#1449
+								td 45
+								td AQM
+								td 200
+								td cl2009
+								td 1449
+								td Nguyen Trai  - Nguyen Van Cu 2 (ham phia cay xang)
+							tr#1310
+								td 46
+								td AQM
+								td 300
+								td pt2005
+								td 1310
+								td DBP - Cao Thang
+							tr#1302_02
+								td 47
+								td AQM
+								td 450
+								td sg2002
+								td 1302
+								td 196 Tran Quoc Thao - cau Le Van Sy (D450)
+							tr#3012
+								td 48
+								td AQM
+								td 200
+								td sg2003
+								td 3012
+								td 609 Dien Bien Phu - Tran Minh Quyen (3A02)
+							tr#3021
+								td 49
+								td AQM
+								td 150
+								td sg2006
+								td 3021
+								td Ly Thai To - Nguyen Dinh Chieu (3B01) (pt2011, sẽ đổi thành sg10xx)
+							tr#3091_02
+								td 50
+								td AQM
+								td 250
+								td sg2025
+								td 3091
+								td 105 Tran Quang Dieu - Hoang Sa. (3JQ2A) [KV - 01/2023]
+							tr#3112
+								td 51
+								td KROHN
+								td 100
+								td sg2028
+								td 3112
+								td 686/72/22 CMT8 (3T01)
+							tr#sumTachMangBT
+								td
+								td.fwb(colspan="5") Cộng tách mạng
+							tr#sumBT 
+								td 
+								td.fwb(colspan="5") Cộng
+							tr
+								td.fwb CN Chợ Lớn
+							tr#1419
+								td 1
+								td Bad
+								td 300
+								td cl1001
+								td 1419
+								td NGUYEN QUYEN - TUNG THIEN VUONG 1
+							tr#1421
+								td 2
+								td AQM
+								td 300
+								td cl1004
+								td 1421
+								td Tung Thien Vuong - Tran Nguyen Han
+							tr#1422
+								td 3
+								td AQM
+								td 400
+								td cl1005
+								td 1422
+								td Tung Thien Vuong - Cao Xuan Duc
+							tr#1424
+								td 4
+								td AQM
+								td 300
+								td cl1014
+								td 1424
+								td Pham Dinh Ho - Thap Muoi
+							tr#1425
+								td 5
+								td AQM
+								td 450
+								td cl1015
+								td 1425
+								td Minh Phung - Phan Van Khoe
+							tr#1163
+								td 6
+								td AQM
+								td 450
+								td cl1016
+								td 1163
+								td 182 Pham Phu Thu (thuy dai)
+							tr#1272
+								td 7
+								td AICHI
+								td 250
+								td cl1017
+								td 1272
+								td Binh Tien - Pham Phu Thu
+							tr#1427
+								td 8
+								td AQM
+								td 250
+								td cl1019
+								td 1427
+								td 178 Hau Giang
+							tr#1428
+								td 9
+								td AQM
+								td 250
+								td cl1022
+								td 1428
+								td Tran Hung Dao - Luong Nhu Hoc
+							tr#1429
+								td 10
+								td KXD
+								td 200
+								td cl1023
+								td 1429
+								td Tran Hung Dao - Trieu Quang Phuc. [bc041 - 1/2022]
+							tr#1430
+								td 11
+								td AQM
+								td 200
+								td cl1024
+								td 1430
+								td Tran Hung Dao - Tan Da
+							tr#5014
+								td 12
+								td SIE
+								td 250
+								td cl1025
+								td 5014
+								td 801 Tran Hung Dao - Tran Binh Trong (5A13A)
+							tr#1531
+								td 13
+								td AQM
+								td 250
+								td cl1029
+								td 1531
+								td Tran Hung Dao - Nguyen Bieu 1 (5A-13C) [KV zz/zzzz]
+							tr#5729
+								td 14
+								td SIE
+								td 200
+								td cl1030
+								td 5729
+								td Tran Hung Dao - Nguyen Bieu 2 (5B03)
+							tr#1555
+								td 15
+								td AQM
+								td 300
+								td cl1031_5N12A
+								td 1555
+								td Hai Thuong Lan Ong - Phung Hung
+							tr#1532
+								td 16
+								td AICHI
+								td 300
+								td cl1032_5P12A
+								td 1532
+								td 132A Phung Hung
+							tr#1354
+								td 17
+								td AQM
+								td 500
+								td cl1036
+								td 1354
+								td 301F Ben Binh Dong - Cay Sung (D500)
+							tr#1434
+								td 18
+								td SIE
+								td 400
+								td cl1037
+								td 1434
+								td Nguyen Van Luong - Cho Lon 1 (phia LCH)
+							tr
+								td 19
+								td KXD
+								td 300
+								td cl1033
+								td 
+								td 242 Minh Phung - Hong Bang. [bc023 – 12/2018]
+							tr#1436
+								td 20
+								td KXD
+								td 300
+								td cl1039
+								td 1436
+								td 249A Nguyen Van Luong - Cho Lon 2 (phia HG). [bc036 - 11/2021]
+							tr#1355
+								td 21
+								td ISO
+								td 400
+								td cl1040
+								td 1355
+								td 154 Ly Chieu Hoang - duong 23 (1) (phia ADV)
+							tr#1437
+								td 22
+								td AQM
+								td 300
+								td cl1041
+								td 1437
+								td 144 Ly Chieu Hoang - duong 23 (2) (phia NVL) 
+							tr#1553
+								td 23
+								td KXD
+								td 300
+								td cl1042
+								td 1553
+								td 393 Pham Van Chi - Binh Tien 1 (Truong mam non). [bc037 - 1/2021]
+							tr#1439
+								td 24
+								td SIE
+								td 300
+								td cl1043
+								td 1439
+								td 409A Pham Van Chi - Binh Tien 2 (phia cau PVC)
+							tr#1375
+								td 25
+								td AQM
+								td 400
+								td cl1044
+								td 1375
+								td 327 Ben Binh Dong - cau di bo so 5
+							tr#1376
+								td 26
+								td AICHI
+								td 300
+								td cl1045 
+								td 1376
+								td 289 Ben Binh Dong (cach Cay Sung khoang 500m)
+							tr#1356
+								td 27
+								td SIE
+								td 800
+								td cl1046 
+								td 1356
+								td 1F Cay Sung - Ben Binh Dong 3 (D800) 
+							tr#1359
+								td 28
+								td SIE
+								td 800
+								td cl1047 
+								td 1359
+								td A6/7Q Quoc lo 1A - Ba Hom 1
+							tr#1358
+								td 29
+								td AQM
+								td 800
+								td cl1048
+								td 1358
+								td 6 An Duong Vuong - Cau My Thuan
+							tr#1358
+								td 30
+								td KXD
+								td 300
+								td cl1049
+								td 1440
+								td 24 Nguyen Thi Tu (Huong lo 13) - Quoc lo 1A. [bc032 - 11/2021]
+							tr
+								td 31
+								td AQM
+								td 300
+								td cl1051
+								td 
+								td Quoc lo 1A - Tan ky Tan Quy [KV zz/20zz]
+							tr#1551
+								td 32
+								td Bad
+								td 300
+								td cl1052
+								td 1551
+								td 1029 Huong lo 2 - QL1a
+							tr#1357
+								td 33
+								td AQM
+								td 500
+								td cl1053
+								td 1357
+								td 1153 Quoc lo 1A - Ba Hom 2
+							tr#1360
+								td 34
+								td SIE
+								td 400
+								td cl1054
+								td 1360
+								td 2A Le Van Quoi - Binh Long - Huong lo 2 (Head Honda) 
+							tr#1441
+								td 35
+								td AQM
+								td 300
+								td cl1055
+								td 1441
+								td Hung Vuong - Minh Phung (tren duong HV)
+							tr#5707
+								td 36
+								td AQM
+								td 200
+								td cl1058_5EF02
+								td 5707
+								td Tran Hung Dao - An Binh (phia Q8)
+							tr#5731
+								td 37
+								td AQM
+								td 250
+								td cl1058_5G01
+								td 5731
+								td Tran Hung Dao - An Binh (nha hang Dong Khanh)
+							tr#1361
+								td 38
+								td AQM
+								td 400
+								td cl1060
+								td 1361
+								td 16 Kinh Vuong Vuong (Vong xoay Phu Lam)
+							tr#1442
+								td 39
+								td ISO
+								td 400
+								td cl1070 
+								td 1442
+								td 279A Hau Giang - Minh Phung (cau Hau Giang) [KV - zz/20zz]
+							tr#8101
+								td 40
+								td AICHI
+								td 150
+								td cl1081
+								td 8101
+								td 165  Binh Dong -Nguyen Quyen  (Q8-1101)
+							tr#1362
+								td 41
+								td AQM
+								td 400
+								td cl1084
+								td 1362
+								td Duong so 7 (Thoi Hoa) - Quoc lo 1A
+							tr#1363
+								td 42
+								td AQM
+								td 400
+								td cl1093
+								td 1363
+								td Duong so 7 (Thoi Hoa) - Phan Van Doi (phia QL1A)
+							tr#1380
+								td 43
+								td AQM
+								td 300
+								td cl1105
+								td 1380
+								td Nguyen Trieu Luat - Quoc lo 1A (ganTinh lo 10)
+							tr#1382
+								td 44
+								td AQM
+								td 300
+								td cl1107
+								td 1382
+								td 428 Quoc lo 1A - Trung tam dang kiem
+							tr#1374
+								td 45
+								td AQM
+								td 300
+								td cl1108
+								td 1374
+								td Hem 738 Quoc lo 1A
+							tr#1590
+								td 46
+								td AQM
+								td 500
+								td cl1111
+								td 1590
+								td 1014 Quoc lo 1A - Tinh lo 10. [CKT]
+							tr#1464
+								td 47
+								td ISO
+								td 500
+								td cl1112
+								td 1464
+								td 99A Nguyen Van Cu - Tran Hung Dao, P2, Q5
+							tr#1542
+								td 48
+								td AQM
+								td 400
+								td cl1114
+								td 1542
+								td 14 Le Van Quoi (Nga tu bon xa)
+							tr#1550
+								td 49
+								td AQM
+								td 400
+								td cl1115
+								td 1550
+								td 61 duong 18B - Quoc lo 1A
+							tr#1546
+								td 50
+								td AQM
+								td 150
+								td cl1126
+								td 1546
+								td 4C duong so 5 - Quoc lo 1A (gan KDC Dat Viet)
+							tr#1547
+								td 51
+								td AQM
+								td 150
+								td cl1127
+								td 1547
+								td Duong so 5 - 667 Huong Lo 3 (duong CN1). [KV - 4/2021]
+							tr#1581
+								td 52
+								td AQM
+								td 200
+								td cl1129
+								td 1581
+								td 101 Lien khu 4-5 - Truong hoc Kim Dong (D200)
+							tr
+								td 53
+								td KXD
+								td 200
+								td cl1131
+								td 
+								td Lien Khu 4 5 - Binh Thanh. [bc038 - 11/2021]
+							tr#sumOutletCL
+								td
+								td.fwb(colspan="5") Cộng Outlet
+							tr#1495
+								td 54
+								td AQM
+								td 300
+								td bc2001
+								td 1495
+								td Quan Trong Linh - duong so 3 (Cho Dau moi Binh Dien huong ra)
+							tr#1496
+								td 55
+								td AQM
+								td 250
+								td bc2002
+								td 1496
+								td Quan Trong Linh - duong so 3 (huong vao Cho dau moi Binh dien)
+							tr#1497
+								td 56
+								td AICHI
+								td 250
+								td bc2003
+								td 1497
+								td 1874 Tinh lo 10 - Vo Van Van
+							tr#1498
+								td 57
+								td AQM
+								td 150
+								td bc2004
+								td 1498
+								td 390 Pham Hung - duong so 6 (Eximbank). [KV - 2/2022]
+							tr#1499
+								td 58
+								td AQM
+								td 100
+								td bc2005
+								td 1499
+								td 4303 Nguyen Cuu Phu - cau Ba Bo (Phia Q.BT)
+							tr
+								td 59
+								td KXD
+								td 100
+								td bc2006
+								td 
+								td Nguyen Dinh Kien - cach Tran Dai Nghia ~180m. [bc040 - 1/2022]
+							tr#1501
+								td 60
+								td AQM
+								td 100
+								td bc2007
+								td 1501
+								td 879A Ta Quang Buu (chan cau ben phia QL50)
+							tr#1502
+								td 61
+								td AQM
+								td 150
+								td bc2008
+								td 1502
+								td A1/4 Quoc lo 50 - cay xang Hiep An
+							tr#1503
+								td 62
+								td SIE
+								td 150
+								td bc2009
+								td 1503
+								td 9 Pham Hung - ho boi Hoa Binh. [KV - 2/2022]
+							tr#1504
+								td 63
+								td AQM
+								td 200
+								td bc2010
+								td 1504
+								td Nguyen Van Linh - Pham The Hien
+							tr#1505
+								td 64
+								td AQM
+								td 150
+								td bc2011
+								td 1505
+								td A30/5 Quoc lo 50 - doi dien cay xang Hiep An
+							tr#15753
+								td 65
+								td AQM
+								td 200
+								td bc2012
+								td 15753
+								td Tran Dai Nghia - QL1A
+							tr#1491
+								td 66
+								td AQM
+								td 300
+								td bc2013
+								td 1491
+								td Cau An Lap - Quoc lo 1A (phia LA; bc1001)
+							tr#1493
+								td 67
+								td AQM
+								td 300
+								td bc2014
+								td 1493
+								td A8/2 Quoc lo 50 - dien may Cho Lon (bc1002)
+							tr#1492
+								td 68
+								td AICHI
+								td 300
+								td bc2015
+								td 1492
+								td D1/1 Nguyen Thi Tu - cafe Mi Mi. (bc1003)
+							tr#1490
+								td 69
+								td AQM
+								td 300
+								td bc2016
+								td 1490
+								td Pham Hung - duong so 6
+							tr#1494
+								td 70
+								td AQM
+								td 800
+								td bc2017
+								td 1494
+								td Cau Ba To - Trinh Quang Nghi (phia ben Phu Dinh)
+							tr#1512
+								td 71
+								td AICHI
+								td 150
+								td bc2019
+								td 1512
+								td Hem 1166 Quoc lo 1A
+							tr
+								td 72
+								td AQM
+								td 200
+								td bc2020
+								td 
+								td Tran Dai Nghia - duong 5B. [KV - 2/2022]
+							tr#1576
+								td 73
+								td AQM
+								td 450
+								td bc2021
+								td 1576
+								td Pham The Hien, Cau Nhi Thien Duong
+							tr#1449_02
+								td 74
+								td AQM
+								td 200
+								td cl2009
+								td 1449
+								td Nguyen Trai  - Nguyen Van Cu 2 (ham phia cay xang)
+							tr
+								td 75
+								td KXD
+								td 300
+								td cl2011
+								td 
+								td 123 Hung Vuong - Tran Nhan Ton 1 [bc022 - 7/2021] 
+							tr#1283
+								td 76
+								td AICHI
+								td 300
+								td nb2014
+								td 1283
+								td Tran Xuan Soan - cau Rach Ong 1 (ben cong vien)
+							tr#1223
+								td 77
+								td AICHI
+								td 300
+								td nb2015
+								td 1223
+								td Tran Xuan Soan - cau Rach Ong 2 (ben huong giao thong tu Q8 qua Q7)
+							tr#1465
+								td 78
+								td Bad
+								td 300
+								td th2001
+								td 1465
+								td Tan Ky Tan Quy - gan Binh Long [10.7961N 106.6128E]
+							tr#sumTachMangCL
+								td 
+								td.fwb(colspan="5") Cộng tách mạng
+							tr
+								td 79
+								td SIE
+								td 300
+								td cl4001
+								td 
+								td Dong ho so 3. [NNSG] [KV zz/zzzz]
+							tr
+								td 80
+								td KXD
+								td 250
+								td cl4004
+								td 
+								td Dong ho so 4. [NNSG] [bc064 - 2/2022]
+							tr#sumNuocNgamCL
+								td 
+								td.fwb(colspan="5") Cộng nước ngầm
+							tr#sumCL
+								td 
+								td.fwb(colspan="5") Cộng
+							tr
+								td.fwb CN Phú Hòa Tân
+							tr#10128
+								td 1
+								td AQM
+								td 250
+								td pt1001_10M345B
+								td 10128
+								td 275 CMT8 - Vong xoay Dan chu
+							tr#1336
+								td 2
+								td AQM
+								td 300
+								td pt1002 
+								td 1336
+								td 79 Đường 3/2 - Cao Thang (phía ĐBP)
+							tr#1337
+								td 3
+								td AQM
+								td 200
+								td pt1003
+								td 1337
+								td 230A Duong 3/2 - Cao Thang (phia Ky Hoa)
+							tr#1184
+								td 4
+								td Bad
+								td 500
+								td pt1004
+								td 1184
+								td Tran Minh Quyen - 213 Duong 3/2
+							tr#1388
+								td 5
+								td AQM
+								td 350
+								td pt1005
+								td 1388
+								td Le Hong Phong noi dai - 244 Duong 3/2
+							tr#1338
+								td 6
+								td Bad
+								td 400
+								td pt1006
+								td 1338
+								td 207 Duong 3/2 - Nguyen Tri Phuong 
+							tr#1339
+								td 7
+								td ISO
+								td 300
+								td pt1007
+								td 1339
+								td Thanh Thai - 3/2
+							tr#1341
+								td 8
+								td AQM
+								td 400
+								td pt1009
+								td 1341
+								td 711 duong 3/2 - Nguyen Lam
+							tr#1342
+								td 9
+								td AQM
+								td 500
+								td pt1010
+								td 1342
+								td 813 Duong 3/2 - Ly Thuong Kiet
+							tr#1343
+								td 10
+								td SIE
+								td 300
+								td pt1011
+								td 1343
+								td Le Dai Hanh - 3/2 - 2 Lanh Binh Thang
+							tr#1344
+								td 11
+								td Bad
+								td 500
+								td pt1014
+								td 1344
+								td 1122 Duong 3/2 - truong hoc Phu Tho
+							tr#1185
+								td 12
+								td ISO
+								td 400
+								td pt1015
+								td 1185
+								td 1175 Duong 3/2 - Ta Uyen
+							tr#1190
+								td 13
+								td AQM
+								td 400
+								td pt1018
+								td 1190
+								td 3/2 - Le Hong Phong 2
+							tr
+								td 14
+								td KXD
+								td 300
+								td pt1019
+								td 
+								td Minh Phung - 3/2 (Vong xoay cay go) (pt2019). [bc035 - 7/2021]
+							tr#sumOutletPHT
+								td 
+								td.fwb(colspan="5") Cộng Outlet
+							tr
+								td 15
+								td KXD
+								td 300
+								td cl2011
+								td 
+								td 123 Hung Vuong - Tran Nhan Ton 1 [bc022 - 7/2021] 
+							tr#1310_02
+								td 16
+								td AQM
+								td 300
+								td pt2005
+								td 1310
+								td DBP - Cao Thang
+							tr#1165
+								td 17
+								td SIE
+								td 450
+								td pt2017
+								td 1165
+								td Ly Thuong Kiet - Thien Phuoc. [KV -7/2017]
+							tr#20206
+								td 18
+								td AQM
+								td 250
+								td pt2018
+								td 20206
+								td Le Dai Hanh - Nguyen Thi Nho (04-07). [KV - 3/2019]
+							tr#1350
+								td 19
+								td AQM
+								td 300
+								td pt2027
+								td 1350
+								td Khuon Viet - Au Co
+							tr
+								td 20
+								td AQM
+								td 300
+								td pt2030
+								td 
+								td Au Co - Le Dai Hanh. [bc034 - 7/2021]
+							tr
+								td 21
+								td KXD
+								td 300
+								td pt2032
+								td 
+								td Au Co - Le Nga. [bc021 - 7/2021]
+							tr#3012_02
+								td 22
+								td AQM
+								td 200
+								td sg2003
+								td 3012
+								td 609 Dien Bien Phu - Tran Minh Quyen (3A02)
+							tr#sumTachMangPHT
+								td 
+								td.fwb(colspan="5") Cộng tách mạng
+							tr#1474
+								td 23
+								td SIE
+								td 300
+								td pt4002
+								td 1474
+								td Dong ho so 7 (Tan Hoa - Lac Long Quan). [NNSG]
+							tr
+								td 24
+								td SIE
+								td 300
+								td pt4006
+								td 
+								td Dong ho so 5 (Tan Hoa - Hong Bang). [NNSG] [KV - 7/2020]
+							tr#sumNuocNgamPHT
+								td 
+								td.fwb(colspan="5") Cộng nước ngầm
+							tr#sumPHT
+								td 
+								td.fwb(colspan="5") Cộng
+							tr
+								td.fwb CN Tân Hòa
+							tr#1403
+								td 1
+								td AQM
+								td 300
+								td th1003
+								td 1403
+								td Hoang van Thu - Le Van Sy 2
+							tr#20246
+								td 2
+								td AQM
+								td 300
+								td th1004
+								td 20246
+								td Hoang Van Thu - Truong Chinh (D300)- DMA 10-02
+							tr#1404
+								td 3
+								td Bad 
+								td 300
+								td th1005
+								td 1404
+								td Cach Mang Thang 8 - Hoang Van Thu (D300)
+							tr#1405
+								td 4
+								td SIE 
+								td 400
+								td th1006
+								td 1405
+								td 287 Le Trong Tan - Tan Thang (phia Tay Thanh)
+							tr#1406
+								td 5
+								td ISO
+								td 400
+								td th1008
+								td 1406
+								td Thoai Ngoc Hau - Binh Long
+							tr#20094
+								td 6
+								td AQM
+								td 350
+								td th1010
+								td 20094
+								td 7F Phan Huy Ích - Trường Chinh 2 (01-03)
+							tr#20042
+								td 7
+								td AQM
+								td 200
+								td th1011
+								td 20042
+								td Pham Van Bach - Truong Chinh (01-01)
+							tr#20068
+								td 8
+								td AQM
+								td 300
+								td th1012
+								td 20068
+								td 948 Truong Chinh - Phan Huy Ich (01-02) [KV zz/zzzz]
+							tr#1408
+								td 9
+								td AQM
+								td 400
+								td th1013
+								td 1408
+								td Hoang van Thu - Le Van Sy 1 [KV zz/zzzz]
+							tr#1257
+								td 10
+								td ISO
+								td 500
+								td th1014
+								td 1257
+								td 769 Ly Thuong Kiet - Hoang Van Thu (D500)
+							tr#20258
+								td 11
+								td ISO
+								td 400
+								td th1015
+								td 20258
+								td Truong Chinh - Ly Thuong Kiet (D400. 11-05)
+							tr#1409
+								td 12
+								td SIE
+								td 400
+								td th1017
+								td 1409
+								td 281 Le Trong Tan - Tan Thang (phia TKTQ)
+							tr#1410
+								td 13
+								td SIE
+								td 400
+								td th1018
+								td 1410
+								td 241 Le Thuc Hoach - Binh Long 
+							tr#1411
+								td 14
+								td ISO
+								td 400
+								td th1019
+								td 1411
+								td 594 Cong Hoa - Tan Ky Tan Quy 
+							tr
+								td 15
+								td AQM
+								td 400
+								td th1020
+								td 
+								td Tran Quoc Hoan - Cong Hoa (KV - zz/20zz)
+							tr#1166
+								td 16
+								td SIE
+								td 500
+								td th1021
+								td 1166
+								td 296 Hoang Van Thu - Hoang Viet
+							tr#1413
+								td 17
+								td AICHI
+								td 300
+								td th1024
+								td 1413
+								td 245 Hoang Van Thu - benh vien Phu San
+							tr#20254
+								td 18
+								td AQM
+								td 300
+								td th1025
+								td 20254
+								td Phan Dinh Giot - Hoang Van Thu (02-02)
+							tr#20126
+								td 19
+								td AQM
+								td 200
+								td th1026
+								td 20126
+								td 14 Binh Long - Thoai Ngoc Hau (Nga tu bon xa) (07-10)
+							tr#1179
+								td 20
+								td AQM
+								td 400
+								td th1027
+								td 1179
+								td 318 Hoa Binh - Phan Anh
+							tr#1415
+								td 21
+								td AQM
+								td 250
+								td th1027
+								td 1415
+								td 382 Tan Ky Tan Quy - Tan Quy (pt1028)
+							tr#20238
+								td 22
+								td AQM
+								td 300
+								td th1029
+								td 20238
+								td Hoang V Thu - Pham Van Hai (03-01)
+							tr#28888
+								td 23
+								td AICHI
+								td 300
+								td th1030_0901
+								td 28888
+								td 2 Bo Bao Tan Thang - Le  Trong Tan
+							tr#20132
+								td 24
+								td AQM
+								td 300
+								td th1031
+								td 20132
+								td Hong Ha - Hoang Minh Giam (02-06)
+							tr#21114
+								td 25
+								td AQM
+								td 150
+								td th1032
+								td 21114
+								td 382A Binh Long - Le Thuc Hoach (07-08)
+							tr#20032
+								td 26	
+								td AQM
+								td 150
+								td th1033_0201
+								td 20032
+								td Phan Dinh Giot - San van dong QK7
+							tr#20182
+								td 27
+								td AQM
+								td 200
+								td th1034_0906
+								td 20182
+								td 285 Le Trong Tan - Tan Thang 2 (phia TKTQ, ngay ngã 3)
+							tr
+								td 28
+								td KXD
+								td 400
+								td th1035
+								td 
+								td Nga 3 duong so 5 - duong CN1. [bc009 - 5/2021]
+							tr#sumOutletTH
+								td
+								td.fwb(colspan="5") Cộng Outlet 
+							tr
+								td 29
+								td 
+								td 250
+								td gd2003
+								td 
+								td 192 Le Van Sy - Dang Van Ngu [bc125 - 01/2023]
+							tr#1165_02
+								td 30
+								td SIE
+								td 450
+								td pt2017
+								td 1165
+								td Ly Thuong Kiet - Thien Phuoc. [KV -7/2017]
+							tr#20206_02
+								td 31
+								td AQM
+								td 250
+								td pt2018
+								td 20206
+								td Le Dai Hanh - Nguyen Thi Nho (04-07). [KV - 3/2019]
+							tr#1350_02
+								td 32
+								td AQM
+								td 300
+								td pt2027
+								td 1350
+								td Khuon Viet - Au Co
+							tr
+								td 33
+								td KXD
+								td 300
+								td pt2030
+								td 
+								td Au Co - Le Dai Hanh. [bc034 - 7/2021]
+							tr
+								td 34
+								td KXD
+								td 300
+								td pt2032
+								td 
+								td Au Co - Le Nga. [bc021 - 7/2021]
+							tr#3112_02
+								td 35
+								td KROHN
+								td 100
+								td sg2028
+								td 3112
+								td 686/72/22 CMT8 (3T01)
+							tr#1465_02
+								td 36
+								td Bad 
+								td 300
+								td th2001
+								td 1465
+								td Tan Ky Tan Quy - gan Binh Long [10.7961N 106.6128E]
+							tr
+								td 37
+								td KXD 
+								td 300
+								td th2002
+								td 
+								td 181 Phan Huy Ich - Huynh Van Nghe. [bc053 - 5/2016]
+							tr#sumTachMangTH
+								td 
+								td.fwb(colspan="5") Cộng tách mạng
+							tr#1470
+								td 38
+								td SIE 
+								td 250
+								td th4002
+								td 1470
+								td Dong ho so 1 (Au Co - Truong Chinh). [NNSG]
+							tr#1471
+								td 39
+								td SIE 
+								td 300
+								td th4004
+								td 1471
+								td Dong ho so 2b (Luy Ban Bich - Thoai Ngoc Hau). [NNSG]
+							tr#1469
+								td 40
+								td SIE 
+								td 300
+								td th4005
+								td 1469
+								td Dong ho so 6 (Che Lan Vien). [NNSG]
+							tr
+								td 41
+								td SIE 
+								td 300
+								td th4006
+								td 
+								td Dong ho so 8 (Luy Ban Bich - Hoa Binh). [NNSG] [KV - 12/2022]
+							tr#sumNuocNgamTH
+								td 
+								td.fwb(colspan="5") Cộng nước ngầm
+							tr#sumTH
+								td 
+								td.fwb(colspan="5") Cộng
+							tr
+								td.fwb CN Nhà Bè
+							tr#1123
+								td 1
+								td ISO 
+								td 600
+								td nb1006
+								td 1123
+								td 39 Ben Van Don
+							tr#1111
+								td 2
+								td SIE  
+								td 600
+								td nb1013
+								td 1111
+								td Vuon uom Cong ty Phat trien CN Tan Thuan (D600)
+							tr#1146
+								td 3
+								td AQM
+								td 600
+								td nb1014
+								td 1146
+								td Duong so 15 - Duong so 24 (Khu Che xuat Tan Thuan) 
+							tr
+								td 4
+								td KXD
+								td 150
+								td nb1015
+								td 
+								td Cong ty phat trien CN Tan Thuan (D150) [10.7745N 106.7398E] [bc110 - 12/2022]
+							tr#1209
+								td 5
+								td SIE
+								td 1000
+								td nb1017
+								td 1209
+								td Huynh Tan Phat - Nguyen Van Linh
+							tr#1215
+								td 6
+								td AQM
+								td 300
+								td nb1018
+								td 1215
+								td Cau Ba Chiem - Nguyen Huu Tho (D300) [10.6726N 106.7242E]
+							tr#1149
+								td 7
+								td SIE
+								td 600
+								td nb1019
+								td 1149
+								td Nguyen Van Linh - Nguyen Huu Tho
+							tr#1258
+								td 8
+								td SIE
+								td 400
+								td nb1020
+								td 1258
+								td Nguyen Huu Tho - Pham Huu Lau
+							tr#1183
+								td 9
+								td SIE
+								td 600
+								td nb1022
+								td 1183
+								td Nguyen Van Linh - Nguyen Luong Bang (PMH)
+							tr#1275
+								td 10
+								td SIE
+								td 600
+								td nb1023
+								td 1275
+								td Duong so 6 - Nguyen Van Tao (Khu Cong nghiep Hiep Phuoc)
+							tr#1276
+								td 11
+								td SIE
+								td 400
+								td nb1024
+								td 1276
+								td Nguyen Binh (Cau Ba Chiem)
+							tr#1277
+								td 12
+								td Bad
+								td 500
+								td nb1025
+								td 1277
+								td Ngo Quang Tham - Nguyen Van Tao (Long Thoi - Nhon Duc)
+							tr#1278
+								td 13
+								td SIE
+								td 600
+								td nb1026
+								td 1278
+								td Ben Van Don - gan cau Calmette 
+							tr#1451
+								td 14
+								td AQM
+								td 200
+								td nb1027
+								td 1451
+								td 702A Nguyen Van Tao - Xom Dinh (cau Hiep Phuoc, D200)
+							tr#1587
+								td 15
+								td AICHI
+								td 150
+								td nb1029
+								td 1587
+								td Tram bom tang ap so 1 (gan Duong so 1 - cau Ba Chiem 2) (D150)
+							tr#1477
+								td 16
+								td AQM
+								td 400
+								td nb1031
+								td 1477
+								td 274 Nguyen Van Linh - gan Nguyen Thi Thap. [KV - 10/2021]
+							tr#1534
+								td 17
+								td ISO
+								td 300
+								td nb1033
+								td 1534
+								td Nguyen Van Tao - Phan Van Bay
+							tr#sumOutletNB
+								td 
+								td.fwb(colspan="5") Cộng Oulet 
+							tr#1279
+								td 18
+								td ISO
+								td 400
+								td bc2014
+								td 1279
+								td Chanh Hung noi dai - Cau Tac Ben Ro (cl2015) [10.7100 N 106.6862 E]
+							tr#1282
+								td 19
+								td AQM
+								td 300
+								td nb2011
+								td 1282
+								td 90 Ben Van Don. [KV - 1/2022]
+							tr#1216
+								td 20
+								td SIE
+								td 600
+								td nb2012
+								td 1216
+								td Cau Ong Lon
+							tr#1283_02
+								td 21
+								td AICHI
+								td 300
+								td nb2014
+								td 1283
+								td Tran Xuan Soan - cau Rach Ong 1 (ben cong vien)
+							tr#1223_02
+								td 22
+								td AICHI
+								td 300
+								td nb2015
+								td 1223
+								td Tran Xuan Soan - cau Rach Ong 2 (ben huong giao thong tu Q8 qua Q7)
+							tr#sumTachMangNB
+								td 
+								td.fwb(colspan="5") Cộng tách mạng
+							tr#sumNB 
+								td 
+								td.fwb(colspan="5") Cộng
+							tr
+								td.fwb CN Cần Giờ
+							tr#1468
+								td 1
+								td SIE
+								td 800
+								td cg1001
+								td 1468
+								td Đường Công Vụ - Đường số 1 (D800)
+							tr 
+								td.fwb CN SHNT
+							tr#1488
+								td 1
+								td SIE
+								td 400
+								td bc1006
+								td 1488
+								td 37 Ben Loi - Lien ap 1 2 3. (bc2018)
+							tr#1615
+								td 2
+								td AQM
+								td 200
+								td bc1007
+								td 1615
+								td Doi dien C6A/21K1 duong 3B (gan Vo Van Van)
+							tr#1378
+								td 3
+								td AQM
+								td 500
+								td bc1009
+								td 1378
+								td G2/11 Tran Van Giau (Tinh lo 10) - Vo Van Van (cl1087)
+							tr#1444
+								td 4
+								td SIE
+								td 400
+								td bc1010
+								td 1444
+								td Vo Van Van - Lien ap 1,2,3 (cl1088)
+							tr#1446
+								td 5
+								td AQM
+								td 600
+								td bc1012
+								td 1446
+								td Vinh Loc - Vo Van Van (cl1090)
+							tr#1379
+								td 6
+								td AQM
+								td 500
+								td bc1013
+								td 1379
+								td Nguyen Thi Tu - Huong lo 80 (cl1091)
+							tr#1447
+								td 7
+								td SIE
+								td 400
+								td bc1014
+								td 1447
+								td Duong so 7 (Thoi Hoa) - Phan Van Doi (phiaLA) cl1092
+							tr#1445
+								td 8
+								td AQM
+								td 400
+								td bc1015
+								td 1445
+								td Vo Van Van - Lai Hung Cuong (ma cu: cl1089)
+							tr#sumOutletSHNT
+								td
+								td.fwb(colspan="5") Cộng Oulet
+							tr#1495_02
+								td 9
+								td AQM
+								td 300
+								td bc2001
+								td 1495
+								td Quan Trong Linh - duong so 3 (Cho Dau moi Binh Dien huong ra)
+							tr#1496_02
+								td 10
+								td AQM
+								td 250
+								td bc2002
+								td 1496
+								td Quan Trong Linh - duong so 3 (huong vao Cho dau moi Binh dien)
+							tr#1497_02
+								td 11
+								td AICHI
+								td 250
+								td bc2003
+								td 1497
+								td 1874 Tinh lo 10 - Vo Van Van
+							tr#1498_02
+								td 12
+								td AQM 
+								td 150
+								td bc2004
+								td 1498
+								td 390 Pham Hung - duong so 6 (Eximbank). [KV - 2/2022]
+							tr#1499_02
+								td 13
+								td AQM 
+								td 100
+								td bc2005
+								td 1499
+								td 4303 Nguyen Cuu Phu - cau Ba Bo (Phia Q.BT)
+							tr
+								td 14
+								td KXD 
+								td 100
+								td bc2006
+								td 
+								td Nguyen Dinh Kien - cach Tran Dai Nghia ~180m. [bc040 - 1/2022]
+							tr#1501_02
+								td 15
+								td AQM 
+								td 100
+								td bc2007
+								td 1501
+								td 879A Ta Quang Buu (chan cau ben phia QL50)
+							tr#1502_02
+								td 16
+								td AQM 
+								td 150
+								td bc2008
+								td 1502
+								td A1/4 Quoc lo 50 - cay xang Hiep An
+							tr#1503_02
+								td 17
+								td SIE
+								td 150
+								td bc2009
+								td 1503
+								td 9 Pham Hung - ho boi Hoa Binh. [KV - 2/2022]
+							tr#1504_02
+								td 18
+								td AQM
+								td 200
+								td bc2010
+								td 1504
+								td Nguyen Van Linh - Pham The Hien
+							tr#1505_02
+								td 19
+								td AQM
+								td 150
+								td bc2011
+								td 1505
+								td A30/5 Quoc lo 50 - doi dien cay xang Hiep An
+							tr#15753_02
+								td 20
+								td AQM
+								td 200
+								td bc2012
+								td 15753
+								td Tran Dai Nghia - QL1A
+							tr#1491_02
+								td 21
+								td AQM
+								td 300
+								td bc2013
+								td 1491
+								td Cau An Lap - Quoc lo 1A (phia LA; bc1001)
+							tr#1493_02
+								td 22
+								td AQM
+								td 300
+								td bc2014
+								td 1493
+								td A8/2 Quoc lo 50 - dien may Cho Lon (bc1002)
+							tr#1492_02
+								td 23
+								td AICHI
+								td 300
+								td bc2015
+								td 1492
+								td D1/1 Nguyen Thi Tu - cafe Mi Mi. (bc1003)
+							tr#1490_02
+								td 24
+								td AQM 
+								td 300
+								td bc2016
+								td 1490
+								td Pham Hung - duong so 6
+							tr#1494_02
+								td 25
+								td AQM 
+								td 800
+								td bc2017
+								td 1494
+								td Cau Ba To - Trinh Quang Nghi (phia ben Phu Dinh)
+							tr#1512_02
+								td 26
+								td AICHI 
+								td 150
+								td bc2019
+								td 1512
+								td Hem 1166 Quoc lo 1A
+							tr
+								td 27
+								td AQM 
+								td 200
+								td bc2020
+								td
+								td Tran Dai Nghia - duong 5B. [KV - 2/2022]
+							tr#1576_02
+								td 28
+								td AQM 
+								td 450
+								td bc2021
+								td 1576
+								td Pham The Hien, Cau Nhi Thien Duong
+							tr#1279_02
+								td 29
+								td ISO 
+								td 400
+								td bc2041
+								td 1279
+								td Chanh Hung noi dai - Cau Tac Ben Ro (cl2015) [10.7100 N 106.6862 E]
+							tr#1285
+								td 30
+								td AQM 
+								td 400
+								td bc2043
+								td 1285
+								td D7/39 Kenh Rau Ram - gan Vuon Thom (CN Duc Hoa, LA - cl2017)
+							tr#1514_02
+								td 31
+								td AQM 
+								td 200
+								td bc2044
+								td 1514
+								td Khu Cong nghiep An Ha (ngay cong - cl2031)
+							tr#1507_02
+								td 32
+								td SIE
+								td 300
+								td bc2045
+								td 1507
+								td Khu cong nghiep Le Minh Xuan (duong dien Cao The cl2032)
+							tr#1216_02
+								td 33
+								td SIE
+								td 600
+								td nb2012
+								td 1216
+								td Cau Ong Lon
+							tr#sumTachMangSHNT
+								td 
+								td.fwb(colspan="5") cộng tách mạng
+							tr
+								td 34
+								td ACT
+								td 100
+								td bc4005
+								td
+								td Tram Phong Phu (cl4005). [NNSG] [KV - 2/2022]
+							tr#1616
+								td 35
+								td SIE
+								td 150
+								td bc4007
+								td 1616
+								td Tram Cap nuoc Tan Tuc (cl4007). [NNSG]
+							tr#sumNuocNgamSHNT 
+								td 
+								td.fwb(colspan="5") Cộng nước ngầm
+							tr#1515
+								td 36
+								td SIE
+								td 5000
+								td ws8006
+								td 1515
+								td Nha may nuoc Binh Hung. (D500) [CNNT]
+							tr#sumBinhHungSHNT 
+								td 
+								td.fwb(colspan="5") Cộng bình hưng
+							tr#sumSHNT 
+								td 
+								td.fwb(colspan="5") Cộng
+							tr#1377
+								td 1
+								td 
+								td 200
+								td bc1008
+								td 1377
+								td Tây Lân - QL1A
+							tr#1189
+								td 2
+								td 
+								td 800
+								td nb1021
+								td 1189
+								td Cầu Bà Chiêm - NH Thọ
+							tr#1556
+								td 3
+								td SIE
+								td 1200
+								td ta1001
+								td 1556
+								td Nguyễn Ảnh Thủ - Song hành QL22
+							tr#1621
+								td Đồng hồ dạng thanh
+								td AQP
+								td 2000
+								td ws8021
+								td 1621
+								td Einstein - Nguyễn Văn Bá
+block linkcriptbody
+	script(src="/js/hostname.js") 
+	script(src="/js/util.js") 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js" integrity="sha512-csNcFYJniKjJxRWRV1R7fvnXrycHP6qDR21mgz1ZP55xY5d+aHLfo9/FcGDQLfn2IfngbAHd8LdfsagcCqgTcQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.core.min.js" integrity="sha512-UhlYw//T419BPq/emC5xSZzkjjreRfN3426517rfsg/XIEC02ggQBb680V0VvP+zaDZ78zqse3rqnnI5EJ6rxA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/TableExport/5.2.0/js/tableexport.min.js" integrity="sha512-XmZS54be9JGMZjf+zk61JZaLZyjTRgs41JLSmx5QlIP5F+sSGIyzD2eJyxD4K6kGGr7AsVhaitzZ2WTfzpsQzg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	script(src="/js/flowDay.js") 

@@ -1,0 +1,253 @@
+extends ./partial/layoutNone.pug
+block linkcss
+	link(rel="stylesheet", href="/css/leaflet/leaflet.1.6.0.css")
+	link(rel="stylesheet", href="/css/leaflet/context-menu.min.css")
+	link(rel="stylesheet", href="/assets/css/lib/listtree/listree.min.css")
+	link(rel="stylesheet", href="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.css")
+	link(rel="stylesheet", href="/css/map.css")
+	link(rel="stylesheet", href="/css/pageCommon.css")
+block content 
+	.container-fluid.map
+		.row.p-0.m-0
+			.col.p-0
+				.map#map
+				.legend#legend
+					div 
+						div.p-2
+							.progress
+								.progress-bar(style="width: 100%; background-color: red")
+								span.ml-2 Áp lực  > 10 && Áp lực < 0
+						div.p-2
+							.progress
+								.progress-bar(style="width: 100%; background-color: yellow")
+								span.ml-2 Áp lực  <= 10 && Áp lực > 5
+						div.p-2
+							.progress
+								.progress-bar(style="width: 100%; background-color: green")
+								span.ml-2 Áp lực  <= 5 && Áp lực >= 0
+						div.p-2
+							img(src="/images/blue.png", alt="icon blue") 	
+							span.ml-2 
+								span#minfirst(contenteditable="true") 21
+								| m <= Áp lực
+						div.p-2
+							img(src="/images/green.png", alt="icon green") 	
+							span.ml-2
+								span#minsecond(contenteditable="true") 15
+								| m <= Áp lực < 
+								span#minfirst2 21
+								| m
+						div.p-2
+							img(src="/images/yellow.png", alt="icon yellow") 	
+							span.ml-2
+								span#minthird(contenteditable="true") 0
+								| m <= Áp lực < 
+								span#minsecond2 15
+								| m
+						div.p-2
+							img(src="/images/grey.png", alt="icon grey") 	
+							span.ml-2 Không có kênh áp lực
+						div.p-2
+							img(src="/images/red.png", alt="icon red") 	
+							span.ml-2 Cảnh báo
+						div.p-2
+							img(src="/images/orange.png", alt="icon orange") 	
+							span.ml-2 Mất tín hiệu (> 
+							span#timeconnect(contenteditable="true") 12
+							|h)
+					div#hideLegend.hide
+						span  
+							i.ti-arrow-right
+				button#toggleTableStatus Hiện bảng cảnh báo
+				#tableStatus
+					.m-b.filter-alarm
+						.filterOptions
+							label Lọc cảnh báo 
+							select.ml-2.form-select(onchange='onFilterAlarmChanged(this)')
+								option(value='noAlarm') Chọn lọc cảnh báo
+								option(value='noPressure') Không có kênh áp lực
+								option(value='lostSignal') Mất tín hiệu
+							button.btn.btn-sm.btn-success.ml-5#btnExportAlarm Xuất file excel
+
+					table#tableAlarmFooter
+						thead.table-header
+							tr
+								th Thời gian cảnh báo
+								th Mã vị trí
+								th Tên
+								th Khu vực
+								th Thông số
+								//- th Giá trị
+								th Nội dung
+								//- th Ngưỡng thấp
+								//- th Ngưỡng cao
+						tbody#tableData
+
+				.icon-setting
+					.box-icon#config.config
+						i.fa.fa-cog.fa-spin.fa-2x.fa-fw.text-danger
+					//- .box-icon#settingChannel.setting-channel
+					//-     i.fa.fa-cog.fa-spin.fa-2x.fa-fw.text-success
+					.box-icon#filter.filter
+						i.fa.fa-filter.fa-2x.fa-fw.text-success
+				#panel.panel.d-none
+					#treeViewSite
+						h6.text-white.text-center Tìm Kiếm Site
+						div.search-area
+							.input-group.input-group-sm.mb-3
+								input.form-control.search-input(type='text' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm' id="searchSite")
+							div.text-center
+								img.icon-expan(src="/images/expan-icon.png", alt="expan", srcset="" id="expan")
+						div 
+							.box-listtree#listSite.mt-2
+						div 
+							.box-view-mutiple-channel 
+								button.btn.btn-info.btn-sm#viewMutipleChannel(type="button") Xem
+								button.btn.btn-success.btn-sm#exportTotalSite(type="button") Xuất CSV
+						//.box-expan
+					#filterSite
+						h5.text-center Lọc Site
+						#filterSiteSub
+			#chart.modal.fade.bd-example-modal-lg(tabindex='-1' role='dialog' aria-labelledby='chartLabel' aria-hidden='true')
+				.modal-dialog.modal-lg(role='document')
+					.modal-content
+						.modal-header
+							h5#chartLabel.modal-title Dữ liệu lịch sử logger
+							span.close-button(data-dismiss='modal') x
+						.modal-body
+							.row 
+								.col-12 
+									.input-group.input-group-sm.mb-1
+										label.mr-2 Tìm kiếm vị trí
+										input.form-control.search-input(type='text' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm' onkeyup="onSearchSiteModalChanged(this)")
+									#listSiteFilterModal
+							hr
+							.row
+								.col-lg-5
+									span.ml-2.mr-3 Thời Gian Bắt Đầu
+									input#startDate(type='datetime-local' name='startDate' value='' min='1970-01-01T00:00' max='')
+								.col-lg-5 
+									span.ml-2.mr-3 Thời Gian Kết Thúc
+									input#endDate(type='datetime-local' name='endDate' value='' min='1970-01-01T00:00' max='')
+								.col-lg-2.col-button-view
+									button.btn.btn-primary#viewChart(onclick="viewChart()") Xem
+								.col-sm-12.col-button-view
+									button.btn.btn-info#viewOnChart(onclick="viewOnChart()") Đồ Thị
+									button.btn.btn-info.ml-2#viewTable(onclick="viewTable()") Bảng
+							.row 
+								.col-12
+									#titleChart.text-center.text-dark
+									#chartDataLogger(ondrop="drop(event)" ondragover="allowDrop(event)")
+									#talbeChart.d-none
+			#controlValve.modal.fade.bd-example-modal-lg(tabindex='-1' role='dialog' aria-labelledby='chartLabel' aria-hidden='true')
+				.modal-dialog.modal-lg(role='document')
+					.modal-content
+						.modal-header
+							h5#controlValveLabel.modal-title Điều khiển van
+							span.close-button(data-dismiss='modal') x
+						.modal-body
+							.row 
+								.col-12.text-center 
+									button.btn-sm.btn.btn-primary.mr-2#btnControlValveClose(onclick="onControlCloseValveClicked()") Đóng (0%)
+									button.btn-sm.btn.btn-primary.mr-2#btnControlValve25(onclick="onControl25ValveClicked()") 25%
+									button.btn-sm.btn.btn-primary.mr-2#btnControlValve50(onclick="onControl50ValveClicked()") 50%
+									button.btn-sm.btn.btn-primary.mr-2#btnControlValve75(onclick="onControl75ValveClicked()") 75%
+									button.btn-sm.btn.btn-primary#btnControlValveOpen(onclick="onControlOpenValveClicked()") Mở (100%)
+			#passwordValve.modal.fade.bd-example-modal-lg(tabindex='-1' role='dialog' aria-labelledby='chartLabel' aria-hidden='true')
+				.modal-dialog.modal-lg(role='document')
+					.modal-content
+						.modal-header
+							h5#controlValveLabel.modal-title Mật khẩu van
+							span.close-button(data-dismiss='modal') x
+						.modal-body
+							.row 
+								.col-12.text-center 
+									.input-group.mb-3
+										.input-group-prepend
+											span#inputGroup-sizing-default.input-group-text Mật khẩu
+										input#passwordControlValve.form-control(type='password' autocomplete="off" aria-label='Default' aria-describedby='inputGroup-sizing-default' style="height: 38px !important")
+								.col-12.text-center
+									button.btn.btn-primary.btn-sm( onclick="onSubmitPasswordClicked()") Kiểm tra mật khẩu
+
+			//- #alarmModal.modal.fade.bd-example-modal-lg(tabindex='-1' role='dialog' aria-labelledby='alarmModalLabel' aria-hidden='true')
+			//- 	.modal-dialog.modal-lg(role='document')
+			//- 		.modal-content
+			//- 			.modal-header
+			//- 				h5#chartLabel.modal-title Bảng cảnh báo
+			//- 				span.close-button(data-dismiss='modal') x
+			//- 			.modal-body
+			//- 				div adfasdfasdfasdfasdf
+			//- 				#tableStatus
+			//- 					.m-b.filter-alarm
+			//- 						.filterOptions
+			//- 							label Lọc cảnh báo 
+			//- 							select.ml-2.form-select(onchange='onFilterAlarmChanged(this)')
+			//- 								option(value='noAlarm') Chọn lọc cảnh báo
+			//- 								option(value='noPressure') Không có kênh áp lực
+			//- 								option(value='lostSignal') Mất tín hiệu
+			//- 							button.btn.btn-sm.btn-success.ml-5#btnExportAlarm Xuất file excel
+
+			//- 					table#tableAlarmFooter
+			//- 						thead.table-header
+			//- 							tr
+			//- 								th Thời gian cảnh báo
+			//- 								th Mã vị trí
+			//- 								th Tên
+			//- 								th Khu vực
+			//- 								th Thông số
+			//- 								//- th Giá trị
+			//- 								th Nội dung
+			//- 								//- th Ngưỡng thấp
+			//- 								//- th Ngưỡng cao
+			//- 						tbody#tableData
+
+	.container-fluid.footer.d-none
+		.row 
+			.col-md-4
+				#loading
+					img.loading(src="/images/loading.svg", alt="", srcset="")
+				#chartHour
+			.col-md-4 
+				#loading2
+					img.loading(src="/images/loading.svg", alt="", srcset="")
+				#chartDay
+			.col-md-4 
+				#loading3
+					img.loading(src="/images/loading.svg", alt="", srcset="")
+				#chartMonth
+		.row.text-center
+			.col-sm-3 
+				h6.text-white Tổng số điểm: 
+					span#totalSite.text-success
+			.col-sm-3.d-none
+				h6.text-white Số điểm có dữ liệu: 
+					span#totalSiteHasValue.text-success 
+			.col-sm-3.d-none
+				h6.text-white Số điểm có đang hoạt đông: 
+					span#totalSiteActing.text-success 
+			.col-sm-3 
+				h6.text-white Số điểm gữi trể dữ liệu: 
+					span#totalSiteDelay.text-warning 
+			.col-sm-3 
+				h6.text-white Số điểm không có dữ liệu: 
+					span#totalSiteNoValue.text-danger 
+			.col-sm-3 
+				h6.text-white Số điểm cảnh báo: 
+					span#totalSiteAlarm.text-danger 
+
+
+block linkcriptbody
+	script(src='https://common.olemiss.edu/_js/sweet-alert/sweet-alert.min.js')
+	script(src='/js/leaflet/leaflet.1.6.0.js')
+	script(src='/js/leaflet/context-menu.js')
+	script(src="/js/leaflet/proj4.js")
+	script(src='/axios/axios.min.js')
+	script(src="/assets/js/lib/listtree/listree.umd.min.js") 
+	script(src='/js/hostname.js')
+	script(src='/js/map.js')
+	script(src='/js/drawingPipe.js')
+	script(src='/js/chartForMap.js')
+	script(src='/js/settingForMap.js')
+	script(src='/js/controlValve.js')
+	script(src='/js/util.js')
+	

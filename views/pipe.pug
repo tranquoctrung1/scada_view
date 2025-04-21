@@ -1,0 +1,123 @@
+extends ./partial/layoutNone.pug
+block linkcss
+    link(rel="stylesheet", href="/css/pageCommon.css")
+    link(rel="stylesheet", href="/css/pipe.css")
+block content
+    nav
+        #nav-tab.nav.nav-tabs(role='tablist')
+            button#nav-home-tab.nav-link.active(data-toggle='tab' data-target='#nav-home' type='button' role='tab' aria-controls='nav-home' aria-selected='true')  Nhóm tuyến ống
+            //- button#nav-profile-tab.nav-link(data-toggle='tab' data-target='#nav-profile' type='button' role='tab' aria-controls='nav-profile' aria-selected='false') Tuyến ống
+            button#nav-contact-tab.nav-link(data-toggle='tab' data-target='#nav-contact' type='button' role='tab' aria-controls='nav-contact' aria-selected='false') Phân tuyến ống
+    #nav-tabContent.tab-content
+        #nav-home.tab-pane.fade.show.active(role='tabpanel' aria-labelledby='nav-home-tab') 
+            .container-fluid
+                .row
+                    .col-sm-4.d-none
+                        .input-group.mb-3
+                            span#lbIdGroupPipe.input-group-text Id
+                            input.form-control#idGroupPipe.form-select( type="text" aria-label='lbIdGroupPipe' aria-describedby='lbIdGroupPipe' )
+                    .col-sm-4 
+                        .input-group.mb-3
+                            span#lbGroupPipeId.input-group-text Mã nhóm tuyến ống
+                            input.form-control#groupPipeId.form-select( type="text" aria-label='lbGroupPipeId' aria-describedby='lbGroupPipeId' list="listGroupPipeId")
+                            datalist#listGroupPipeId
+                    .col-sm-4 
+                        .input-group.mb-3
+                            span#lbNameGroupPipe.input-group-text Tên nhóm tuyến ống
+                            input.form-control#nameGroupPipe.form-select( type="text" aria-label='lbNameGroupPipe' aria-describedby='lbNameGroupPipe')
+                    .col-sm-4 
+                        .input-group.mb-3
+                            span#lbColorGroupPipe.input-group-text Màu ống
+                            input.form-control#colorGroupPipe(type='color' aria-label='lbColorGroupPipe' aria-describedby='lbColorGroupPipe' value="#2ecc71")
+                    .col-sm-4 
+                        .input-group.mb-3
+                            span#lbDescriptionGroupPipe.input-group-text Mô tả
+                            input.form-control#descriptionGroupPipe(type='text' aria-label='lbDescriptionGroupPipe' aria-describedby='lbDescriptionGroupPipe')
+                    .col-sm-4 
+                        .input-group.mb-3
+                            span#lbSiteIdStart.input-group-text Điểm đầu 
+                            input.form-control#startSiteId.form-select( type="text" aria-label='lbSiteIdStart' aria-describedby='lbSiteIdStart' list="listSiteStart")
+                            datalist#listSiteStart
+                    .col-sm-4
+                        .input-group.mb-3
+                            span#lbSiteIdEnd.input-group-text Điểm cuối 
+                            input.form-control#endSiteId.form-select( type="text" aria-label='lbSiteIdEnd' aria-describedby='lbSiteIdEnd' list="listSiteEnd")
+                            datalist#listSiteEnd
+                    .col-12.button
+                        .box-button 
+                            button.btn.btn-success#btnInsertGroupPipe(type="button" onclick="InsertGroupPipe(this)") Thêm
+                            button.btn.btn-info#btnUpdateGroupPipe(type="button" onclick="UpdateGroupPipe(this)") Sửa
+                            button.btn.btn-danger#btnDeleteGroupPipe(type="button" onclick="DeleteGroupPipe(this)") Xóa
+
+        //- #nav-profile.tab-pane.fade(role='tabpanel' aria-labelledby='nav-profile-tab') 
+        //-     .container-fluid 
+        //-         .row 
+        //-             .col-sm-4.d-none
+        //-                 .input-group.mb-3
+        //-                     span#lbIdPipe.input-group-text Id
+        //-                     input.form-control#idPipe.form-select( type="text" aria-label='lbIdPipe' aria-describedby='lbIdPipe' )
+        //-             .col-sm-4 
+        //-                 .input-group.mb-3
+        //-                     span#lbPipeId.input-group-text Mã tuyến ống
+        //-                     input.form-control#pipeId.form-select( type="text" aria-label='lbPipeId' aria-describedby='lbPipeId' list="listPipeId")
+        //-                     datalist#listPipeId
+        //-             .col-sm-4 
+        //-                 .input-group.mb-3
+        //-                     span#lbNamePipe.input-group-text Tên  tuyến ống
+        //-                     input.form-control#namePipe.form-select( type="text" aria-label='lbNamePipe' aria-describedby='lbNamePipe')
+        //-             .col-sm-4 
+        //-                 .input-group.mb-3
+        //-                     span#lbDescriptionPipe.input-group-text Mô tả
+        //-                     input.form-control#descriptionPipe(type='text' aria-label='lbDescriptionPipe' aria-describedby='lbDescriptionPipe')
+        //-             .col-sm-4 
+        //-                 .input-group.mb-3
+        //-                     span#lbGroupPipeIdPipe.input-group-text Mã nhóm tuyến ống
+        //-                     input.form-control#idGroupPipeIdPipe.form-select( type="text" aria-label='lbGroupPipeIdPipe' aria-describedby='lbGroupPipeIdPipe' list="listIdGroupPipe")
+        //-                     datalist#listIdGroupPipe
+        //-             .col-sm-4 
+        //-                 .input-group.mb-3
+        //-                     span#lbSize.input-group-text Kích thước ống 
+        //-                     input.form-control#size.form-select( type="number" aria-label='lbSize' aria-describedby='lbSize')
+        //-             .col-sm-4 
+        //-                 .input-group.mb-3
+        //-                     span#lbLength.input-group-text Chiều dài ống 
+        //-                     input.form-control#length.form-select( type="number" aria-label='lbLength' aria-describedby='lbLength')
+        //-             .col-12.button
+        //-                 .box-button 
+        //-                     button.btn.btn-success#btnInsertPipe(type="button" onclick="InsertPipe(this)") Thêm
+        //-                     button.btn.btn-info#btnUpdatePipe(type="button" onclick="UpdatePipe(this)") Sửa
+        //-                     button.btn.btn-danger#btnDeletePipe(type="button" onclick="DeletePipe(this)") Xóa
+        #nav-contact.tab-pane.fade(role='tabpanel' aria-labelledby='nav-contact-tab') 
+            .container-fluid 
+                .row 
+                    .col-sm-12
+                        .input-group.mb-3
+                            span#lbIdPipe.input-group-text Mã nhóm tuyến ống
+                            input.form-control#idPipePoint.form-select( type="text" aria-label='lbIdPipe' aria-describedby='lbIdPipe' list="listIdPipe")
+                            datalist#listIdPipe 
+                    .col-sm-12 
+                        .row
+                            .col-sm-6.col-drag
+                                h6.title-site-drag.text-center Danh sách tuyến chưa phân
+                                .box-drag
+                                    ul#siteDrag
+                            .col-sm-6.col-drag
+                                h6.title-site-drop.text-center Danh sách tuyến đã phân
+                                .box-drop
+                                    ul#siteDrop
+                    .col-12.button.mt-3
+                        .box-button 
+                            button.btn.btn-primary#btnDropAllSite(type="button") >>
+                    .col-12.button.mt-3
+                        .box-button 
+                            button.btn.btn-success#btnUpdateListPointPipe(type="button" onclick="UpdateListPointPipe(this)") Cập nhật
+
+
+
+block linkcriptbody
+    script(src="/js/hostname.js") 
+    script(src="/assets/js/lib/sortable.min.js")
+    script(src="/js/groupPipe.js")
+    //- script(src="/js/pipe.js") 
+    script(src="/js/pipePermission.js")
+    script(src="/js/util.js") 

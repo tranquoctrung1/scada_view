@@ -1,0 +1,42 @@
+{
+  "name": "login-fucntion",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon -e js,pug,sass index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "deploy.bat"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "bootstrap": "^4.3.1",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "echarts": "^5.6.0",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "express-session": "^1.17.1",
+    "i": "^0.3.6",
+    "jquery": "^3.4.1",
+    "jsonwebtoken": "^8.5.1",
+    "md5": "^2.3.0",
+    "mongoose": "^5.11.15",
+    "npm": "^7.15.0",
+    "popper.js": "^1.16.0",
+    "pug": "^3.0.2",
+    "shortid": "^2.2.16",
+    "socket.io": "^4.0.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22",
+    "reload": "^2.2.0"
+  }
+}

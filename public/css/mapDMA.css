@@ -1,0 +1,184 @@
+.content-wrap {
+    height: 99vh;
+}
+#mapDMA {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.container-fluid.map .row,
+.container-fluid.map .row .col {
+    height: 100%;
+}
+
+@media only screen and (max-width: 769px) {
+    .container-fluid {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+}
+
+@media only screen and (max-width: 321px) {
+    #panel {
+        width: 75%;
+    }
+
+    .icon-setting .box-icon.expanse {
+        right: 75%;
+    }
+}
+
+@media only screen and (max-width: 430px) {
+    #panel {
+        width: 60%;
+    }
+
+    #mapDMA {
+        height: 90%;
+    }
+
+    .icon-setting .box-icon.expanse {
+        right: 60%;
+    }
+}
+
+@media only screen and (max-width: 769px) {
+    #panel {
+        width: 40%;
+    }
+
+    .icon-setting .box-icon.expanse {
+        right: 40%;
+    }
+
+    .container-fluid.footer {
+        display: none;
+    }
+    .container-fluid.map {
+        height: 100%;
+    }
+}
+
+@media only screen and (max-width: 426px) {
+    .content-wrap {
+        height: 96%;
+    }
+}
+
+.container-fluid.map {
+    height: calc(100% - 200px);
+    padding: 0 !important;
+}
+
+#legend {
+    opacity: 0.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    background-color: darkgrey;
+    color: darkblue;
+
+    transition: all 0.5s ease-in-out;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+}
+
+.back-gray {
+    background-color: #95a5a6 !important;
+}
+
+.back-orange {
+    background-color: #e67e22 !important;
+}
+
+.back-red {
+    background-color: #e74c3c !important;
+}
+
+.text-white {
+    color: whitesmoke;
+}
+
+.chart {
+    width: 100%;
+    height: 200px;
+}
+
+#tableStatistic {
+    width: 100%;
+    height: 200px;
+
+    overflow-y: scroll;
+}
+
+.loading {
+    width: 50px;
+    height: 50px;
+}
+
+.lost-area {
+    padding: 10px;
+    width: 100%;
+    margin: 5px;
+    height: 100px;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+
+#totalPercentLost,
+#totalLostWater {
+    font-size: 1.5rem;
+}
+
+table {
+    font-size: 0.7rem;
+    width: 100%;
+}
+
+table thead {
+    background-color: #052b27e0;
+}
+
+table th,
+table td {
+    padding: 5px !important;
+    font-size: 0.6rem;
+}
+
+#bodyTableStatistic tr td {
+    color: white;
+}
+
+.chart-popup {
+    width: 100%;
+    height: 100px;
+}
+
+#tableStatistic::-webkit-scrollbar {
+    width: 5px; /* Vertical scrollbar width */
+}
+
+/* Track (the background) */
+#tableStatistic::-webkit-scrollbar-track {
+    background: #05152b;
+    border-radius: 10px;
+}
+
+/* Handle (the draggable part) */
+#tableStatistic::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+#tableStatistic::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

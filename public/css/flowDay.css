@@ -1,0 +1,16 @@
+.info__col 
+{
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.table-data 
+{
+	overflow: scroll;
+	height: 50rem;
+}
+
+.fwb {
+	font-weight: bold;
+}

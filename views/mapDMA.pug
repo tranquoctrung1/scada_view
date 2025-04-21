@@ -1,0 +1,74 @@
+extends ./partial/layoutNone.pug
+block linkcss
+	link(rel="stylesheet", href="/css/leaflet/leaflet.1.6.0.css")
+	link(rel="stylesheet", href="/css/leaflet/context-menu.min.css")
+	link(rel="stylesheet", href="/assets/css/lib/listtree/listree.min.css")
+	link(rel="stylesheet", href="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.css")
+	link(rel="stylesheet", href="/css/mapDMA.css")
+	link(rel="stylesheet", href="/css/pageCommon.css")
+block content 
+	.container-fluid.map
+		.row.p-0.m-0
+			.col.p-0
+				.map#mapDMA
+				.legend#legend
+					div 
+						div.p-2
+							img(src="/images/red.png", alt="icon red") 	
+							span.ml-2
+								span TTN > 25%
+						div.p-2
+							img(src="/images/yellow.png", alt="icon yellow") 	
+							span.ml-2
+								span TTN <= 25
+						div.p-2
+							img(src="/images/green.png", alt="icon green") 	
+							span.ml-2 TTN <= 10%
+			
+	.container-fluid.footer
+		.row 
+			.col-md-3
+				//- #loading
+				//- 	img.loading(src="/images/loading.svg", alt="", srcset="")
+				.text-center Top 5 TTN Thấp Nhất
+				canvas#barChartLowestTTN.chart
+			.col-md-3
+				//- #loading2
+				//- 	img.loading(src="/images/loading.svg", alt="", srcset="")
+				.text-center Top 5 TTN Cao Nhất
+				canvas#barChartHighestTTN.chart
+			.col-md-2
+				//- #loading3
+				//- 	img.loading(src="/images/loading.svg", alt="", srcset="")
+				.lost-area
+					#totalPercentLost.text-center
+					div.text-center Tổng Phần Trăm Thất Thoát Nước (%)
+				.lost-area
+					#totalLostWater.text-center
+					div.text-center Tổng Lượng Thất Thoát Nước (m3)
+			.col-md-4
+				.text-center Chi tiết DMA
+				#tableStatistic 
+					//- .table.table-bordered.table-striped.table-hover
+					table
+						thead
+							tr
+								th Tên DMA
+								th LN Cấp (m3)
+								th LN tiêu thụ (m3)
+								th TT (%)
+								th Xu hướng
+						tbody#bodyTableStatistic
+
+
+block linkcriptbody
+	script(src='https://common.olemiss.edu/_js/sweet-alert/sweet-alert.min.js')
+	script(src='/js/leaflet/leaflet.1.6.0.js')
+	script(src='https://cdn.jsdelivr.net/npm/chart.js')
+	script(src='/js/leaflet/context-menu.js')
+	script(src="/js/leaflet/proj4.js")
+	script(src='/axios/axios.min.js')
+	script(src='/js/hostname.js')
+	script(src='/js/mapDMA.js')
+	script(src='/js/util.js')
+	

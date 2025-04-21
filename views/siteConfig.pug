@@ -1,0 +1,213 @@
+extends ./partial/layoutNone.pug
+block linkcss
+	link(rel="stylesheet", href="/css/leaflet/leaflet.1.6.0.css")
+	link(rel="stylesheet", href="/css/leaflet/context-menu.min.css")
+	link(rel="stylesheet", href="/css/siteConfig.css")
+	link(rel="stylesheet", href="/css/pageCommon.css")
+block content
+	.container-fluid
+		.row.title-pressure
+			h3 Cấu Hình Điểm Lắp Đặt
+		.row.info
+			.col-sm-6 
+				.input-group.mb-3
+					button#lbDisplayGroup.btn.btn-outline-primary(type='button' data-bs-toggle="modal" data-bs-target="#Model") Nhóm hiển thị
+					input.form-control#displayGroup.form-select( type="text" aria-label='lbDisplayGroup' aria-describedby='lbDisplayGroup' list="listDisplayGroup")
+					datalist#listDisplayGroup
+			.col-sm-6 
+				.input-group.mb-3
+					span#lbSite.input-group-text Mã vị trí 
+					input.form-control#site.form-select( type="text" aria-label='lbSite' aria-describedby='lbSite' list="listSite")
+					datalist#listSite
+			.col-sm-6 
+				.input-group.mb-3
+					span#lbLocation.input-group-text Vị trí
+					input.form-control#location(type='text' placeholder='Vị trí' aria-label='lbLocation' aria-describedby='lbLocation')
+			.col-sm-6 
+				.input-group.mb-3
+					span#lbLat.input-group-text Vĩ độ
+					input.form-control#lat(type='number' placeholder='Vĩ độ' aria-label='lbLat' aria-describedby='lbLat')
+					button.btn.btn-outline-secondary(type='button' onclick="showMap()")
+						i.fa.fa-map
+					//- button.btn.btn-outline-secondary(type='button' onclick="getLocation()")
+					//-     i.fa.fa-map-marker
+				#map.show
+			.col-sm-6 
+				.input-group.mb-3
+					button#lbLoggerId.btn.btn-outline-primary(type='button') LoggerId
+					input.form-control#loggerId(type='text' placeholder='LoggerId' aria-label='lbLoggerId' aria-describedby='lbLoggerId')
+			.col-sm-6 
+				.input-group.mb-3
+					span#lbLong.input-group-text Kinh độ
+					input.form-control#long(type='number' placeholder='Kinh độ' aria-label='lbLong' aria-describedby='lbLong')
+					button.btn.btn-outline-secondary(type='button' onclick="showMap()") 
+						i.fa.fa-map
+					//- button.btn.btn-outline-secondary(type='button' onclick="getLocation()")
+					//-     i.fa.fa-map-marker
+			.col-sm-6.d-none
+				.input-group.mb-3
+					span#lbStartDay.input-group-text Ngày chốt dữ liệu
+					input.form-control#startDay(type='number' placeholder='Ngày chốt dữ liệu' min="1" max="31" aria-label='lbStartDay' aria-describedby='lbStartDay')
+			.col-sm-6.d-none
+				.input-group.mb-3
+					span#lbStartHour.input-group-text Giờ chốt dữ liệu
+					input.form-control#startHour(type='number' placeholder='Giờ chốt dữ liệu' min="0" max="23" aria-label='lbStartHour' aria-describedby='lbStartHour')
+			.col-sm-6.d-none
+				.input-group.mb-3
+					span#lbTimeDelay.input-group-text Thời gian báo trể (phút)
+					input.form-control#timeDelay(type='number' placeholder='Thời gian báo trể' min="0"  aria-label='lbTimeDelay' aria-describedby='lbTimeDelay')
+			.col-sm-6.d-none
+				.input-group.mb-3
+					span#lbStatus.input-group-text Trạng thái
+					input.form-control#status(type='text' placeholder='Trạng thái' aria-label='lbStatus' aria-describedby='lbStatus')
+			.col-sm-6.d-none
+				.input-group.mb-3
+					span#lbAvailable.input-group-text Tình trạng
+					input.form-control#available(type='text' placeholder='Tình trạng' aria-label='lbAvailable' aria-describedby='lbAvailable')
+			.col-sm-6.d-none
+				.input-group.mb-3
+					span#lbPipeSize.input-group-text Kích thước ống
+					input.form-control#pipeSize(type='number' placeholder='Kích thước ống' aria-label='lbPipeSize' min="0" aria-describedby='lbPipeSize')
+			.col-sm-6.d-none
+				.input-group.mb-3
+					span#lbInterval.input-group-text Thời gian gữi dũ liệu
+					input.form-control#interval(type='number' placeholder='Thời gian gữi dũ liệu' aria-label='lbInterval' min="0" aria-describedby='lbInterval')
+			.col-12
+				.row 
+					.col-sm-6.pt-0.pl-0
+						.input-group.mb-3.h-100
+							span#lbNote.input-group-text Ghi chú
+							textarea.h-100.form-control#note(type='text' placeholder='Ghi chú' aria-label='lbNote' aria-describedby='lbNote')
+					.col-sm-1.check-box.pt-0
+						.form-check
+							input#otherDevice.form-check-input(type='checkbox' value='')
+							label.form-check-label(for='otherDevice')
+								| Thiết bị khác
+					.col-sm-1.check-box.pt-0
+						.form-check
+							input#isValve.form-check-input(type='checkbox' value='')
+							label.form-check-label(for='isValve')
+								| Thiết bị van
+					.col-sm-1.check-box.pt-0
+						.form-check
+							input#isDisplay.form-check-input(type='checkbox' value='')
+							label.form-check-label(for='isDisplay')
+								| Hiển thị
+					.col-sm-1.check-box.pt-0
+						.form-check
+							input#isConnectPipe.form-check-input(type='checkbox' value='')
+							label.form-check-label(for='isConnectPipe')
+								| Điểm nối
+			.col-sm-6.d-none
+				.input-group.mb-3
+					span#lbId.input-group-text id
+					input.form-control#id(type='text' placeholder='id' aria-label='lbId' aria-describedby='lbId')
+			.col-12.button
+				.box-button 
+					button.btn.btn-success#btnInsert(type="button") Thêm
+					button.btn.btn-info#btnUpdate(type="button") Sửa
+					button.btn.btn-danger#btnDelete(type="button") Xóa
+			#Model.modal.fade.bd-example-modal-lg(tabindex='-1' role='dialog' aria-labelledby='ModelLabel' aria-hidden='true')
+				.modal-dialog.modal-lg(role='document')
+					.modal-content
+						.modal-header
+							h5#ModelLabel.modal-title Thêm Thông Tin
+							span.close-button(data-dismiss='modal') x
+						.modal-body
+							.row#rowDisplayGroup
+								.col-sm-6 
+									.input-group.mb-3
+										span#lbModalDisplayGroup.input-group-text Nhóm hiển thị
+										input.form-control#modalDisplayGroup.form-select( type="text" aria-label='lbModalDisplayGroup' aria-describedby='lbModalDisplayGroup' list="listModalDisplayGroup" onchange="modalDisplayGroupChanged(this)")
+										datalist#listModalDisplayGroup
+								.col-sm-6 
+									.input-group.mb-3
+										span#lbModalNoteDisplayGroup.input-group-text Mô tả
+										input.form-control#modalNoteDisplayGroup.form-select( type="text" aria-label='lbModalNoteDisplayGroup' aria-describedby='lbModalNoteDisplayGroup')
+								.col-sm-6.d-none
+									.input-group.mb-3
+										span#lbModalIdDisplayGroup.input-group-text Id
+										input.form-control#modalIdDisplayGroup.form-select( type="text" aria-label='lbModalIdDisplayGroup' aria-describedby='lbModalIdDisplayGroup' )
+								.col-12.button
+									.box-button 
+										button.btn.btn-success#btnModalDisplayGroupInsert(type="button" onclick="insertDisplayGroup(this)") Thêm
+										button.btn.btn-info#btnModalDisplayGroupUpdate(type="button" onclick="updateDisplayGroup(this)") Sửa
+										button.btn.btn-danger#btnModalDisplayGroupDelete(type="button" onclick="deleteDisplayGroup(this)") Xóa
+							.row#rowLoggerId
+								.col-sm-6 
+									.input-group.mb-3
+										span#lbModalLoggerId.input-group-text LoggerId
+										input.form-control#modalLoggerId.form-select( type="text" aria-label='lbModalLoggerId' aria-describedby='lbModalLoggerId' disabled="true")
+								.col-sm-6 
+									.input-group.mb-3
+										span#lbModalChannelId.input-group-text Mã kênh
+										input.form-control#modalChannelId.form-select( type="text" aria-label='lbModalChannelId' aria-describedby='lbModalChannelId' list="listModalChannelId" onchange="modalChannelIdChanged(this)")
+										datalist#listModalChannelId
+								.col-sm-6 
+									.input-group.mb-3
+										span#lbModalChannelName.input-group-text Tên kênh
+										input.form-control#modalChannelName.form-select( type="text" aria-label='lbModalChannelName' aria-describedby='lbModalChannelName')
+								.col-sm-6 
+									.input-group.mb-3
+										span#lbModalUnit.input-group-text Đơn vị
+										input.form-control#modalUnit.form-select( type="text" aria-label='lbModalUnit' aria-describedby='lbModalUnit')
+								.col-sm-6.d-none
+									.input-group.mb-3
+										span#lbModalBaseMin.input-group-text Ngưỡng dưới
+										input.form-control#modalBaseMin.form-select( type="number" aria-label='lbModalBaseMin' aria-describedby='lbModalBaseMin')
+								.col-sm-6.d-none
+									.input-group.mb-3
+										span#lbModalBaseMax.input-group-text Ngưỡng trên
+										input.form-control#modalBaseMax.form-select( type="number" aria-label='lbModalBaseMax' aria-describedby='lbModalBaseMax')
+								.col-sm-6.d-none
+									.input-group.mb-3
+										span#lbBaseLine.input-group-text Base line
+										input.form-control#modalBaseLine.form-select( type="number" aria-label='lbBaseLine' aria-describedby='lbBaseLine')
+								.col-sm-12
+									.input-group.mb-3(style="opacity: 0")
+										span#lbIdChannelConfig.input-group-text id
+										input.form-control#modalIdChannelConfig.form-select( type="text" aria-label='lbIdChannelConfig' aria-describedby='lbIdChannelConfig')
+								.col-sm-6.check-box
+									.form-check
+										input#modalPressure1.form-check-input(type='checkbox' name="typeChannel")
+										label.form-check-label(for='modalPressure1')
+											| Áp Lực 1
+								.col-sm-6.check-box
+									.form-check
+										input#modalPressure2.form-check-input(type='checkbox' name="typeChannel")
+										label.form-check-label(for='modalPressure2')
+											| Áp Lực 2
+								.col-sm-6.check-box
+									.form-check
+										input#modalForwardFlow.form-check-input(type='checkbox' name="typeChannel")
+										label.form-check-label(for='modalForwardFlow')
+											| Lưu Lượng Thuận
+								.col-sm-6.check-box
+									.form-check
+										input#modalReverseFlow.form-check-input(type='checkbox' name="typeChannel")
+										label.form-check-label(for='modalReverseFlow')
+											| Lưu Lượng Nghịch
+								.col-sm-6.check-box
+									.form-check
+										input#modalOpenCloseChannel.form-check-input(type='checkbox' name="typeChannel")
+										label.form-check-label(for='modalOpenCloseChannel')
+											| Mở Đóng cửa tủ
+								.col-sm-6.check-box
+									.form-check
+										input#modalOtherChannel.form-check-input(type='checkbox' name="typeChannel")
+										label.form-check-label(for='modalOtherChannel')
+											| Kênh Khác
+								.col-12.button
+									.box-button 
+										button.btn.btn-success#btnModalChannelInsert(type="button" onclick="insertChannelConfig(this)") Thêm
+										button.btn.btn-info#btnModalChannelUpdate(type="button" onclick="UpdateChannelConfig(this)") Sửa
+										button.btn.btn-danger#btnModalChannelDelete(type="button" onclick="DeleteChannelConfig(this)") Xóa
+		   
+block linkcriptbody
+	script(src='/js/leaflet/leaflet.1.6.0.js')
+	script(src='/js/leaflet/context-menu.js')
+	script(src="/js/hostname.js")
+	script(src="/js/displayGroup.js")
+	script(src="/js/channelConfig.js")
+	script(src="/js/siteConfig.js")
+	script(src="/js/util.js") 

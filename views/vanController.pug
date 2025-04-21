@@ -1,0 +1,171 @@
+extends ./partial/layout.pug
+block linkcss
+	link(rel="stylesheet", href="/css/pageCommon.css")
+	link(rel="stylesheet", href="/css/vanController.css")
+block content
+	.container-fluid
+		.row 
+			.col-lg-3
+				.box-table 
+					table.table.text-center.table-hover.table-bordered
+						thead
+							tr
+								th(colspan="2").text-center Thông số
+						tbody
+							tr
+								td(colspan="2").text-center
+									span Thời gian: 
+									span#timeStamp 11/11/2023 14:00:00
+									
+							tr
+								td(colspan="2").text-center
+									span Áp lực đặt hiện tại:
+									button#currentPressure.ml-2.btn.btn-primary.btn-sm(disabled=true) 123456.00
+									span#unitCurrentPressure.ml-2 m
+							tr 
+								td(colspan="2").text-center
+									span Lưu lượng tổng:
+									button#totalFlow.ml-2.btn.btn-primary.btn-sm(disabled=true) 123456.00
+									span#unitTotalFlow.ml-2 m3
+							
+
+
+					table.table.mt-4.table-hover.table-striped.table-bordered.text-center
+						thead
+							tr
+								th.text-center(scope='col' colspan="2") Bảng cảnh báo
+							tr
+								th(scope='col') Thời gian
+								th(scope='col') Nội dung cảnh báo
+						tbody
+							tr
+								td Mark
+								td Otto
+						
+			.col-lg-6
+				.box-controller 
+					button.btn.btn-primary.mr-4 Chế độ điều khiển
+					button#modeShow.btn.btn-success(disabled="true") Tại chổ
+				.box-station-name.mt-3
+					span.font-bold Tên trạm: 
+					span.font-bold#nameStation.ml-2 DN400 TDNS- THẢO ĐIỀN
+					button#statusStation.btn.btn-success.ml-3(disabled="true") Bình thường
+				.box-image 
+					img.img-fluid(src="/images/hold.jpg", alt="", srcset="")
+				.box-pressure
+					.entrance-pressure
+						span Áp lực trước van
+						button#entrancePressure.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.0
+						span#unitEntrancePressure.ml-2 m
+					.flow 
+						span Lưu lượng
+						button#flow.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.0
+						span#unitFlow.ml-2 m3/h
+					.end-pressure 
+						span Áp lực sau van
+						button#endPressure.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.0
+						span#unitEndPressure.ml-2 m
+			.col-lg-3
+				table.table.text-center.table-hover.table-bordered
+					thead
+						tr
+							th(colspan="2").text-center Áp suất đặt (m)
+					tbody
+						tr
+							td(colspan="2").text-center
+								span Áp lực cài đặt cố định
+								button#setPressure.ml-2.btn.btn-primary.btn-sm(disabled=true) 123456.00
+						tr
+							td(colspan="2").text-center
+								span Bảng áp lực cài đặt theo giờ
+						tr
+							td 
+								span 0H
+								button#pressure0h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+							td 
+								span 12H
+								button#pressure12h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+						tr
+							td 
+								span 1H
+								button#pressure1h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+							td 
+								span 13H
+								button#pressure13h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+						tr
+							td 
+								span 2H
+								button#pressure2h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+							td 
+								span 14H
+								button#pressure14h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+						tr
+							td 
+								span 3H
+								button#pressure3h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+							td 
+								span 15H
+								button#pressure15h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+						tr
+							td 
+								span 4H
+								button#pressure4h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+							td 
+								span 16H
+								button#pressure16h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+						tr
+							td 
+								span 5H
+								button#pressure5h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+							td 
+								span 17H
+								button#pressure17h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+						tr
+							td 
+								span 6H
+								button#pressure7h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+							td 
+								span 18H
+								button#pressure18h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+						tr
+							td 
+								span 7H
+								button#pressure7h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+							td 
+								span 19H
+								button#pressure19h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+						tr
+							td 
+								span 8H
+								button#pressure8h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+							td 
+								span 20H
+								button#pressure20h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+						tr
+							td 
+								span 9H
+								button#pressure9h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+							td 
+								span 21H
+								button#pressure21h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+						tr
+							td 
+								span 10H
+								button#pressure10h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+							td 
+								span 22H
+								button#pressure22h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+						tr
+							td 
+								span 11H
+								button#pressure11h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+							td 
+								span 23H
+								button#pressure23h.ml-2.btn.btn-primary.btn-sm(disabled=true) 2.00
+			.col-12 
+				#chart
+block linkcriptbody
+	script(src="https://cdn.amcharts.com/lib/4/core.js") 
+	script(src="https://cdn.amcharts.com/lib/4/charts.js") 
+	script(src="https://cdn.amcharts.com/lib/4/themes/animated.js") 
+	script(src="/js/vanController.js") 
