@@ -20,32 +20,47 @@ block content
 						div.p-2
 							img(src="/images/yellow.png", alt="icon yellow") 	
 							span.ml-2
-								span TTN <= 25
+								span TTN &le; 25 && TTN > 10%
 						div.p-2
 							img(src="/images/green.png", alt="icon green") 	
-							span.ml-2 TTN <= 10%
+							span.ml-2 TTN &le; 10%
 			
 	.container-fluid.footer
 		.row 
-			.col-md-3
+			.col-md-2
 				//- #loading
 				//- 	img.loading(src="/images/loading.svg", alt="", srcset="")
 				.text-center Top 5 TTN Thấp Nhất
 				canvas#barChartLowestTTN.chart
-			.col-md-3
+			.col-md-2
 				//- #loading2
 				//- 	img.loading(src="/images/loading.svg", alt="", srcset="")
 				.text-center Top 5 TTN Cao Nhất
 				canvas#barChartHighestTTN.chart
 			.col-md-2
+				//- #loading2
+				//- 	img.loading(src="/images/loading.svg", alt="", srcset="")
+				.text-center Biểu Đồ So Sánh Thất Thoát Nước Năm 
+					span#prevYear
+					| &nbsp; và Năm 
+					span#currentYear
+				canvas#lineChartCompare.chart
+			.col-md-2
 				//- #loading3
 				//- 	img.loading(src="/images/loading.svg", alt="", srcset="")
+				.lost-area-total-dma
+					#totalDMA.text-center
+					.text-center Số lượng DMA
 				.lost-area
 					#totalPercentLost.text-center
-					div.text-center Tổng Phần Trăm Thất Thoát Nước (%)
+					div.text-center Tổng Phần Trăm Thất Thoát Nước Của Tháng 
+						span#currentMonthYear
+						| (%)
 				.lost-area
 					#totalLostWater.text-center
-					div.text-center Tổng Lượng Thất Thoát Nước (m3)
+					div.text-center Lủy Kế Thất Thoát Nước Đến Tháng 
+						span#currentMonthYearLK
+						| (%)
 			.col-md-4
 				.text-center Chi tiết DMA
 				#tableStatistic 

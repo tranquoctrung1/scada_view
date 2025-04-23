@@ -61,6 +61,7 @@ const FlowDay = require('./router/flowDay');
 const VanController = require('./router/vanController');
 const Pipe = require('./router/pipe');
 const MapDMA = require('./router/mapDMA');
+const DrawDMA = require('./router/drawDMA');
 
 // call api
 const Api = require('./router/api/api');
@@ -134,6 +135,7 @@ app.use('/SWOCApi', SWOCApi);
 app.use('/login', Login);
 app.use('/' /*, Auth.auth*/, Map);
 app.use('/mapDMA' /*, Auth.auth*/, MapDMA);
+app.use('/drawDMA' /*, Auth.auth*/, DrawDMA);
 app.use('/pressureReport', Auth.auth, PressureReport);
 app.use('/quantityReport', Auth.auth, QuantityReport);
 app.use('/tableDataCurrent', Auth.auth, TableDataCurrent);

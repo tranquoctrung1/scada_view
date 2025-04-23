@@ -1,0 +1,37 @@
+.content-wrap {
+    height: 99vh;
+}
+#map {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.container-fluid.map .row,
+.container-fluid.map .row .col {
+    height: 100%;
+}
+
+@media only screen and (max-width: 769px) {
+    .container-fluid {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+}
+
+@media only screen and (max-width: 769px) {
+    .container-fluid.map {
+        height: 100%;
+    }
+}
+
+@media only screen and (max-width: 426px) {
+    .content-wrap {
+        height: 96%;
+    }
+}
+
+.container-fluid.map {
+    height: calc(100% - 0px);
+    padding: 0 !important;
+}

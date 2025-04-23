@@ -3,6 +3,12 @@ const totalLostWater = document.getElementById('totalLostWater');
 
 const urlGetDrawingDMA = `${hostname}/GetDrawingDMA`;
 
+const totalDMA = document.getElementById('totalDMA');
+const currentMonthYear = document.getElementById('currentMonthYear');
+const currentMonthYearLK = document.getElementById('currentMonthYearLK');
+const prevYear = document.getElementById('prevYear');
+const currentYear = document.getElementById('currentYear');
+
 let map = null;
 let top5LowestTTN = [];
 let top5HighestTTN = [];
@@ -102,7 +108,7 @@ function styleFeature(feature) {
 
 // random ttn data
 function getRandomTTN(data) {
-    for (const item of data.features) {
+    for (const item of data) {
         const randomNumber = Math.floor(Math.random() * 50) + 1;
         item.properties.TTN = randomNumber;
     }
@@ -110,16 +116,12 @@ function getRandomTTN(data) {
 }
 
 function getTop5LowestTTN(data) {
-    const sortedData = data.features.sort(
-        (a, b) => a.properties.TTN - b.properties.TTN,
-    );
+    const sortedData = data.sort((a, b) => a.properties.TTN - b.properties.TTN);
     return sortedData.slice(0, 5);
 }
 
 function getTop5HighestTTN(data) {
-    const sortedData = data.features.sort(
-        (a, b) => b.properties.TTN - a.properties.TTN,
-    );
+    const sortedData = data.sort((a, b) => b.properties.TTN - a.properties.TTN);
     return sortedData.slice(0, 5);
 }
 
@@ -127,13 +129,15 @@ function getDataDMADarwing() {
     axios
         .get(urlGetDrawingDMA)
         .then((res) => {
-            delete res.data[0]._id;
+            res.data.shift();
 
-            const dataTTN = getRandomTTN(res.data[0]);
+            const dataTTN = getRandomTTN(res.data);
 
             top5LowestTTN = getTop5LowestTTN(dataTTN);
             top5HighestTTN = getTop5HighestTTN(dataTTN);
+
             fillDataTable(dataTTN);
+            drawLineChartCompare(dataTTN);
 
             drawBarChartLowestTTN(top5LowestTTN);
             drawBarChartHighestTTN(top5HighestTTN);
@@ -141,35 +145,55 @@ function getDataDMADarwing() {
             totalPercentLost.innerHTML =
                 Math.floor(Math.random() * 30) + 1 + ' %';
             totalLostWater.innerHTML =
-                Math.floor(Math.random() * 10000) + 1 + ' m3';
+                Math.floor(Math.random() * 50) + 1 + ' %';
 
-            L.geoJSON(dataTTN, {
-                style: styleFeature,
-                onEachFeature: function (feature, layer) {
-                    if (feature.properties.TTN > 25) {
-                        animateFade(layer);
-                    }
-                    // Bind a popup with the DMA information
-                    layer.bindPopup(`
-                        <div> 
-                            <b>${feature.properties.TenKVCN}</b><br>
-                            ID: ${feature.properties.IDKVCN}<br>
-                            Cập nhật lần cuối: ${convertDateToString(
-                                new Date(feature.properties.LASTUPDATE),
-                            )}<br>
-                            TTN: ${feature.properties.TTN} %<br>
-                        </div>
-                       
-                        <div id="barChart${
-                            feature.properties.IDKVCN
-                        }" class="chart-popup"></div>
-                    `);
+            totalDMA.innerHTML = res.data.length;
 
-                    drawBarChartPopup(feature);
-                },
-            }).addTo(map);
+            const now = new Date();
+            const now2 = new Date();
+            now2.setMonth(now.getMonth() - 1);
+            currentMonthYear.innerHTML = `${
+                now.getMonth() + 1
+            }/${now.getFullYear()}`;
+            currentMonthYearLK.innerHTML = `${
+                now2.getMonth() + 1
+            }/${now2.getFullYear()}`;
 
-            map.fitBounds(L.geoJSON(res.data[0]).getBounds());
+            prevYear.innerHTML = `${now.getFullYear() - 1}`;
+            currentYear.innerHTML = `${now.getFullYear()}`;
+
+            for (let i = 0; i < res.data.length; i++) {
+                L.geoJSON(dataTTN[i], {
+                    style: styleFeature,
+                    onEachFeature: function (feature, layer) {
+                        if (feature.properties.TTN > 25) {
+                            animateFade(layer);
+                        }
+                        // Bind a popup with the DMA information
+                        layer.bindPopup(`
+                            <div> 
+                                <b>${feature.properties.TenKVCN}</b><br>
+                                ID: ${feature.properties.IDKVCN}<br>
+                                Cập nhật lần cuối: ${convertDateToString(
+                                    new Date(feature.properties.LASTUPDATE),
+                                )}<br>
+                                TTN: ${feature.properties.TTN} %<br>
+                            </div>
+                            <div id="barChart${
+                                feature.properties.IDKVCN
+                            }" class="chart-popup"></div>
+                        `);
+
+                        drawBarChartPopup(feature);
+                    },
+                }).addTo(map);
+            }
+
+            if (res.data.length > 0) {
+                map.fitBounds(L.geoJSON(res.data[0]).getBounds());
+
+                map.setZoom(13);
+            }
         })
         .catch((err) => {
             console.log(err);
@@ -208,12 +232,6 @@ getDataDMADarwing();
 
 function drawBarChartPopup(data) {
     map.on('popupopen', function (e) {
-        let randomData = [];
-
-        for (let i = 0; i < 7; i++) {
-            randomData.push(Math.floor(Math.random() * 50) + 1);
-        }
-
         if (data.properties.IDKVCN !== null) {
             var chartDom = document.getElementById(
                 `barChart${data.properties.IDKVCN}`,
@@ -225,7 +243,7 @@ function drawBarChartPopup(data) {
                 option = {
                     xAxis: {
                         type: 'category',
-                        data: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'],
+                        data: randomLabelTotalTTNCurrentYear(),
                         axisLabel: { interval: 0, rotate: 30 },
                     },
                     tooltip: {
@@ -239,7 +257,7 @@ function drawBarChartPopup(data) {
                     },
                     series: [
                         {
-                            data: randomData,
+                            data: randomDataTotalTTNCurrentYear(),
                             type: 'bar',
                             color: '#e74c3c',
                         },
@@ -276,11 +294,44 @@ function drawBarChartLowestTTN(data) {
                     beginAtZero: true,
                 },
             },
+            plugins: {
+                legend: {
+                    display: false,
+                },
+            },
         },
     });
 }
 
 function drawBarChartHighestTTN(data) {
+    // var chartDom = document.getElementById('barChartHighestTTN');
+    // var myChart = echarts.init(chartDom);
+    // var option;
+    // option = {
+    //     xAxis: {
+    //         type: 'category',
+    //         data: data.map((item) => item.properties.IDKVCN),
+    //         axisLabel: { interval: 0, rotate: 30 },
+    //     },
+    //     tooltip: {
+    //         trigger: 'axis',
+    //         axisPointer: {
+    //             type: 'shadow',
+    //         },
+    //     },
+    //     yAxis: {
+    //         type: 'value',
+    //     },
+    //     series: [
+    //         {
+    //             data: data.map((item) => item.properties.TTN),
+    //             type: 'bar',
+    //             color: '#3498db',
+    //         },
+    //     ],
+    // };
+    // option && myChart.setOption(option);
+
     const ctx = document.getElementById('barChartHighestTTN').getContext('2d');
 
     const myBarChart = new Chart(ctx, {
@@ -304,6 +355,11 @@ function drawBarChartHighestTTN(data) {
                     beginAtZero: true,
                 },
             },
+            plugins: {
+                legend: {
+                    display: false,
+                },
+            },
         },
     });
 }
@@ -313,22 +369,114 @@ function fillDataTable(data) {
 
     let content = '';
 
-    for (const item of data.features) {
+    for (const item of data) {
         let waterSupply = Math.floor(Math.random() * 10000) + 1;
         let waterLoss = Math.floor(Math.random() * 10000) + 1;
+
+        let trend = Math.floor(Math.random() * 2);
+
+        let contentTrend =
+            trend === 0
+                ? '<span class="arrow-up">&uArr; </span>Tăng'
+                : '<span class="arrow-down">&dArr; </span> Giảm';
+
+        let backgroundColor = trend === 0 ? 'trend-up' : 'trend-down';
 
         let waterLossPercent = Math.floor((waterLoss / waterSupply) * 100) + 1;
 
         content += `
-            <tr>
+            <tr class="${backgroundColor}">
                 <td>${item.properties.TenKVCN}</td>
                 <td>${waterSupply}</td>
                 <td>${waterLoss}</td>
                 <td>${waterLossPercent}</td>
-                <td>Giảm</td>
+                <td>${contentTrend}</td>
             </tr>
         `;
     }
 
     bodyTableStatistic.innerHTML = content;
+}
+
+function randomDataTotalTTNPrevYear() {
+    let data = [];
+
+    for (let i = 0; i < 12; i++) {
+        data.push(Math.floor(Math.random() * 50) + 1);
+    }
+
+    return data;
+}
+
+function randomLabelTotalTTNCurrentYear() {
+    let data = [];
+
+    let now = new Date();
+    let month = now.getMonth() + 1;
+
+    for (let i = 0; i < month; i++) {
+        data.push(`T${i + 1}`);
+    }
+
+    return data;
+}
+
+function randomDataTotalTTNCurrentYear() {
+    let data = [];
+
+    let now = new Date();
+    let month = now.getMonth() + 1;
+
+    for (let i = 0; i < month; i++) {
+        data.push(Math.floor(Math.random() * 50) + 1);
+    }
+
+    return data;
+}
+
+function drawLineChartCompare(data) {
+    const ctx = document.getElementById('lineChartCompare').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [
+                'T1',
+                'T2',
+                'T3',
+                'T4',
+                'T5',
+                'T6',
+                'T7',
+                'T8',
+                'T9',
+                'T10',
+                'T11',
+                'T12',
+            ],
+            datasets: [
+                {
+                    label: new Date().getFullYear() - 1,
+                    data: randomDataTotalTTNPrevYear(),
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    fill: false,
+                    tension: 0.1,
+                },
+                {
+                    label: new Date().getFullYear(),
+                    data: randomDataTotalTTNCurrentYear(),
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    fill: false,
+                    tension: 0.1,
+                },
+            ],
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                },
+            },
+        },
+    });
 }

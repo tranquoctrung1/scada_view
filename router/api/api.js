@@ -439,4 +439,6 @@ router.get('/GetPipeDrawing', DrawingPipeApi.GetPipeDrawing);
 
 router.get('/GetDrawingDMA', DrawingDMAApi.GetDmaDrawing);
 
+router.post('/InsertDrawingDMA', DrawingDMAApi.Insert);
+
 module.exports = router;

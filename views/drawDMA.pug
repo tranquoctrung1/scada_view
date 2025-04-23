@@ -1,0 +1,57 @@
+extends ./partial/layoutNone.pug
+block linkcss
+	link(rel="stylesheet", href="/css/leaflet/leaflet.1.6.0.css")
+	link(rel="stylesheet", href="/css/leaflet/context-menu.min.css")
+	link(rel="stylesheet", href="/assets/css/lib/listtree/listree.min.css")
+	link(rel="stylesheet", href="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.css")
+	link(rel="stylesheet", href="https://unpkg.com/leaflet-draw/dist/leaflet.draw.css")
+	link(rel="stylesheet", href="/css/drawDMA.css")
+	link(rel="stylesheet", href="/css/pageCommon.css")
+block content 
+	.container-fluid.map
+		.row.p-0.m-0
+			.col.p-0
+				.map#map
+		#properties.modal.fade.bd-example-modal-lg(tabindex='-1' role='dialog' aria-labelledby='propertiesLabel' aria-hidden='true')
+			.modal-dialog.modal-lg(role='document')
+				.modal-content
+					.modal-header
+						h5.modal-title Thông tin cho DMA
+						span.close-button(data-dismiss='modal') x
+					.modal-body
+						.row 
+							.col-sm-6.col-12
+								.input-group.mb-3
+									span#lbIDKVCN.input-group-text IDKVCN 
+									input.form-control#IDKVCN.form-select( type="text" aria-label='lbIDKVCN' aria-describedby='lbIDKVCN' )
+							.col-sm-6.col-12
+								.input-group.mb-3
+									span#lbIDVungCN.input-group-text IDVungCN 
+									input.form-control#IDVungCN.form-select( type="text" aria-label='lbIDVungCN' aria-describedby='lbIDVungCN' )
+							.col-sm-6.col-12
+								.input-group.mb-3
+									span#lbTenKVCN.input-group-text TenKVCN 
+									input.form-control#TenKVCN.form-select( type="text" aria-label='lbTenKVCN' aria-describedby='lbTenKVCN' )
+							.col-sm-6.col-12
+								.input-group.mb-3
+									span#lbNote.input-group-text Ghi chú 
+									input.form-control#note.form-select( type="text" aria-label='lbNote' aria-describedby='lbNote' )
+							.col-sm-6.col-12
+								.input-group.mb-3
+									span#lbIDVungQuan.input-group-text IDVungQuan 
+									input.form-control#IDVungQuan.form-select( type="text" aria-label='lbIDVungQuan' aria-describedby='lbIDVungQuan' )
+							.col-12 
+								.text-center 
+									button.btn.btn-primary#btnInsertDMA(type='button' onclick="insertDMA()") Thêm
+
+block linkcriptbody
+	script(src='https://common.olemiss.edu/_js/sweet-alert/sweet-alert.min.js')
+	script(src='/js/leaflet/leaflet.1.6.0.js')
+	script(src='https://unpkg.com/leaflet-draw/dist/leaflet.draw.js')
+	script(src='/js/leaflet/context-menu.js')
+	script(src="/js/leaflet/proj4.js")
+	script(src='/axios/axios.min.js')
+	script(src='/js/hostname.js')
+	script(src='/js/drawDMA.js')
+	script(src='/js/util.js')
+	

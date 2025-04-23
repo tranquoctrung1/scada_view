@@ -1,0 +1,165 @@
+const urlGetDrawingDMA = `${hostname}/GetDrawingDMA`;
+const urlInsertDrawingDMA = `${hostname}/InsertDrawingDMA`;
+
+const IDKVCN = document.getElementById('IDKVCN');
+const TenKVCN = document.getElementById('TenKVCN');
+const note = document.getElementById('note');
+const IDVungCN = document.getElementById('IDVungCN');
+const IDVungQuan = document.getElementById('IDVungQuan');
+
+let map = null;
+
+let editLayer = null;
+let drawLayer = null;
+
+let currentDrawDMA = null;
+
+function initMap() {
+    map = L.map('map', {
+        contextmenu: true,
+        contextmenuWidth: 140,
+    });
+
+    L.tileLayer(
+        'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+        {
+            attribution:
+                '<strong style="color: #0078a8">Copyright &copy by Bavitech</strong>',
+            maxZoom: 18,
+        },
+    ).addTo(map);
+
+    editLayer = new L.FeatureGroup();
+    map.addLayer(editLayer);
+
+    drawLayer = new L.FeatureGroup();
+    map.addLayer(drawLayer);
+
+    // Initialize the draw control and pass it the FeatureGroup of editable layers
+    const drawControl = new L.Control.Draw({
+        edit: {
+            featureGroup: editLayer,
+            remove: true,
+        },
+        draw: {
+            polygon: true,
+            polyline: true,
+            rectangle: true,
+            circle: true,
+            marker: true,
+            circlemarker: true,
+        },
+    });
+    map.addControl(drawControl);
+
+    map.on('draw:created', function (e) {
+        const layer = e.layer;
+        drawLayer.addLayer(layer);
+        currentDrawDMA = layer.toGeoJSON();
+
+        $('#properties').modal('show');
+
+        console.log('New shape added:', layer.toGeoJSON());
+    });
+
+    // When GeoJSON is edited
+    map.on('draw:edited', function (e) {
+        e.layers.eachLayer((layer) => {
+            console.log('Edited existing shape:', layer.toGeoJSON());
+        });
+    });
+
+    // When existing features are deleted
+    map.on('draw:deleted', function (e) {
+        e.layers.eachLayer((layer) => {
+            console.log('Deleted existing feature');
+        });
+    });
+}
+
+initMap();
+
+function styleFeature(feature) {
+    return {
+        fillColor: '#3498db',
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7,
+    };
+}
+
+function getDataDMADarwing() {
+    axios
+        .get(urlGetDrawingDMA)
+        .then((res) => {
+            for (let i = 1; i < res.data.length; i++) {
+                const editableLayer = L.geoJSON(res.data[i], {
+                    style: styleFeature,
+                    onEachFeature: function (feature, layer) {
+                        // Bind a popup with the DMA information
+                        layer.bindPopup(`
+                            <div> 
+                                <b>${feature.properties.TenKVCN}</b><br>
+                                ID: ${feature.properties.IDKVCN}<br>
+                                Cập nhật lần cuối: ${convertDateToString(
+                                    new Date(feature.properties.LASTUPDATE),
+                                )}<br>
+                                
+                            </div>
+                        `);
+                    },
+                }).addTo(map);
+
+                editableLayer.eachLayer((layer) => editLayer.addLayer(layer));
+            }
+            if (res.data.length > 0) {
+                map.fitBounds(L.geoJSON(res.data[1]).getBounds());
+                map.setZoom(13);
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}
+
+getDataDMADarwing();
+
+function insertDMA() {
+    if (
+        IDKVCN.value == null ||
+        IDKVCN.value == undefined ||
+        IDKVCN.value.trim() == ''
+    ) {
+        swal('Lỗi', 'Chưa có IDKVCN', 'error');
+    } else {
+        if (currentDrawDMA == null) {
+            swal('Lỗi', 'Chưa có hình vẽ', 'error');
+            return;
+        } else {
+            const obj = {
+                IDKVCN: IDKVCN.value,
+                TenKVCN: TenKVCN.value,
+                GhiChu: note.value,
+                IDVungCN: IDVungCN.value,
+                IDVungQuan: IDVungQuan.value,
+            };
+
+            currentDrawDMA.properties = obj;
+
+            axios
+                .post(urlInsertDrawingDMA, currentDrawDMA)
+                .then((res) => {
+                    if (res.data !== '') {
+                        swal('Thành công', 'Thêm thành công', 'success');
+                    } else {
+                        swal('Lỗi', 'Thêm không thành công', 'error');
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    }
+}

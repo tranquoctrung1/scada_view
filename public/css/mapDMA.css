@@ -121,21 +121,40 @@
 }
 
 .lost-area {
-    padding: 10px;
+    padding: 5px;
     width: 100%;
     margin: 5px;
-    height: 100px;
+    height: 65px;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
     border-radius: 10px;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
     -ms-border-radius: 10px;
     -o-border-radius: 10px;
+
+    font-size: 10px;
+}
+
+.lost-area-total-dma {
+    padding: 5px;
+    width: 100%;
+    margin: 5px;
+    height: 55px;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+
+    font-size: 10px;
 }
 
 #totalPercentLost,
-#totalLostWater {
-    font-size: 1.5rem;
+#totalLostWater,
+#totalDMA {
+    font-size: 1.2rem;
+    color: #3498db;
 }
 
 table {
@@ -154,12 +173,12 @@ table td {
 }
 
 #bodyTableStatistic tr td {
-    color: white;
+    color: #868e96;
 }
 
 .chart-popup {
     width: 100%;
-    height: 100px;
+    height: 250px;
 }
 
 #tableStatistic::-webkit-scrollbar {
@@ -181,4 +200,26 @@ table td {
 /* Handle on hover */
 #tableStatistic::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+.arrow-up {
+    padding: 2px;
+    background-color: #e74c3c;
+    color: whitesmoke;
+    margin-right: 2px;
+}
+
+.arrow-down {
+    padding: 2px;
+    background-color: aqua;
+    margin-right: 2px;
+}
+
+.trend-up {
+    background-color: #c0392b;
+}
+
+.leaflet-popup-content-wrapper {
+    min-height: 300px;
+    min-width: 300px;
 }
