@@ -87,6 +87,48 @@
     -o-transition: all 0.5s ease-in-out;
 }
 
+#legend.hide {
+    transform: translateX(-105%);
+    -webkit-transform: translateX(-105%);
+    -moz-transform: translateX(-105%);
+    -ms-transform: translateX(-105%);
+    -o-transform: translateX(-105%);
+}
+
+#hideLegend span i {
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 5px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    background: darkgrey;
+    box-shadow: 0 0 5px 0 rgb(0 0 0 / 20%);
+
+    position: relative;
+    right: 50px;
+}
+
+#hideLegend {
+    transform: translateX(90px);
+    cursor: pointer;
+    transition: all 0.5s ease-in-out;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    -webkit-transform: translateX(90px);
+    -moz-transform: translateX(90px);
+    -ms-transform: translateX(90px);
+    -o-transform: translateX(90px);
+}
+
+#hideLegend:hover {
+    color: darkblue;
+}
+
 .back-gray {
     background-color: #95a5a6 !important;
 }
@@ -101,11 +143,6 @@
 
 .text-white {
     color: whitesmoke;
-}
-
-.chart {
-    width: 100%;
-    height: 200px;
 }
 
 #tableStatistic {
@@ -124,8 +161,10 @@
     padding: 5px;
     width: 100%;
     margin: 5px;
-    height: 65px;
-    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+    height: 70px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+    border: 1px solid #e0e0e0;
     border-radius: 10px;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
@@ -139,8 +178,11 @@
     padding: 5px;
     width: 100%;
     margin: 5px;
-    height: 55px;
-    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+    height: 70px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+    border: 1px solid #e0e0e0;
+
     border-radius: 10px;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
@@ -153,7 +195,7 @@
 #totalPercentLost,
 #totalLostWater,
 #totalDMA {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     color: #3498db;
 }
 
@@ -215,11 +257,38 @@ table td {
     margin-right: 2px;
 }
 
-.trend-up {
-    background-color: #c0392b;
+.trend-up td {
+    color: #c44141 !important;
 }
 
 .leaflet-popup-content-wrapper {
+    color:#868e96;
+    background: #051328;
     min-height: 300px;
     min-width: 300px;
+}
+
+/* Bổ sung styling cho biểu đồ và canvas */
+.chart {
+    height: 210px !important;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.chart canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 210px !important;
+    width: 100% !important;
+}
+.ttn-tooltip {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #00ffff;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-shadow: 0 0 3px #000;
 }

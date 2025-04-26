@@ -11,7 +11,16 @@ block content
 		.row.p-0.m-0
 			.col.p-0
 				.map#map
-				.legend#legend
+				.slider-container#slider
+					label(for='pressureRange')
+					b L&#x1ECD;c &aacute;p l&#x1EF1;c
+					| : 
+					span#rangeVal 0
+					|  bar
+					.slider-bar-wrapper
+					input#pressureRange(type='range' min='0' max='20' value='0' step='0.1' onchange='onPressureRangeChanged(this)')
+
+				.legend#legend.hide
 					div 
 						div.p-2
 							.progress
@@ -57,7 +66,7 @@ block content
 							|h)
 					div#hideLegend.hide
 						span  
-							i.ti-arrow-right
+							i.ti-blackboard
 				button#toggleTableStatus Hiện bảng cảnh báo
 				#tableStatus
 					.m-b.filter-alarm
@@ -201,8 +210,8 @@ block content
 			//- 								//- th Ngưỡng cao
 			//- 						tbody#tableData
 
-	.container-fluid.footer.d-none
-		.row 
+	.container-fluid.footer
+		.row.d-none
 			.col-md-4
 				#loading
 					img.loading(src="/images/loading.svg", alt="", srcset="")
@@ -217,28 +226,29 @@ block content
 				#chartMonth
 		.row.text-center
 			.col-sm-3 
-				h6.text-white Tổng số điểm: 
+				h6.text-grey Tổng số điểm: 
 					span#totalSite.text-success
 			.col-sm-3.d-none
-				h6.text-white Số điểm có dữ liệu: 
+				h6.text-grey Số điểm có dữ liệu: 
 					span#totalSiteHasValue.text-success 
 			.col-sm-3.d-none
-				h6.text-white Số điểm có đang hoạt đông: 
+				h6.text-grey Số điểm có đang hoạt đông: 
 					span#totalSiteActing.text-success 
 			.col-sm-3 
-				h6.text-white Số điểm gữi trể dữ liệu: 
+				h6.text-grey Số điểm gữi trể dữ liệu: 
 					span#totalSiteDelay.text-warning 
 			.col-sm-3 
-				h6.text-white Số điểm không có dữ liệu: 
+				h6.text-grey Số điểm không có dữ liệu: 
 					span#totalSiteNoValue.text-danger 
 			.col-sm-3 
-				h6.text-white Số điểm cảnh báo: 
+				h6.text-grey Số điểm cảnh báo: 
 					span#totalSiteAlarm.text-danger 
 
 
 block linkcriptbody
 	script(src='https://common.olemiss.edu/_js/sweet-alert/sweet-alert.min.js')
 	script(src='/js/leaflet/leaflet.1.6.0.js')
+	script(src='https://cdn.jsdelivr.net/npm/chroma-js@2.4.2/chroma.min.js')
 	script(src='/js/leaflet/context-menu.js')
 	script(src="/js/leaflet/proj4.js")
 	script(src='/axios/axios.min.js')

@@ -52,6 +52,8 @@ let minsecond = document.getElementById('minsecond');
 let minsecond2 = document.getElementById('minsecond2');
 let minthird = document.getElementById('minthird');
 let timeconnect = document.getElementById('timeconnect');
+let slider = document.getElementById('slider');
+let pressureRange = document.getElementById('pressureRange');
 const exportTotalSite = document.getElementById('exportTotalSite');
 
 let siteNotPressure = [];
@@ -67,6 +69,10 @@ let minthirdOrigin;
 let minthirdChange;
 let timeconnectOrigin;
 let timeconnectChange;
+
+const colorScale = chroma
+    .scale(['#e74c3c', '#f1c40f', '#2ecc71', '#2980b9'])
+    .domain([0, 10]);
 
 function createHeatIcon(color = 'red', radius = 20) {
     const canvas = document.createElement('canvas');
@@ -96,6 +102,7 @@ function createHeatIcon(color = 'red', radius = 20) {
 
 function initMap() {
     map = L.map('map', {
+        attributionControl: false,
         contextmenu: true,
         contextmenuWidth: 140,
         contextmenuItems: [
@@ -154,7 +161,9 @@ function initMap() {
     L.control.watermark = function (opts) {
         return new L.Control.Watermark(opts);
     };
+
     L.control.watermark({ position: 'bottomright' }).addTo(map);
+
     L.Control.Watermark = L.Control.extend({
         onAdd: function (map) {
             return showTableStatusElement;
@@ -168,6 +177,19 @@ function initMap() {
     };
     L.control.watermark({ position: 'bottomright' }).addTo(map);
 
+    L.Control.Watermark = L.Control.extend({
+        onAdd: function (map) {
+            return slider;
+        },
+        onRemove: function (map) {
+            // Nothing to do here
+        },
+    });
+    L.control.watermark = function (opts) {
+        return new L.Control.Watermark(opts);
+    };
+    L.control.watermark({ position: 'topright' }).addTo(map);
+
     axios
         .get(urlGetSiteByUid)
         .then(async function (res) {
@@ -180,6 +202,7 @@ function initMap() {
                 let statusError = 0;
                 let timeStampLostSignal = new Date();
                 let colorHeatIcon = 'green';
+                let pressureChannel = null;
 
                 let find = tempAlarm.data.findIndex(
                     (el) => el.SiteId === site.SiteId,
@@ -217,7 +240,7 @@ function initMap() {
                     .get(urlGetChannels + logger)
                     .then(function (res) {
                         labelHtml =
-                            '<table cellspacing="0" cellpadding="0" style="width: 180px; font-size: 0.85rem"><tr><td colspan="2" style="text-align:center;font-weight:bold;color:blue;background-color:white; "><span>' +
+                            '<table cellspacing="0" cellpadding="0" style="width: 180px; font-size: 0.85rem"><tr><td colspan="2" style="text-align:center;font-weight:bold;color:#868e96;background-color:#051328; "><span>' +
                             site.Location +
                             '</span></td></tr>' +
                             `<tr><td colspan="2" style="text-align:center;font-weight:bold;color:red;background-color:white; "><marquee id="error-site${site.SiteId}"></marquee></td></tr>`;
@@ -241,10 +264,17 @@ function initMap() {
                         dInfoHtml = '';
                         let preStatus = null;
                         for (let channel of res.data) {
-                            let color = 'blue';
+                            let color = '#3498db';
                             if (channel != null && channel != undefined) {
                                 if (channel.ChannelName == channelAlarm) {
                                     color = 'red';
+                                }
+
+                                if (
+                                    channel.Pressure1 === true ||
+                                    channel.Pressure2 === true
+                                ) {
+                                    pressureChannel = channel;
                                 }
                             }
 
@@ -325,12 +355,12 @@ function initMap() {
                                     '</td>' +
                                     '<td style="text-align:right;color:' +
                                     color +
-                                    '">' +
+                                    ' !important">' +
                                     val +
                                     '</td>' +
                                     '<td style="color:' +
                                     color +
-                                    '">' +
+                                    '!important"> ' +
                                     channel.Unit +
                                     '</td>' +
                                     '<td>' +
@@ -346,10 +376,14 @@ function initMap() {
                                     '<tr><td> ' +
                                     channel.ChannelName +
                                     '</td>' +
-                                    '<td style="text-align:right;color:blue">' +
+                                    '<td style="text-align:right;color:' +
+                                    color +
+                                    ' !important">' +
                                     val +
                                     '</td>' +
-                                    '<td style="color:blue">' +
+                                    '<td style="color:' +
+                                    color +
+                                    ' !important">' +
                                     channel.Unit +
                                     '</td>' +
                                     '<td>' +
@@ -360,7 +394,7 @@ function initMap() {
                             }
 
                             dLabelHtml +=
-                                '<tr style="background-color:#3498db"><td style="text-align:center;font-weight:bold;color:white;"><span>' +
+                                '<tr style="background-color:#34495e"><td style="text-align:center;font-weight:bold;color:#3498db;"><span>' +
                                 channel.ChannelName +
                                 ': ' +
                                 val +
@@ -408,22 +442,53 @@ function initMap() {
                             });
                         }
 
-                        //LOAD TO MAP
-                        var greenIcon = new L.Icon({
-                            iconUrl: img,
-                            iconSize:
-                                site.IsValve === true ? [40, 40] : [20, 20],
-                        });
+                        var greenIcon = null;
 
-                        const heat = L.marker(
-                            [
-                                parseFloat(site.Latitude),
-                                parseFloat(site.Longitude),
-                            ],
-                            {
-                                icon: createHeatIcon(colorHeatIcon, 25),
-                            },
-                        ).addTo(map);
+                        //LOAD TO MAP
+
+                        if (pressureChannel !== null) {
+                            let heightIcon = 30;
+                            let colorIcon = '#3498db';
+
+                            if (
+                                pressureChannel.LastValue != null &&
+                                pressureChannel.LastValue !== undefined
+                            ) {
+                                heightIcon = Math.min(
+                                    pressureChannel.LastValue * 6,
+                                    60,
+                                );
+
+                                colorIcon = colorScale(
+                                    pressureChannel.LastValue,
+                                ).hex();
+                            }
+
+                            const htmlIcon = `<div class="pressure-icon" style="height:${heightIcon}px; color:${colorIcon}"></div>`;
+
+                            greenIcon = L.divIcon({
+                                className: '',
+                                html: htmlIcon,
+                                iconSize: [12, heightIcon],
+                                iconAnchor: [6, heightIcon],
+                            });
+                        } else {
+                            greenIcon = new L.Icon({
+                                iconUrl: img,
+                                iconSize:
+                                    site.IsValve === true ? [40, 40] : [20, 20],
+                            });
+                        }
+
+                        // const heat = L.marker(
+                        //     [
+                        //         parseFloat(site.Latitude),
+                        //         parseFloat(site.Longitude),
+                        //     ],
+                        //     {
+                        //         icon: createHeatIcon(colorHeatIcon, 25),
+                        //     },
+                        // ).addTo(map);
 
                         let marker = new L.marker(
                             [
@@ -434,6 +499,7 @@ function initMap() {
                                 icon: greenIcon,
                                 id: `m_${site.SiteId}`,
                                 riseOnHover: true,
+                                pressure: pressureChannel?.LastValue,
                             },
                         )
                             .addTo(map)
@@ -515,6 +581,7 @@ async function updateMap() {
             let statusError = 0;
             let channelAlarm = '';
             let timeStampLostSignal = new Date();
+            let pressureChannel = null;
 
             let find = tempAlarm.data.findIndex(
                 (el) => el.SiteId === site.SiteId,
@@ -563,10 +630,17 @@ async function updateMap() {
                     dInfoHtml = '';
                     let preStatus = null;
                     for (let channel of res.data) {
-                        let color = 'blue';
+                        let color = '#3498db';
                         if (channel != null && channel != undefined) {
                             if (channel.ChannelName == channelAlarm) {
                                 color = 'red';
+                            }
+
+                            if (
+                                channel.Pressure1 === true ||
+                                channel.Pressure2 === true
+                            ) {
+                                pressureChannel = channel;
                             }
                         }
 
@@ -644,12 +718,12 @@ async function updateMap() {
                                 '</td>' +
                                 '<td style="text-align:right;color:' +
                                 color +
-                                '">' +
+                                '  !important">' +
                                 val +
                                 '</td>' +
                                 '<td style="color:' +
                                 color +
-                                '">' +
+                                ' !important" >' +
                                 channel.Unit +
                                 '</td>' +
                                 '<td>' +
@@ -665,10 +739,14 @@ async function updateMap() {
                                 '<tr><td> ' +
                                 channel.ChannelName +
                                 '</td>' +
-                                '<td style="text-align:right;color:blue">' +
+                                '<td style="text-align:right;color:' +
+                                color +
+                                ' !important">' +
                                 val +
                                 '</td>' +
-                                '<td style="color:blue">' +
+                                '<td style="color:' +
+                                color +
+                                ' !important">' +
                                 channel.Unit +
                                 '</td>' +
                                 '<td>' +
@@ -679,7 +757,7 @@ async function updateMap() {
                         }
 
                         dLabelHtml +=
-                            '<tr style="background-color:#3498db"><td style="text-align:center;font-weight:bold;color:white;"><span>' +
+                            '<tr style="background-color:#34495e"><td style="text-align:center;font-weight:bold;color:#3498db;"><span>' +
                             channel.ChannelName +
                             ': ' +
                             val +
@@ -727,11 +805,43 @@ async function updateMap() {
                     }
 
                     //LOAD TO MAP
-                    var greenIcon = new L.Icon({
-                        iconUrl: img,
-                        iconSize: site.IsValve === true ? [40, 40] : [20, 20],
-                        
-                    });
+                    var greenIcon = null;
+
+                    //LOAD TO MAP
+
+                    if (pressureChannel !== null) {
+                        let heightIcon = 30;
+                        let colorIcon = '#3498db';
+
+                        if (
+                            pressureChannel.LastValue != null &&
+                            pressureChannel.LastValue !== undefined
+                        ) {
+                            heightIcon = Math.min(
+                                pressureChannel.LastValue * 6,
+                                60,
+                            );
+
+                            colorIcon = colorScale(
+                                pressureChannel.LastValue,
+                            ).hex();
+                        }
+
+                        const htmlIcon = `<div class="pressure-icon" style="height:${heightIcon}px; color:${colorIcon}"></div>`;
+
+                        greenIcon = L.divIcon({
+                            className: '',
+                            html: htmlIcon,
+                            iconSize: [12, heightIcon],
+                            iconAnchor: [6, heightIcon],
+                        });
+                    } else {
+                        greenIcon = new L.Icon({
+                            iconUrl: img,
+                            iconSize:
+                                site.IsValve === true ? [40, 40] : [20, 20],
+                        });
+                    }
 
                     markers.forEach(function (marker) {
                         if (marker.options.id == `m_${site.SiteId}`) {
@@ -952,6 +1062,11 @@ L.DomEvent.on(legendElement, 'mousewheel', L.DomEvent.stopPropagation);
 L.DomEvent.disableScrollPropagation(legendElement);
 L.DomEvent.disableClickPropagation(legendElement);
 
+var sliderElement = L.DomUtil.get('slider');
+L.DomEvent.on(sliderElement, 'mousewheel', L.DomEvent.stopPropagation);
+L.DomEvent.disableScrollPropagation(sliderElement);
+L.DomEvent.disableClickPropagation(sliderElement);
+
 setTimeout(() => {
     getStatusSite();
 }, 2000);
@@ -1131,3 +1246,20 @@ timeconnect.addEventListener('blur', (e) => {
         e.target.innerHTML = timeconnectOrigin;
     }
 });
+
+function filterSiteByPressureValue(value) {
+    for (const marker of markers) {
+        if (marker.options.pressure !== undefined) {
+            if (marker.options.pressure < value) {
+                map.removeLayer(marker);
+            } else {
+                map.addLayer(marker);
+            }
+        }
+    }
+}
+function onPressureRangeChanged(e) {
+    const val = parseFloat(e.value);
+    document.getElementById('rangeVal').textContent = val;
+    filterSiteByPressureValue(val);
+}

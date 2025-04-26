@@ -11,7 +11,7 @@ block content
 		.row.p-0.m-0
 			.col.p-0
 				.map#mapDMA
-				.legend#legend
+				.legend#legend.hide
 					div 
 						div.p-2
 							img(src="/images/red.png", alt="icon red") 	
@@ -24,6 +24,9 @@ block content
 						div.p-2
 							img(src="/images/green.png", alt="icon green") 	
 							span.ml-2 TTN &le; 10%
+					div#hideLegend.hide
+						span  
+							i.ti-blackboard
 			
 	.container-fluid.footer
 		.row 
@@ -40,7 +43,7 @@ block content
 			.col-md-2
 				//- #loading2
 				//- 	img.loading(src="/images/loading.svg", alt="", srcset="")
-				.text-center Biểu Đồ So Sánh Thất Thoát Nước Năm 
+				.text-center TTN Năm 
 					span#prevYear
 					| &nbsp; và Năm 
 					span#currentYear
@@ -53,24 +56,24 @@ block content
 					.text-center Số lượng DMA
 				.lost-area
 					#totalPercentLost.text-center
-					div.text-center Tổng Phần Trăm Thất Thoát Nước Của Tháng 
+					div.text-center Thất Thoát Nước Tháng 
 						span#currentMonthYear
-						| (%)
+						
 				.lost-area
 					#totalLostWater.text-center
-					div.text-center Lủy Kế Thất Thoát Nước Đến Tháng 
+					div.text-center Lũy Kế Thất Thoát Đến Tháng 
 						span#currentMonthYearLK
-						| (%)
+						
 			.col-md-4
-				.text-center Chi tiết DMA
+				.text-center Chi tiết Thất Thoát DMA
 				#tableStatistic 
 					//- .table.table-bordered.table-striped.table-hover
 					table
 						thead
 							tr
 								th Tên DMA
-								th LN Cấp (m3)
-								th LN tiêu thụ (m3)
+								th Cấp (m3)
+								th Tiêu thụ (m3)
 								th TT (%)
 								th Xu hướng
 						tbody#bodyTableStatistic

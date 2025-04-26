@@ -177,6 +177,7 @@ app.use(function (req, res) {
 
 // other error
 app.use(function (err, req, res, next) {
+    console.log(err);
     res.status(500).render('500');
 });
 

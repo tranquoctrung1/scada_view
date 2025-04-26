@@ -8,6 +8,8 @@ const currentMonthYear = document.getElementById('currentMonthYear');
 const currentMonthYearLK = document.getElementById('currentMonthYearLK');
 const prevYear = document.getElementById('prevYear');
 const currentYear = document.getElementById('currentYear');
+const legend = document.getElementById('legend');
+const hideLegend = document.getElementById('hideLegend');
 
 let map = null;
 let top5LowestTTN = [];
@@ -34,6 +36,7 @@ function zoomOut(e) {
 }
 function initMap() {
     map = L.map('mapDMA', {
+        attributionControl: false,
         contextmenu: true,
         contextmenuWidth: 140,
         contextmenuItems: [
@@ -77,7 +80,7 @@ function initMap() {
         {
             attribution:
                 '<strong style="color: #0078a8">Copyright &copy by Bavitech</strong>',
-            maxZoom: 18,
+            maxZoom: 14,
         },
     ).addTo(map);
 }
@@ -169,6 +172,17 @@ function getDataDMADarwing() {
                         if (feature.properties.TTN > 25) {
                             animateFade(layer);
                         }
+                        if (
+                            feature.properties &&
+                            feature.properties.TTN !== undefined
+                        ) {
+                            layer.bindTooltip(`${feature.properties.TTN} %`, {
+                                permanent: false, // 👈 CHỈ hiện khi hover
+                                direction: 'top',
+                                sticky: true,
+                                className: 'ttn-tooltip',
+                            });
+                        }
                         // Bind a popup with the DMA information
                         layer.bindPopup(`
                             <div> 
@@ -199,6 +213,7 @@ function getDataDMADarwing() {
             console.log(err);
         });
 }
+
 function animateFade(layer) {
     let opacity = 1;
     let fadingOut = true;
@@ -251,6 +266,10 @@ function drawBarChartPopup(data) {
                         axisPointer: {
                             type: 'shadow',
                         },
+                        backgroundColor: '#052b27e0',
+                        textStyle: {
+                            color: '#fff', // Optional: change the text color
+                        },
                     },
                     yAxis: {
                         type: 'value',
@@ -288,6 +307,7 @@ function drawBarChartLowestTTN(data) {
             ],
         },
         options: {
+            maintainAspectRatio: false,
             responsive: true,
             scales: {
                 y: {
@@ -349,6 +369,7 @@ function drawBarChartHighestTTN(data) {
             ],
         },
         options: {
+            maintainAspectRatio: false,
             responsive: true,
             scales: {
                 y: {
@@ -464,13 +485,14 @@ function drawLineChartCompare(data) {
                 {
                     label: new Date().getFullYear(),
                     data: randomDataTotalTTNCurrentYear(),
-                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderColor: 'rgba(54, 162, 235, 0.6)',
                     fill: false,
                     tension: 0.1,
                 },
             ],
         },
         options: {
+            maintainAspectRatio: false,
             responsive: true,
             scales: {
                 y: {
@@ -480,3 +502,8 @@ function drawLineChartCompare(data) {
         },
     });
 }
+
+hideLegend.addEventListener('click', (e) => {
+    legend.classList.toggle('hide');
+    hideLegend.classList.toggle('hide');
+});
