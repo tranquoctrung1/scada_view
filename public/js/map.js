@@ -245,14 +245,29 @@ function initMap() {
                             '</span></td></tr>' +
                             `<tr><td colspan="2" style="text-align:center;font-weight:bold;color:red;background-color:white; "><marquee id="error-site${site.SiteId}"></marquee></td></tr>`;
                         infoHtml =
+                            '<div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Hảng SX ĐH: ' +
+                            'ABB' +
+                            '</span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold"> Hảng SX Logger: ' +
+                            'Technolog' +
+                            '</span></div></div>' +
+                            '<div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Model ĐH: ' +
+                            'ABC123456' +
+                            '</span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold">Model Logger: ' +
+                            'Technolog123' +
+                            '</span></div></div>' +
+                            '<div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Trạng thái ĐH: ' +
+                            'Mới' +
+                            '</span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold">Trạng thái Logger: ' +
+                            'Đã sử dụng' +
+                            '</span></div></div>' +
                             '<span style="font-weight:bold">Vị trí: ' +
                             site.Location +
                             '</span>' +
-                            '<br/><span style="font-weight:bold">Mã vị trí: ' +
-                            site.SiteId +
-                            ' </span>' +
                             '<br/><span>Logger Id: ' +
                             site.LoggerId +
+                            '</span>' +
+                            '<br/><span>Pin đồng hồ: ' +
+                            '3.6 V' +
                             '</span>' +
                             (site.IsValve === true
                                 ? `<br/><span style="font-weight:bold; cursor: pointer; color: blue; text-decoration: underline" onclick="openControlValve(${site.LoggerId})">Điều khiển van</span>`
@@ -413,7 +428,7 @@ function initMap() {
                         //     Math.round(Math.abs(index)) +
                         //     '</span></span>';
                         infoHtml +=
-                            '<br/><table cellpadding="5" cellspacing="5" style="width: 100%">';
+                            '<br/><table cellpadding="5" cellspacing="5" style="width: 95%">';
                         infoHtml += dInfoHtml;
                         infoHtml += `<tr></tr>` + '</table>';
                         infoHtml += `
@@ -440,6 +455,9 @@ function initMap() {
                                 ...site,
                                 TimeStamp: timeStampLostSignal,
                             });
+                        }
+                        if (site.DisplayGroup == 'Nha may') {
+                            img = '/images/factory.png';
                         }
 
                         var greenIcon = null;
@@ -476,7 +494,9 @@ function initMap() {
                             greenIcon = new L.Icon({
                                 iconUrl: img,
                                 iconSize:
-                                    site.IsValve === true ? [40, 40] : [20, 20],
+                                    site.DisplayGroup === 'Nha may'
+                                        ? [40, 40]
+                                        : [20, 20],
                             });
                         }
 
@@ -612,14 +632,29 @@ async function updateMap() {
                         '</span></td></tr>' +
                         `<tr><td colspan="2" style="text-align:center;font-weight:bold;color:red;background-color:white; "><marquee id="error-site${site.SiteId}"></marquee></td></tr>`;
                     infoHtml =
+                        '<div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Hảng SX ĐH: ' +
+                        'ABB' +
+                        '</span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold"> Hảng SX Logger: ' +
+                        'Technolog' +
+                        '</span></div></div>' +
+                        '<div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Model ĐH: ' +
+                        'ABC123456' +
+                        '</span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold">Model Logger: ' +
+                        'Technolog123' +
+                        '</span></div></div>' +
+                        '<div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Trạng thái ĐH: ' +
+                        'Mới' +
+                        '</span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold">Trạng thái Logger: ' +
+                        'Đã sử dụng' +
+                        '</span></div></div>' +
                         '<span style="font-weight:bold">Vị trí: ' +
                         site.Location +
                         '</span>' +
-                        '<br/><span style="font-weight:bold">Mã vị trí: ' +
-                        site.SiteId +
-                        ' </span>' +
                         '<br/><span>Logger Id: ' +
                         site.LoggerId +
+                        '</span>' +
+                        '<br/><span>Pin đồng hồ: ' +
+                        '3.6 V' +
                         '</span>' +
                         (site.IsValve === true
                             ? `<br/><span style="font-weight:bold; cursor: pointer;  color: blue; text-decoration: underline" onclick="openControlValve(${site.LoggerId})">Điều khiển van</span>`
@@ -803,7 +838,9 @@ async function updateMap() {
                             TimeStamp: timeStampLostSignal,
                         });
                     }
-
+                    if (site.DisplayGroup == 'Nha may') {
+                        img = '/images/factory.png';
+                    }
                     //LOAD TO MAP
                     var greenIcon = null;
 
@@ -839,7 +876,9 @@ async function updateMap() {
                         greenIcon = new L.Icon({
                             iconUrl: img,
                             iconSize:
-                                site.IsValve === true ? [40, 40] : [20, 20],
+                                site.DisplayGroup === 'Nha may'
+                                    ? [40, 40]
+                                    : [20, 20],
                         });
                     }
 
