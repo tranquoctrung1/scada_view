@@ -441,4 +441,8 @@ router.get('/GetDrawingDMA', DrawingDMAApi.GetDmaDrawing);
 
 router.post('/InsertDrawingDMA', DrawingDMAApi.Insert);
 
+router.patch('/UpdateDrawingDMA', DrawingDMAApi.Update);
+
+router.put('/DeleteDrawingDMA', DrawingDMAApi.Delete);
+
 module.exports = router;

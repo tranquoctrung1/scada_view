@@ -23,3 +23,28 @@ module.exports.Insert = async (req, res) => {
         res.json(0);
     }
 };
+
+module.exports.Update = async (req, res) => {
+    let data = req.body;
+    let result = await DMADrawing.updateOne(
+        { _id: data._id },
+        { $set: { geometry: data.geometry, properties: data.properties } },
+    );
+
+    if (result.modifiedCount > 0) {
+        res.json(1);
+    } else {
+        res.json(0);
+    }
+};
+
+module.exports.Delete = async (req, res) => {
+    let data = req.body;
+    let result = await DMADrawing.deleteOne({ _id: data._id });
+
+    if (result.deletedCount > 0) {
+        res.json(1);
+    } else {
+        res.json(0);
+    }
+};

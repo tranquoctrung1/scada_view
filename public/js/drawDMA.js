@@ -1,5 +1,7 @@
 const urlGetDrawingDMA = `${hostname}/GetDrawingDMA`;
 const urlInsertDrawingDMA = `${hostname}/InsertDrawingDMA`;
+const urlUpdateDrawingDMA = `${hostname}/UpdateDrawingDMA`;
+const urlDeleteDrawingDMA = `${hostname}/DeleteDrawingDMA`;
 
 const IDKVCN = document.getElementById('IDKVCN');
 const TenKVCN = document.getElementById('TenKVCN');
@@ -7,12 +9,17 @@ const note = document.getElementById('note');
 const IDVungCN = document.getElementById('IDVungCN');
 const IDVungQuan = document.getElementById('IDVungQuan');
 
+const btnInsertDMA = document.getElementById('btnInsertDMA');
+const btnUpdateDMA = document.getElementById('btnUpdateDMA');
+
 let map = null;
 
 let editLayer = null;
 let drawLayer = null;
 
 let currentDrawDMA = null;
+let currentEditDMA = null;
+let currentDeleteDMA = null;
 
 function initMap() {
     map = L.map('map', {
@@ -57,6 +64,15 @@ function initMap() {
         drawLayer.addLayer(layer);
         currentDrawDMA = layer.toGeoJSON();
 
+        IDKVCN.value = '';
+        TenKVCN.value = '';
+        note.value = '';
+        IDVungCN.value = '';
+        IDVungQuan.value = '';
+
+        btnUpdateDMA.disabled = true;
+        btnInsertDMA.disabled = false;
+
         $('#properties').modal('show');
 
         console.log('New shape added:', layer.toGeoJSON());
@@ -65,6 +81,19 @@ function initMap() {
     // When GeoJSON is edited
     map.on('draw:edited', function (e) {
         e.layers.eachLayer((layer) => {
+            currentEditDMA = layer.toGeoJSON();
+
+            IDKVCN.value = currentEditDMA.properties.IDKVCN;
+            TenKVCN.value = currentEditDMA.properties.TenKVCN;
+            note.value = currentEditDMA.properties.GhiChu;
+            IDVungCN.value = currentEditDMA.properties.IDVungCN;
+            IDVungQuan.value = currentEditDMA.properties.IDVungQuan;
+
+            btnUpdateDMA.disabled = false;
+            btnInsertDMA.disabled = true;
+
+            $('#properties').modal('show');
+
             console.log('Edited existing shape:', layer.toGeoJSON());
         });
     });
@@ -72,7 +101,9 @@ function initMap() {
     // When existing features are deleted
     map.on('draw:deleted', function (e) {
         e.layers.eachLayer((layer) => {
-            console.log('Deleted existing feature');
+            currentDeleteDMA = layer.toGeoJSON();
+
+            deleteDMA();
         });
     });
 }
@@ -161,5 +192,63 @@ function insertDMA() {
                     console.log(err);
                 });
         }
+    }
+}
+
+function updateDMA() {
+    if (
+        IDKVCN.value == null ||
+        IDKVCN.value == undefined ||
+        IDKVCN.value.trim() == ''
+    ) {
+        swal('Lỗi', 'Chưa có IDKVCN', 'error');
+    } else {
+        if (currentEditDMA == null) {
+            swal('Lỗi', 'Chưa có hình vẽ', 'error');
+            return;
+        } else {
+            const obj = {
+                IDKVCN: IDKVCN.value,
+                TenKVCN: TenKVCN.value,
+                GhiChu: note.value,
+                IDVungCN: IDVungCN.value,
+                IDVungQuan: IDVungQuan.value,
+            };
+
+            currentEditDMA.properties = obj;
+
+            axios
+                .patch(urlUpdateDrawingDMA, currentEditDMA)
+                .then((res) => {
+                    if (res.data > 0) {
+                        swal('Thành công', 'Cập nhật thành công', 'success');
+                    } else {
+                        swal('Lỗi', 'Cập nhật không thành công', 'error');
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    }
+}
+
+function deleteDMA() {
+    if (currentDeleteDMA == null) {
+        swal('Lỗi', 'Chưa có hình vẽ', 'error');
+        return;
+    } else {
+        axios
+            .put(urlDeleteDrawingDMA, currentDeleteDMA)
+            .then((res) => {
+                if (res.data > 0) {
+                    swal('Thành công', 'Xóa thành công', 'success');
+                } else {
+                    swal('Lỗi', 'Xóa không thành công', 'error');
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 }

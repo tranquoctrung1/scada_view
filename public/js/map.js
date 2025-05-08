@@ -245,9 +245,9 @@ function initMap() {
                             '</span></td></tr>' +
                             `<tr><td colspan="2" style="text-align:center;font-weight:bold;color:red;background-color:white; "><marquee id="error-site${site.SiteId}"></marquee></td></tr>`;
                         infoHtml =
-                            '<div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Hảng SX ĐH: ' +
+                            '<div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Hãng ĐH: ' +
                             'ABB' +
-                            '</span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold"> Hảng SX Logger: ' +
+                            '</span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold"> Hãng Logger: ' +
                             'Technolog' +
                             '</span></div></div>' +
                             '<div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Model ĐH: ' +
@@ -632,9 +632,9 @@ async function updateMap() {
                         '</span></td></tr>' +
                         `<tr><td colspan="2" style="text-align:center;font-weight:bold;color:red;background-color:white; "><marquee id="error-site${site.SiteId}"></marquee></td></tr>`;
                     infoHtml =
-                        '<div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Hảng SX ĐH: ' +
+                        '<div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Hãng ĐH: ' +
                         'ABB' +
-                        '</span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold"> Hảng SX Logger: ' +
+                        '</span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold"> Hãng Logger: ' +
                         'Technolog' +
                         '</span></div></div>' +
                         '<div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Model ĐH: ' +
