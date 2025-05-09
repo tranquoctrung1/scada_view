@@ -13,7 +13,7 @@ var deviceLoggerSchema = new mongoose.Schema({
 });
 
 var DeviceLogger = mongoose.model(
-    'deviceLoggerSchema',
+    'DeviceLogger',
     deviceLoggerSchema,
     't_Logger',
 );

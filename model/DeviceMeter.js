@@ -12,10 +12,6 @@ var DeviceMeterSchema = new mongoose.Schema({
     urlUploadFile: String,
 });
 
-var DeviceMeter = mongoose.model(
-    'DeviceMeterSchema',
-    DeviceMeterSchema,
-    't_Meter',
-);
+var DeviceMeter = mongoose.model('DeviceMeter', DeviceMeterSchema, 't_Meter');
 
 module.exports = DeviceMeter;

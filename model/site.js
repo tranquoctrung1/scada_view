@@ -20,6 +20,8 @@ var siteSchema = new mongoose.Schema({
     IsDisplay: Boolean,
     IsValve: Boolean,
     IsConnectPipe: Boolean,
+    MeterSerial: String,
+    LoggerSerial: String,
 });
 
 var Site = mongoose.model('Site', siteSchema, 't_Sites');

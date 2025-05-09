@@ -17,12 +17,16 @@ let otherDevice = document.getElementById('otherDevice');
 let isDisplay = document.getElementById('isDisplay');
 let isValve = document.getElementById('isValve');
 let isConnectPipe = document.getElementById('isConnectPipe');
+let serialLogger = document.getElementById('serialLogger');
+let serialMeter = document.getElementById('serialMeter');
 
 let urlGetSiteByDisplayGroup = `${hostname}/GetSiteByDisplayGroup`;
 let urlGetSiteBySiteId = `${hostname}/GetSiteBySiteId`;
 let urlInsertSite = `${hostname}/InsertSite`;
 let urlUpdateSite = `${hostname}/UpdateSite`;
 let urlDeleteSite = `${hostname}/DeleteSite`;
+let urlGetAllDeviceLogger = `${hostname}/GetAllDeviceLogger`;
+let urlGetAllDeviceMeter = `${hostname}/GetAllDeviceMeter`;
 
 function fetchDisplayGroupForSite() {
     axios
@@ -45,6 +49,28 @@ function fetchSiteForDisplayGroup(displayGroup) {
         })
         .catch((err) => console.log(err));
 }
+
+function fetchSerialMeter() {
+    axios
+        .get(urlGetAllDeviceMeter)
+        .then((res) => {
+            createOptionsInSerialMeterSelectBox(res.data, 'listDeviceMeter');
+        })
+        .catch((err) => console.log(err));
+}
+
+fetchSerialMeter();
+
+function fetchSerialLogger() {
+    axios
+        .get(urlGetAllDeviceLogger)
+        .then((res) => {
+            createOptionsInSerialLoggerSelectBox(res.data, 'listDeviceLogger');
+        })
+        .catch((err) => console.log(err));
+}
+
+fetchSerialLogger();
 
 displayGroup.addEventListener('change', function (e) {
     fetchSiteForDisplayGroup(e.target.value);
@@ -76,6 +102,12 @@ site.addEventListener('change', function (e) {
                 isConnectPipe.checked = fillDataIntoInputTag(
                     res.data[0].IsConnectPipe,
                 );
+                serialLogger.value = fillDataIntoInputTag(
+                    res.data[0].LoggerSerial,
+                );
+                serialMeter.value = fillDataIntoInputTag(
+                    res.data[0].MeterSerial,
+                );
             }
         })
         .catch((err) => console.log(err));
@@ -99,6 +131,8 @@ function SetEmptySite() {
     isDisplay.checked = false;
     isValve.checked = false;
     isConnectPipe.checked = false;
+    serialLogger.value = '';
+    serialMeter.value = '';
 }
 
 let btnInsert = document.getElementById('btnInsert');
@@ -111,28 +145,33 @@ btnInsert.addEventListener('click', function (e) {
     ) {
         swal('Lỗi', 'Chưa có mã vị trí', 'error');
     } else {
-        let url = `${urlInsertSite}/${CreateDataNullForPost(
-            siteid.value,
-        )}/${CreateDataNullForPost(locationSite.value)}/${CreateDataNullForPost(
-            lat.value,
-        )}/${CreateDataNullForPost(long.value)}/${CreateDataNullForPost(
-            displayGroup.value,
-        )}/${CreateDataNullForPost(loggerId.value)}/${CreateDataNullForPost(
-            startDay.value,
-        )}/${CreateDataNullForPost(startHour.value)}/${CreateDataNullForPost(
-            status.value,
-        )}/${CreateDataNullForPost(pipeSize.value)}/${CreateDataNullForPost(
-            interval.value,
-        )}/${CreateDataNullForPost(available.value)}/${CreateDataNullForPost(
-            timeDelay.value,
-        )}/${CreateDataNullForPost(note.value.replaceAll('/', '|'))}/${
-            otherDevice.checked
-        }/${CreateDataNullForPost(isDisplay.checked)}/${CreateDataNullForPost(
-            isValve.checked,
-        )}/${CreateDataNullForPost(isConnectPipe.checked)}`;
+        const obj = {
+            SiteId: siteid.value,
+            Location: locationSite.value,
+            Latitude: lat.value,
+            Longitude: long.value,
+            DisplayGroup: displayGroup.value,
+            LoggerId: loggerId.value,
+            StartDay: startDay.value,
+            StartHour: startHour.value,
+            Status: status.value,
+            PipeSize: pipeSize.value,
+            Interval: interval.value,
+            Available: available.value,
+            TimeDelay: timeDelay.value,
+            Note: note.value.replaceAll('/', '|'),
+            OtherDevice: otherDevice.checked,
+            IsDisplay: isDisplay.checked,
+            IsValve: isValve.checked,
+            IsConnectPipe: isConnectPipe.checked,
+            MeterSerial: serialMeter.value,
+            LoggerSerial: serialLogger.value,
+        };
+
+        let url = `${urlInsertSite}`;
 
         axios
-            .post(url)
+            .post(url, obj)
             .then((res) => {
                 if (res.data != 0) {
                     swal('Thành công', 'Thêm thành công', 'success');
@@ -155,30 +194,34 @@ btnUpdate.addEventListener('click', function (e) {
     ) {
         swal('Lỗi', 'Chưa có mã vị trí', 'error');
     } else {
-        let url = `${urlUpdateSite}/${CreateDataNullForPost(
-            id.value,
-        )}/${CreateDataNullForPost(siteid.value)}/${CreateDataNullForPost(
-            locationSite.value,
-        )}/${CreateDataNullForPost(lat.value)}/${CreateDataNullForPost(
-            long.value,
-        )}/${CreateDataNullForPost(displayGroup.value)}/${CreateDataNullForPost(
-            loggerId.value,
-        )}/${CreateDataNullForPost(startDay.value)}/${CreateDataNullForPost(
-            startHour.value,
-        )}/${CreateDataNullForPost(status.value)}/${CreateDataNullForPost(
-            pipeSize.value,
-        )}/${CreateDataNullForPost(interval.value)}/${CreateDataNullForPost(
-            available.value,
-        )}/${CreateDataNullForPost(timeDelay.value)}/${CreateDataNullForPost(
-            note.value.replaceAll('/', '|'),
-        )}/${otherDevice.checked}/${CreateDataNullForPost(
-            isDisplay.checked,
-        )}/${CreateDataNullForPost(isValve.checked)}/${CreateDataNullForPost(
-            isConnectPipe.checked,
-        )}`;
+        const obj = {
+            _id: id.value,
+            SiteId: siteid.value,
+            Location: locationSite.value,
+            Latitude: lat.value,
+            Longitude: long.value,
+            DisplayGroup: displayGroup.value,
+            LoggerId: loggerId.value,
+            StartDay: startDay.value,
+            StartHour: startHour.value,
+            Status: status.value,
+            PipeSize: pipeSize.value,
+            Interval: interval.value,
+            Available: available.value,
+            TimeDelay: timeDelay.value,
+            Note: note.value.replaceAll('/', '|'),
+            OtherDevice: otherDevice.checked,
+            IsDisplay: isDisplay.checked,
+            IsValve: isValve.checked,
+            IsConnectPipe: isConnectPipe.checked,
+            MeterSerial: serialMeter.value,
+            LoggerSerial: serialLogger.value,
+        };
+
+        let url = `${urlUpdateSite}`;
 
         axios
-            .post(url)
+            .post(url, obj)
             .then((res) => {
                 if (res.data != 0) {
                     swal('Thành công', 'Cập nhật thành công', 'success');

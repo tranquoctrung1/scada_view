@@ -245,21 +245,51 @@ function initMap() {
                             '</span></td></tr>' +
                             `<tr><td colspan="2" style="text-align:center;font-weight:bold;color:red;background-color:white; "><marquee id="error-site${site.SiteId}"></marquee></td></tr>`;
                         infoHtml =
-                            '<div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Hãng ĐH: ' +
-                            'ABB' +
-                            '</span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold"> Hãng Logger: ' +
-                            'Technolog' +
-                            '</span></div></div>' +
-                            '<div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Model ĐH: ' +
-                            'ABC123456' +
-                            '</span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold">Model Logger: ' +
-                            'Technolog123' +
-                            '</span></div></div>' +
-                            '<div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Trạng thái ĐH: ' +
-                            'Mới' +
-                            '</span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold">Trạng thái Logger: ' +
-                            'Đã sử dụng' +
-                            '</span></div></div>' +
+                            `<div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Hãng ĐH:
+                            ${
+                                site.DeviceMeter != null &&
+                                site.DeviceMeter != undefined
+                                    ? site.DeviceMeter.Branch
+                                    : ''
+                            } 
+                            </span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold"> Hãng Logger:
+                            ${
+                                site.DeviceLogger != null &&
+                                site.DeviceLogger != undefined
+                                    ? site.DeviceLogger.Branch
+                                    : ''
+                            }
+                            </span></div></div>
+                            <div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Model ĐH: 
+                            ${
+                                site.DeviceMeter != null &&
+                                site.DeviceMeter != undefined
+                                    ? site.DeviceMeter.Model
+                                    : ''
+                            }
+                            </span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold">Model Logger:
+                            ${
+                                site.DeviceLogger != null &&
+                                site.DeviceLogger != undefined
+                                    ? site.DeviceLogger.Model
+                                    : ''
+                            }
+                            </span></div></div>
+                            <div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Trạng thái ĐH: 
+                            ${
+                                site.DeviceMeter != null &&
+                                site.DeviceMeter != undefined
+                                    ? site.DeviceMeter.Status
+                                    : ''
+                            }
+                            </span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold">Trạng thái Logger:
+                            ${
+                                site.DeviceLogger != null &&
+                                site.DeviceLogger != undefined
+                                    ? site.DeviceLogger.Status
+                                    : ''
+                            }
+                            </span></div></div>` +
                             '<span style="font-weight:bold">Vị trí: ' +
                             site.Location +
                             '</span>' +
@@ -272,6 +302,10 @@ function initMap() {
                             (site.IsValve === true
                                 ? `<br/><span style="font-weight:bold; cursor: pointer; color: blue; text-decoration: underline" onclick="openControlValve(${site.LoggerId})">Điều khiển van</span>`
                                 : '');
+
+                        if (site.SiteId == '6500') {
+                            console.log(infoHtml);
+                        }
 
                         //'</br><span>Index: ';
                         index = 0;
@@ -632,21 +666,51 @@ async function updateMap() {
                         '</span></td></tr>' +
                         `<tr><td colspan="2" style="text-align:center;font-weight:bold;color:red;background-color:white; "><marquee id="error-site${site.SiteId}"></marquee></td></tr>`;
                     infoHtml =
-                        '<div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Hãng ĐH: ' +
-                        'ABB' +
-                        '</span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold"> Hãng Logger: ' +
-                        'Technolog' +
-                        '</span></div></div>' +
-                        '<div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Model ĐH: ' +
-                        'ABC123456' +
-                        '</span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold">Model Logger: ' +
-                        'Technolog123' +
-                        '</span></div></div>' +
-                        '<div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Trạng thái ĐH: ' +
-                        'Mới' +
-                        '</span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold">Trạng thái Logger: ' +
-                        'Đã sử dụng' +
-                        '</span></div></div>' +
+                        `<div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Hãng ĐH:
+                            ${
+                                site.DeviceMeter != null &&
+                                site.DeviceMeter != undefined
+                                    ? site.DeviceMeter.Branch
+                                    : ''
+                            } 
+                            </span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold"> Hãng Logger:
+                            ${
+                                site.DeviceLogger != null &&
+                                site.DeviceLogger != undefined
+                                    ? site.DeviceLogger.Branch
+                                    : ''
+                            }
+                            </span></div></div>
+                            <div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Model ĐH: 
+                            ${
+                                site.DeviceMeter != null &&
+                                site.DeviceMeter != undefined
+                                    ? site.DeviceMeter.Model
+                                    : ''
+                            }
+                            </span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold">Model Logger:
+                            ${
+                                site.DeviceLogger != null &&
+                                site.DeviceLogger != undefined
+                                    ? site.DeviceLogger.Model
+                                    : ''
+                            }
+                            </span></div></div>
+                            <div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Trạng thái ĐH: 
+                            ${
+                                site.DeviceMeter != null &&
+                                site.DeviceMeter != undefined
+                                    ? site.DeviceMeter.Status
+                                    : ''
+                            }
+                            </span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold">Trạng thái Logger:
+                            ${
+                                site.DeviceLogger != null &&
+                                site.DeviceLogger != undefined
+                                    ? site.DeviceLogger.Status
+                                    : ''
+                            }
+                            </span></div></div>` +
                         '<span style="font-weight:bold">Vị trí: ' +
                         site.Location +
                         '</span>' +

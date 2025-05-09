@@ -5,6 +5,8 @@ const StaffSiteModel = require('../../model/staffSite');
 const ChannelModel = require('../../model/Channel');
 const ConditionIconModel = require('../../model/ConditionIcon');
 const mongoose = require('mongoose');
+const DeviceLoggerModel = require('../../model/DeviceLogger');
+const DeviceMeterModel = require('../../model/DeviceMeter');
 
 module.exports.GetAllSite = async function (req, res) {
     let result = await SiteModel.find({}).sort({
@@ -75,7 +77,33 @@ module.exports.GetSiteByUid = async function (req, res) {
         });
     }
 
-    res.json(listSite);
+    const result = [];
+
+    for (const site of listSite) {
+        const obj = { ...site._doc };
+
+        const deviceLogger = await DeviceLoggerModel.find({
+            Serial: site.LoggerSerial,
+        });
+        const deviceMeter = await DeviceMeterModel.find({
+            Serial: site.MeterSerial,
+        });
+
+        if (deviceLogger.length > 0) {
+            obj.DeviceLogger = deviceLogger[0];
+        } else {
+            obj.DeviceLogger = null;
+        }
+        if (deviceMeter.length > 0) {
+            obj.DeviceMeter = deviceMeter[0];
+        } else {
+            obj.DeviceMeter = null;
+        }
+
+        result.push(obj);
+    }
+
+    res.json(result);
 };
 
 module.exports.GetSiteByUid2 = async function (req, res) {
@@ -455,102 +483,33 @@ module.exports.GetSiteForSWOC = async function (req, res) {
 };
 
 module.exports.InsertSite = async function (req, res) {
-    let displayGroup = req.params.displayGroup;
-    if (displayGroup == 'null') {
-        displayGroup = '';
-    }
-    let siteid = req.params.siteid;
-    if (siteid == 'null') {
-        siteid = '';
-    }
-    let loggerid = req.params.loggerid;
-    if (loggerid == 'null') {
-        loggerid = '';
-    }
-    let location = req.params.location;
-    if (location == 'null') {
-        location = '';
-    }
-    let lat = req.params.lat;
-    if (lat == 'null') {
-        lat = 0;
-    }
-    let long = req.params.long;
-    if (long == 'null') {
-        long = 0;
-    }
-    let startDay = req.params.startDay;
-    if (startDay == 'null') {
-        startDay = 1;
-    }
-    let startHour = req.params.startHour;
-    if (startHour == 'null') {
-        startHour = 0;
-    }
-    let timeDelay = req.params.timeDelay;
-    if (timeDelay == 'null') {
-        timeDelay = 60;
-    }
-    let available = req.params.available;
-    if (available == 'null') {
-        available = '';
-    }
-    let status = req.params.status;
-    if (status == 'null') {
-        status = '';
-    }
-    let pipeSize = req.params.pipeSize;
-    if (pipeSize == 'null') {
-        pipeSize = '';
-    }
-    let interval = req.params.interval;
-    if (interval == 'null') {
-        interval = 10;
-    }
-    let note = req.params.note;
-    if (note == 'null') {
-        note = '';
-    }
-    let otherDevice = req.params.otherDevice;
-    if (otherDevice == 'null') {
-        otherDevice = false;
-    }
-    let isDisplay = req.params.isDisplay;
-    if (isDisplay == 'null') {
-        isDisplay = false;
-    }
-    let isValve = req.params.isValve;
-    if (isValve == 'null') {
-        isValve = false;
-    }
+    const data = req.body;
 
-    let isConnectPipe = req.params.isConnectPipe;
-    if (isConnectPipe == 'null') {
-        isConnectPipe = false;
-    }
-    let check = await SiteModel.find({ SiteId: siteid });
+    let check = await SiteModel.find({ SiteId: data.SiteId });
 
     if (check.length == 0) {
         let result = await SiteModel.insertMany([
             {
-                SiteId: siteid,
-                Location: location,
-                Latitude: lat,
-                Longitude: long,
-                DisplayGroup: displayGroup,
-                LoggerId: loggerid,
-                StartDay: startDay,
-                StartHour: startHour,
-                Status: status,
-                PipeSize: pipeSize,
-                InterVal: interval,
-                Available: available,
-                TimeDelay: timeDelay,
-                Note: note.replaceAll('|', '/'),
-                OtherDevice: otherDevice,
-                IsDisplay: isDisplay,
-                IsValve: isValve,
-                IsConnectPipe: isConnectPipe,
+                SiteId: data.SiteId,
+                Location: data.Location,
+                Latitude: data.Latitude,
+                Longitude: data.Longitude,
+                DisplayGroup: data.DisplayGroup,
+                LoggerId: data.LoggerId,
+                StartDay: data.StartDay,
+                StartHour: data.StartHour,
+                Status: data.Status,
+                PipeSize: data.PipeSize,
+                InterVal: data.Interval,
+                Available: data.Available,
+                TimeDelay: data.TimeDelay,
+                Note: data.Note.replaceAll('|', '/'),
+                OtherDevice: data.OtherDevice,
+                IsDisplay: data.IsDisplay,
+                IsValve: data.IsValve,
+                IsConnectPipe: data.IsConnectPipe,
+                MeterSerial: data.MeterSerial,
+                LoggerSerial: data.LoggerSerial,
             },
         ]);
 
@@ -565,105 +524,31 @@ module.exports.InsertSite = async function (req, res) {
 };
 
 module.exports.UpdateSite = async function (req, res) {
-    let id = req.params.id;
-    if (id == 'null') {
-        id = '';
-    }
-
-    let displayGroup = req.params.displayGroup;
-    if (displayGroup == 'null') {
-        displayGroup = '';
-    }
-    let siteid = req.params.siteid;
-    if (siteid == 'null') {
-        siteid = '';
-    }
-    let loggerid = req.params.loggerid;
-    if (loggerid == 'null') {
-        loggerid = '';
-    }
-    let location = req.params.location;
-    if (location == 'null') {
-        location = '';
-    }
-    let lat = req.params.lat;
-    if (lat == 'null') {
-        lat = 0;
-    }
-    let long = req.params.long;
-    if (long == 'null') {
-        long = 0;
-    }
-    let startDay = req.params.startDay;
-    if (startDay == 'null') {
-        startDay = 1;
-    }
-    let startHour = req.params.startHour;
-    if (startHour == 'null') {
-        startHour = 0;
-    }
-    let timeDelay = req.params.timeDelay;
-    if (timeDelay == 'null') {
-        timeDelay = 60;
-    }
-    let available = req.params.available;
-    if (available == 'null') {
-        available = '';
-    }
-    let status = req.params.status;
-    if (status == 'null') {
-        status = '';
-    }
-    let pipeSize = req.params.pipeSize;
-    if (pipeSize == 'null') {
-        pipeSize = '';
-    }
-    let interval = req.params.interval;
-    if (interval == 'null') {
-        interval = 10;
-    }
-    let note = req.params.note;
-    if (note == 'null') {
-        note = '';
-    }
-    let otherDevice = req.params.otherDevice;
-    if (otherDevice == 'null') {
-        otherDevice = false;
-    }
-    let isDisplay = req.params.isDisplay;
-    if (isDisplay == 'null') {
-        isDisplay = false;
-    }
-    let isValve = req.params.isValve;
-    if (isValve == 'null') {
-        isValve = false;
-    }
-    let isConnectPipe = req.params.isConnectPipe;
-    if (isConnectPipe == 'null') {
-        isConnectPipe = false;
-    }
+    const data = req.body;
 
     let result = await SiteModel.updateOne(
-        { _id: id },
+        { _id: data._id },
         {
-            SiteId: siteid,
-            Location: location,
-            Latitude: lat,
-            Longitude: long,
-            DisplayGroup: displayGroup,
-            LoggerId: loggerid,
-            StartDay: startDay,
-            StartHour: startHour,
-            Status: status,
-            PipeSize: pipeSize,
-            Interval: interval,
-            Available: available,
-            TimeDelay: timeDelay,
-            Note: note.replaceAll('|', '/'),
-            OtherDevice: otherDevice,
-            IsDisplay: isDisplay,
-            IsValve: isValve,
-            IsConnectPipe: isConnectPipe,
+            SiteId: data.SiteId,
+            Location: data.Location,
+            Latitude: data.Latitude,
+            Longitude: data.Longitude,
+            DisplayGroup: data.DisplayGroup,
+            LoggerId: data.LoggerId,
+            StartDay: data.StartDay,
+            StartHour: data.StartHour,
+            Status: data.Status,
+            PipeSize: data.PipeSize,
+            InterVal: data.Interval,
+            Available: data.Available,
+            TimeDelay: data.TimeDelay,
+            Note: data.Note.replaceAll('|', '/'),
+            OtherDevice: data.OtherDevice,
+            IsDisplay: data.IsDisplay,
+            IsValve: data.IsValve,
+            IsConnectPipe: data.IsConnectPipe,
+            MeterSerial: data.MeterSerial,
+            LoggerSerial: data.LoggerSerial,
         },
     );
 

@@ -53,14 +53,8 @@ router.get('/GetAllSite', SiteApi.GetAllSite);
 router.get('/GetSiteByUId/:userid', SiteApi.GetSiteByUid);
 router.get('/GetSiteByUId2/:userid', SiteApi.GetSiteByUid2);
 router.get('/GetSiteBySiteId/:siteid', SiteApi.GetSiteBySiteId);
-router.post(
-    '/InsertSite/:siteid/:location/:lat/:long/:displayGroup/:loggerid/:startDay/:startHour/:status/:pipeSize/:interval/:available/:timeDelay/:note/:otherDevice/:isDisplay/:isValve/:isConnectPipe',
-    SiteApi.InsertSite,
-);
-router.post(
-    '/UpdateSite/:id/:siteid/:location/:lat/:long/:displayGroup/:loggerid/:startDay/:startHour/:status/:pipeSize/:interval/:available/:timeDelay/:note/:otherDevice/:isDisplay/:isValve/:isConnectPipe',
-    SiteApi.UpdateSite,
-);
+router.post('/InsertSite', SiteApi.InsertSite);
+router.post('/UpdateSite', SiteApi.UpdateSite);
 router.post('/DeleteSite/:id', SiteApi.DeleteSite);
 router.get('/GetChannelByLoggerId/:loggerid', ChannelApi.GetChannelByLoggerId);
 router.get(

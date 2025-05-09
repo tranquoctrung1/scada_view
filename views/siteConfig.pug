@@ -44,6 +44,16 @@ block content
 						i.fa.fa-map
 					//- button.btn.btn-outline-secondary(type='button' onclick="getLocation()")
 					//-     i.fa.fa-map-marker
+			.col-sm-6 
+				.input-group.mb-3
+					span#lbDeviceLogger.input-group-text Serial Logger
+					input.form-control#serialLogger.form-select( type="text" aria-label='lbDeviceLogger' aria-describedby='lbDeviceLogger' list="listDeviceLogger")
+					datalist#listDeviceLogger
+			.col-sm-6 
+				.input-group.mb-3
+					span#lbDeviceMeter.input-group-text Serial Đồng hồ
+					input.form-control#serialMeter.form-select( type="text" aria-label='lbDeviceMeter' aria-describedby='lbDeviceMeter' list="listDeviceMeter")
+					datalist#listDeviceMeter
 			.col-sm-6.d-none
 				.input-group.mb-3
 					span#lbStartDay.input-group-text Ngày chốt dữ liệu
