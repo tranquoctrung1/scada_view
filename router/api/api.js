@@ -47,6 +47,7 @@ const PipeApi = require('../../controller/api/pipe');
 const ListPointPipeApi = require('../../controller/api/listPointPipe');
 const DrawingPipeApi = require('../../controller/api/drawingPipe');
 const DrawingDMAApi = require('../../controller/api/drawingDMA');
+const MeterApi = require('../../controller/api/meter');
 
 router.get('/GetAllSite', SiteApi.GetAllSite);
 router.get('/GetSiteByUId/:userid', SiteApi.GetSiteByUid);
@@ -444,5 +445,18 @@ router.post('/InsertDrawingDMA', DrawingDMAApi.Insert);
 router.patch('/UpdateDrawingDMA', DrawingDMAApi.Update);
 
 router.put('/DeleteDrawingDMA', DrawingDMAApi.Delete);
+
+router.get('/GetAllDeviceMeter', MeterApi.GetAllDeviceMeter);
+router.get('/GetDeviceMeterBySerial/:serial', MeterApi.GetDeviceMeterBySerial);
+router.post(
+    '/InsertDeviceMeter/:serial/:datePushStock/:producer/:branch/:model/:status/:note/:isInstall/:urlUploadFile',
+    MeterApi.InsertDeviceMeter,
+);
+router.post(
+    '/UpdateDeviceMeter/:id/:serial/:datePushStock/:producer/:branch/:model/:status/:note/:isInstall/:urlUploadFile',
+    MeterApi.UpdateDeviceMeter,
+);
+
+router.post('/DeleteDeviceMeter/:id', MeterApi.DeleteDeviceMeter);
 
 module.exports = router;

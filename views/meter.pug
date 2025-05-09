@@ -1,11 +1,11 @@
 extends ./partial/layoutNone.pug
 block linkcss
-    link(rel="stylesheet", href="/css/logger.css")
+    link(rel="stylesheet", href="/css/meter.css")
     link(rel="stylesheet", href="/css/pageCommon.css")
 block content
     .container-fluid
         .row.title-pressure
-            h3 Thiết Bị Logger
+            h3 Đồng hồ
         .row.info
             .col-sm-6 
                 .input-group.mb-3
@@ -55,5 +55,5 @@ block content
                     button.btn.btn-danger#btnDelete(type="button") Xóa
 block linkcriptbody
     script(src="/js/hostname.js") 
-    script(src="/js/logger.js") 
+    script(src="/js/meter.js") 
     script(src="/js/util.js") 

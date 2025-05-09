@@ -63,6 +63,7 @@ const Pipe = require('./router/pipe');
 const MapDMA = require('./router/mapDMA');
 const DrawDMA = require('./router/drawDMA');
 const DrawPipe = require('./router/drawPipe');
+const Meter = require('./router/meter');
 
 // call api
 const Api = require('./router/api/api');
@@ -146,7 +147,8 @@ app.use('/dataDayLogger', Auth.auth, DataDayLogger);
 app.use('/dataMonthLogger', Auth.auth, DataMonthLogger);
 app.use('/dataTableDetailLogger', Auth.auth, DataTableDetailLogger);
 app.use('/dataManual', Auth.auth, DataManual);
-app.use('/logger', Auth.auth, Logger);
+app.use('/logger', /*Auth.auth,*/ Logger);
+app.use('/meter', /*Auth.auth,*/ Meter);
 app.use('/siteConfig', /*Auth.auth,*/ SiteConfig);
 app.use('/createUser', Auth.auth, CreateUser);
 app.use('/viewUser', Auth.auth, ViewUser);

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-var deviceLoggerSchema = new mongoose.Schema({
+var DeviceMeterSchema = new mongoose.Schema({
     Serial: String,
     DatePushStock: Date,
     Producer: String,
@@ -12,10 +12,10 @@ var deviceLoggerSchema = new mongoose.Schema({
     urlUploadFile: String,
 });
 
-var DeviceLogger = mongoose.model(
-    'deviceLoggerSchema',
-    deviceLoggerSchema,
-    't_Logger',
+var DeviceMeter = mongoose.model(
+    'DeviceMeterSchema',
+    DeviceMeterSchema,
+    't_Meter',
 );
 
-module.exports = DeviceLogger;
+module.exports = DeviceMeter;

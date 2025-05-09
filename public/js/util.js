@@ -257,6 +257,22 @@ function createOptionsInSerialLoggerSelectBox(data, idDom) {
     domSelect.innerHTML = content;
 }
 
+function createOptionsInSerialMeterSelectBox(data, idDom) {
+    let domSelect = document.getElementById(`${idDom}`);
+
+    domSelect.innerHTML = '';
+
+    let content = '';
+
+    if (CheckExistsData(data)) {
+        for (let item of data) {
+            content += `<option value="${item.Serial}">${item.Serial}</option>`;
+        }
+    }
+
+    domSelect.innerHTML = content;
+}
+
 function createOptionsInDisplayGroupSelectBox(data, idDom) {
     let domSelect = document.getElementById(`${idDom}`);
 

@@ -1,19 +1,19 @@
-const urlGetAllDeviceLogger = `${hostname}/GetAllDeviceLogger`;
-const urlInsertDeviceLogger = `${hostname}/InsertDeviceLogger`;
-const urlGetDeviceLoggerBySerial = `${hostname}/GetDeviceLoggerBySerial`;
-const urlUpdateDeviceLogger = `${hostname}/UpdateDeviceLogger`;
-const urlDeleteDeviceLogger = `${hostname}/DeleteDeviceLogger`;
+const urlGetAllDeviceMeter = `${hostname}/GetAllDeviceMeter`;
+const urlInsertDeviceMeter = `${hostname}/InsertDeviceMeter`;
+const urlGetDeviceMeterBySerial = `${hostname}/GetDeviceMeterBySerial`;
+const urlUpdateDeviceMeter = `${hostname}/UpdateDeviceMeter`;
+const urlDeleteDeviceMeter = `${hostname}/DeleteDeviceMeter`;
 
-function fetchSerialLogger() {
+function fetchSerialMeter() {
     axios
-        .get(urlGetAllDeviceLogger)
+        .get(urlGetAllDeviceMeter)
         .then((res) => {
-            createOptionsInSerialLoggerSelectBox(res.data, 'listSerial');
+            createOptionsInSerialMeterSelectBox(res.data, 'listSerial');
         })
         .catch((err) => console.log(err));
 }
 
-fetchSerialLogger();
+fetchSerialMeter();
 
 let serial = document.getElementById('serialNumber');
 let datePushStock = document.getElementById('datePushStock');
@@ -38,7 +38,7 @@ btnInsert.addEventListener('click', function (e) {
         swal('Lỗi', 'Chưa có số Serial', 'error');
     } else {
         let totalMilisecond = new Date(datePushStock.value).getTime();
-        let url = `${urlInsertDeviceLogger}/${CreateDataNullForPost(
+        let url = `${urlInsertDeviceMeter}/${CreateDataNullForPost(
             serial.value,
         )}/${CreateDataNullForPost(totalMilisecond)}/${CreateDataNullForPost(
             producer.value,
@@ -55,7 +55,7 @@ btnInsert.addEventListener('click', function (e) {
                 if (res.data != 0) {
                     swal('Thành công', 'Thêm thành công', 'success');
                     id.value = res.data;
-                    fetchSerialLogger();
+                    fetchSerialMeter();
                 } else {
                     swal('Lỗi', 'Thêm không thành công', 'error');
                 }
@@ -71,7 +71,7 @@ let serialNumber = document.getElementById('serialNumber');
 serialNumber.addEventListener('change', function (e) {
     console.log(e.target.value);
 
-    let url = `${urlGetDeviceLoggerBySerial}/${e.target.value}`;
+    let url = `${urlGetDeviceMeterBySerial}/${e.target.value}`;
     axios
         .get(url)
         .then((res) => {
@@ -120,7 +120,7 @@ btnUpdate.addEventListener('click', function (e) {
         swal('Lỗi', 'Chưa có số Serial', 'error');
     } else {
         let totalMilisecond = new Date(datePushStock.value).getTime();
-        let url = `${urlUpdateDeviceLogger}/${CreateDataNullForPost(
+        let url = `${urlUpdateDeviceMeter}/${CreateDataNullForPost(
             id.value,
         )}/${CreateDataNullForPost(serial.value)}/${CreateDataNullForPost(
             totalMilisecond,
@@ -138,7 +138,7 @@ btnUpdate.addEventListener('click', function (e) {
                 console.log(res.data);
                 if (res.data != 0) {
                     swal('Thành công', 'Cập nhật thành công', 'success');
-                    fetchSerialLogger();
+                    fetchSerialMeter();
                 } else {
                     swal('Lỗi', 'Cập nhật không thành công', 'error');
                 }
@@ -159,14 +159,14 @@ btnDelete.addEventListener('click', async function (e) {
         buttons: true,
         dangerMode: true,
     }).then(async (willDelete) => {
-        let url = `${urlDeleteDeviceLogger}/${id.value}`;
+        let url = `${urlDeleteDeviceMeter}/${id.value}`;
         axios
             .post(url)
             .then((res) => {
                 if (res.data != 0) {
                     swal('Thành công', 'Xóa thành công', 'success');
                     SetEmpty();
-                    fetchSerialLogger();
+                    fetchSerialMeter();
                 } else {
                     swal('Lỗi', 'Xóa không thành công', 'error');
                 }
