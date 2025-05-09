@@ -25,6 +25,7 @@ function initMap() {
     map = L.map('map', {
         contextmenu: true,
         contextmenuWidth: 140,
+        attributionControl: false,
     });
 
     L.tileLayer(
