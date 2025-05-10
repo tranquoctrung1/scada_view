@@ -72,7 +72,7 @@ let timeconnectChange;
 
 const colorScale = chroma
     .scale(['#e74c3c', '#f1c40f', '#2ecc71', '#2980b9'])
-    .domain([0, 10]);
+    .domain([0, 1, 2, 10]);
 
 function createHeatIcon(color = 'red', radius = 20) {
     const canvas = document.createElement('canvas');
@@ -289,23 +289,26 @@ function initMap() {
                                     ? site.DeviceLogger.Status
                                     : ''
                             }
-                            </span></div></div>` +
-                            '<span style="font-weight:bold">Vị trí: ' +
-                            site.Location +
-                            '</span>' +
-                            '<br/><span>Logger Id: ' +
-                            site.LoggerId +
-                            '</span>' +
-                            '<br/><span>Pin đồng hồ: ' +
-                            '3.6 V' +
-                            '</span>' +
+                            </span></div></div>
+                            <div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Vị trí: 
+                            ${site.Location}
+                            </span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold">Logger Id:
+                            ${site.LoggerId}
+                            </span></div></div>
+                            <div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">TH kiểm định: 
+                            ${''}
+                            </span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold">Hạn bảo hành:
+                            ${''}
+                            </span></div></div>
+                            <div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Pin đồng hồ:
+                            ${'3.6 V'} 
+                            </span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold">Pin Logger:
+                            ${'3.6 V'} 
+                            </span></div></div>
+                            ` +
                             (site.IsValve === true
                                 ? `<br/><span style="font-weight:bold; cursor: pointer; color: blue; text-decoration: underline" onclick="openControlValve(${site.LoggerId})">Điều khiển van</span>`
                                 : '');
-
-                        if (site.SiteId == '6500') {
-                            console.log(infoHtml);
-                        }
 
                         //'</br><span>Index: ';
                         index = 0;
@@ -498,40 +501,44 @@ function initMap() {
 
                         //LOAD TO MAP
 
-                        if (pressureChannel !== null) {
-                            let heightIcon = 30;
-                            let colorIcon = '#3498db';
-
-                            if (
-                                pressureChannel.LastValue != null &&
-                                pressureChannel.LastValue !== undefined
-                            ) {
-                                heightIcon = Math.min(
-                                    pressureChannel.LastValue * 6,
-                                    60,
-                                );
-
-                                colorIcon = colorScale(
-                                    pressureChannel.LastValue,
-                                ).hex();
-                            }
-
-                            const htmlIcon = `<div class="pressure-icon" style="height:${heightIcon}px; color:${colorIcon}"></div>`;
-
-                            greenIcon = L.divIcon({
-                                className: '',
-                                html: htmlIcon,
-                                iconSize: [12, heightIcon],
-                                iconAnchor: [6, heightIcon],
-                            });
-                        } else {
+                        if (site.DisplayGroup === 'Nha may') {
                             greenIcon = new L.Icon({
                                 iconUrl: img,
-                                iconSize:
-                                    site.DisplayGroup === 'Nha may'
-                                        ? [40, 40]
-                                        : [20, 20],
+                                iconSize: [30, 30],
                             });
+                        } else {
+                            if (pressureChannel === null) {
+                                greenIcon = new L.Icon({
+                                    iconUrl: img,
+                                    iconSize: [10, 10],
+                                });
+                            } else {
+                                let heightIcon = 30;
+                                let colorIcon = '#3498db';
+
+                                if (
+                                    pressureChannel.LastValue != null &&
+                                    pressureChannel.LastValue !== undefined
+                                ) {
+                                    heightIcon = Math.min(
+                                        pressureChannel.LastValue * 15,
+                                        70,
+                                    );
+
+                                    colorIcon = colorScale(
+                                        pressureChannel.LastValue,
+                                    ).hex();
+                                }
+
+                                const htmlIcon = `<div class="pressure-icon" style="height:${heightIcon}px; color:${colorIcon}"></div>`;
+
+                                greenIcon = L.divIcon({
+                                    className: '',
+                                    html: htmlIcon,
+                                    iconSize: [12, heightIcon],
+                                    iconAnchor: [6, heightIcon],
+                                });
+                            }
                         }
 
                         // const heat = L.marker(
@@ -710,18 +717,24 @@ async function updateMap() {
                                     ? site.DeviceLogger.Status
                                     : ''
                             }
-                            </span></div></div>` +
-                        '<span style="font-weight:bold">Vị trí: ' +
-                        site.Location +
-                        '</span>' +
-                        '<br/><span>Logger Id: ' +
-                        site.LoggerId +
-                        '</span>' +
-                        '<br/><span>Pin đồng hồ: ' +
-                        '3.6 V' +
-                        '</span>' +
+                            </span></div></div><div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Vị trí: 
+                            ${site.Location}
+                            </span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold">Logger Id:
+                            ${site.LoggerId}
+                            </span></div></div>
+                            <div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">TH kiểm định: 
+                            ${''}
+                            </span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold">Hạn bảo hành:
+                            ${''}
+                            </span></div></div>
+                            <div class=row><div class="col-md-5 col-12 no-padding"><span style="font-weight:bold">Pin đồng hồ:
+                            ${'3.6 V'} 
+                            </span></div><div class="col-md-6 col-12 no-padding"><span style="font-weight:bold">Pin Logger:
+                            ${'3.6 V'} 
+                            </span></div></div>
+                            ` +
                         (site.IsValve === true
-                            ? `<br/><span style="font-weight:bold; cursor: pointer;  color: blue; text-decoration: underline" onclick="openControlValve(${site.LoggerId})">Điều khiển van</span>`
+                            ? `<br/><span style="font-weight:bold; cursor: pointer; color: blue; text-decoration: underline" onclick="openControlValve(${site.LoggerId})">Điều khiển van</span>`
                             : '');
                     // '</br><span>Index: ';
                     index = 0;
@@ -910,40 +923,44 @@ async function updateMap() {
 
                     //LOAD TO MAP
 
-                    if (pressureChannel !== null) {
-                        let heightIcon = 30;
-                        let colorIcon = '#3498db';
-
-                        if (
-                            pressureChannel.LastValue != null &&
-                            pressureChannel.LastValue !== undefined
-                        ) {
-                            heightIcon = Math.min(
-                                pressureChannel.LastValue * 6,
-                                60,
-                            );
-
-                            colorIcon = colorScale(
-                                pressureChannel.LastValue,
-                            ).hex();
-                        }
-
-                        const htmlIcon = `<div class="pressure-icon" style="height:${heightIcon}px; color:${colorIcon}"></div>`;
-
-                        greenIcon = L.divIcon({
-                            className: '',
-                            html: htmlIcon,
-                            iconSize: [12, heightIcon],
-                            iconAnchor: [6, heightIcon],
-                        });
-                    } else {
+                    if (site.DisplayGroup === 'Nha may') {
                         greenIcon = new L.Icon({
                             iconUrl: img,
-                            iconSize:
-                                site.DisplayGroup === 'Nha may'
-                                    ? [40, 40]
-                                    : [20, 20],
+                            iconSize: [30, 30],
                         });
+                    } else {
+                        if (pressureChannel === null) {
+                            greenIcon = new L.Icon({
+                                iconUrl: img,
+                                iconSize: [10, 10],
+                            });
+                        } else {
+                            let heightIcon = 30;
+                            let colorIcon = '#3498db';
+
+                            if (
+                                pressureChannel.LastValue != null &&
+                                pressureChannel.LastValue !== undefined
+                            ) {
+                                heightIcon = Math.min(
+                                    pressureChannel.LastValue * 15,
+                                    70,
+                                );
+
+                                colorIcon = colorScale(
+                                    pressureChannel.LastValue,
+                                ).hex();
+                            }
+
+                            const htmlIcon = `<div class="pressure-icon" style="height:${heightIcon}px; color:${colorIcon}"></div>`;
+
+                            greenIcon = L.divIcon({
+                                className: '',
+                                html: htmlIcon,
+                                iconSize: [12, heightIcon],
+                                iconAnchor: [6, heightIcon],
+                            });
+                        }
                     }
 
                     markers.forEach(function (marker) {

@@ -51,11 +51,11 @@ function initMap() {
         },
         draw: {
             polygon: true,
-            polyline: true,
+            polyline: false,
             rectangle: true,
             circle: true,
-            marker: true,
-            circlemarker: true,
+            marker: false,
+            circlemarker: false,
         },
     });
     map.addControl(drawControl);

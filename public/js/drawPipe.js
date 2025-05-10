@@ -45,10 +45,10 @@ function initMap() {
     const drawControl = new L.Control.Draw({
         edit: {
             featureGroup: editLayer,
-            remove: true,
+            remove: false,
         },
         draw: {
-            polygon: true,
+            polygon: false,
             polyline: true,
             rectangle: false,
             circle: false,
