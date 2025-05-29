@@ -10,6 +10,9 @@ const prevYear = document.getElementById('prevYear');
 const currentYear = document.getElementById('currentYear');
 const legend = document.getElementById('legend');
 const hideLegend = document.getElementById('hideLegend');
+const hideFooter = document.getElementById('hideFooter');
+const footer = document.getElementById('footer');
+const containerMap = document.getElementById('containerMap');
 
 let map = null;
 let top5LowestTTN = [];
@@ -75,12 +78,28 @@ function initMap() {
 
     L.control.watermark({ position: 'bottomleft' }).addTo(map);
 
+    L.Control.Watermark = L.Control.extend({
+        onAdd: function (map) {
+            return hideFooter;
+        },
+        onRemove: function (map) {
+            // Nothing to do here
+        },
+    });
+
+    L.control.watermark = function (opts) {
+        return new L.Control.Watermark(opts);
+    };
+
+    L.control.watermark({ position: 'bottomright' }).addTo(map);
+
     L.tileLayer(
-        'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        // 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
         {
             attribution:
                 '<strong style="color: #0078a8">Copyright &copy by Bavitech</strong>',
-            maxZoom: 14,
+            maxZoom: 18,
         },
     ).addTo(map);
 }
@@ -506,4 +525,10 @@ function drawLineChartCompare(data) {
 hideLegend.addEventListener('click', (e) => {
     legend.classList.toggle('hide');
     hideLegend.classList.toggle('hide');
+});
+
+hideFooter.addEventListener('click', (e) => {
+    footer.classList.toggle('hide');
+    containerMap.classList.toggle('hideFooter');
+    hideFooter.classList.toggle('hide');
 });

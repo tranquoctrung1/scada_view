@@ -7,7 +7,7 @@ block linkcss
 	link(rel="stylesheet", href="/css/mapDMA.css")
 	link(rel="stylesheet", href="/css/pageCommon.css")
 block content 
-	.container-fluid.map
+	.container-fluid.map#containerMap.hideFooter
 		.row.p-0.m-0
 			.col.p-0
 				.map#mapDMA
@@ -27,9 +27,11 @@ block content
 					div#hideLegend.hide
 						span  
 							i.ti-blackboard
-			
-	.container-fluid.footer
-		.row 
+				div#hideFooter.hide
+					span
+						i.ti-menu-alt
+	.container-fluid.footer#footer.hide
+		.row
 			.col-md-2
 				//- #loading
 				//- 	img.loading(src="/images/loading.svg", alt="", srcset="")

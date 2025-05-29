@@ -289,7 +289,7 @@ module.exports.GetPipes = async (req, res) => {
         const colorGroupPipe = [];
 
         for (const gp of groupPipes) {
-            let color = 'green';
+            let color = '#74b9ff';
 
             const site = await SiteModel.find({ _id: gp.SiteIdStart });
             if (site !== undefined && site !== null && SiteModel.length > 0) {
@@ -348,13 +348,13 @@ module.exports.GetPipes = async (req, res) => {
                     result.push(t);
                 } else {
                     const t = JSON.parse(JSON.stringify(pipe));
-                    t.features[0].properties.Color = 'green';
+                    t.features[0].properties.Color = '#74b9ff';
 
                     result.push(t);
                 }
             } else {
                 const t = JSON.parse(JSON.stringify(pipe));
-                t.features[0].properties.Color = 'green';
+                t.features[0].properties.Color = '#74b9ff';
                 result.push(t);
             }
         }

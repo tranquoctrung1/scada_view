@@ -127,7 +127,8 @@ function initMap() {
     });
 
     L.tileLayer(
-        'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        // 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
         {
             attribution:
                 '<strong style="color: #0078a8">Copyright &copy by Bavitech</strong>',
@@ -504,16 +505,16 @@ function initMap() {
                         if (site.DisplayGroup === 'Nha may') {
                             greenIcon = new L.Icon({
                                 iconUrl: img,
-                                iconSize: [30, 30],
+                                iconSize: [50, 50],
                             });
                         } else {
                             if (pressureChannel === null) {
                                 greenIcon = new L.Icon({
                                     iconUrl: img,
-                                    iconSize: [10, 10],
+                                    iconSize: [30, 30],
                                 });
                             } else {
-                                let heightIcon = 30;
+                                let heightIcon = 70;
                                 let colorIcon = '#3498db';
 
                                 if (
@@ -521,8 +522,8 @@ function initMap() {
                                     pressureChannel.LastValue !== undefined
                                 ) {
                                     heightIcon = Math.min(
-                                        pressureChannel.LastValue * 15,
-                                        70,
+                                        pressureChannel.LastValue * 30,
+                                        100,
                                     );
 
                                     colorIcon = colorScale(
@@ -926,16 +927,16 @@ async function updateMap() {
                     if (site.DisplayGroup === 'Nha may') {
                         greenIcon = new L.Icon({
                             iconUrl: img,
-                            iconSize: [30, 30],
+                            iconSize: [50, 50],
                         });
                     } else {
                         if (pressureChannel === null) {
                             greenIcon = new L.Icon({
                                 iconUrl: img,
-                                iconSize: [10, 10],
+                                iconSize: [30, 30],
                             });
                         } else {
-                            let heightIcon = 30;
+                            let heightIcon = 70;
                             let colorIcon = '#3498db';
 
                             if (
@@ -943,8 +944,8 @@ async function updateMap() {
                                 pressureChannel.LastValue !== undefined
                             ) {
                                 heightIcon = Math.min(
-                                    pressureChannel.LastValue * 15,
-                                    70,
+                                    pressureChannel.LastValue * 30,
+                                    100,
                                 );
 
                                 colorIcon = colorScale(

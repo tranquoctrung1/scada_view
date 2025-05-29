@@ -131,135 +131,135 @@ module.exports.GetChannelByLoggerId = async function (req, res) {
         result.push(obj);
     }
 
-    if (site.length > 0) {
-        let quantity = 0;
+    // if (site.length > 0) {
+    //     let quantity = 0;
 
-        let objChannelQuantity = {};
-        objChannelQuantity.ChannelId = site[0].LoggerId + '_102';
-        objChannelQuantity.ChannelName = 'SLN';
-        objChannelQuantity.LoggerId = site[0].LoggerId;
-        objChannelQuantity.Unit = 'm3';
-        objChannelQuantity.Pressure1 = false;
-        objChannelQuantity.Pressure2 = false;
-        objChannelQuantity.ForwardFlow = false;
-        objChannelQuantity.ReverseFlow = false;
-        objChannelQuantity.IndexTimeStamp = null;
-        objChannelQuantity.LastIndex = 0;
-        objChannelQuantity.BaseLine = null;
-        objChannelQuantity.BaseMin = null;
-        objChannelQuantity.BaseMax = null;
-        objChannelQuantity.OtherChannel = true;
-        objChannelQuantity.DisplayOnLabel = true;
-        objChannelQuantity.Status = null;
-        objChannelQuantity.allowChart = false;
-        objChannelQuantity.OpenCloseChannel = false;
+    //     let objChannelQuantity = {};
+    //     objChannelQuantity.ChannelId = site[0].LoggerId + '_102';
+    //     objChannelQuantity.ChannelName = 'SLN';
+    //     objChannelQuantity.LoggerId = site[0].LoggerId;
+    //     objChannelQuantity.Unit = 'm3';
+    //     objChannelQuantity.Pressure1 = false;
+    //     objChannelQuantity.Pressure2 = false;
+    //     objChannelQuantity.ForwardFlow = false;
+    //     objChannelQuantity.ReverseFlow = false;
+    //     objChannelQuantity.IndexTimeStamp = null;
+    //     objChannelQuantity.LastIndex = 0;
+    //     objChannelQuantity.BaseLine = null;
+    //     objChannelQuantity.BaseMin = null;
+    //     objChannelQuantity.BaseMax = null;
+    //     objChannelQuantity.OtherChannel = true;
+    //     objChannelQuantity.DisplayOnLabel = true;
+    //     objChannelQuantity.Status = null;
+    //     objChannelQuantity.allowChart = false;
+    //     objChannelQuantity.OpenCloseChannel = false;
 
-        if (commonDate != null) {
-            let zeroHour = new Date(
-                commonDate.getFullYear(),
-                commonDate.getMonth(),
-                commonDate.getDate(),
-                0,
-                0,
-                0,
-            );
-            let oneHour = new Date(
-                commonDate.getFullYear(),
-                commonDate.getMonth(),
-                commonDate.getDate(),
-                1,
-                0,
-                0,
-            );
+    //     if (commonDate != null) {
+    //         let zeroHour = new Date(
+    //             commonDate.getFullYear(),
+    //             commonDate.getMonth(),
+    //             commonDate.getDate(),
+    //             0,
+    //             0,
+    //             0,
+    //         );
+    //         let oneHour = new Date(
+    //             commonDate.getFullYear(),
+    //             commonDate.getMonth(),
+    //             commonDate.getDate(),
+    //             1,
+    //             0,
+    //             0,
+    //         );
 
-            if (channelForward != '') {
-                const DataLoggerSchema = new mongoose.Schema({
-                    TimeStamp: Date,
-                    Value: Number,
-                });
+    //         if (channelForward != '') {
+    //             const DataLoggerSchema = new mongoose.Schema({
+    //                 TimeStamp: Date,
+    //                 Value: Number,
+    //             });
 
-                delete mongoose.models.DataLogger;
+    //             delete mongoose.models.DataLogger;
 
-                const DataLogger = mongoose.model(
-                    'DataLogger',
-                    DataLoggerSchema,
-                    't_Index_Logger_' + channelForward,
-                );
+    //             const DataLogger = mongoose.model(
+    //                 'DataLogger',
+    //                 DataLoggerSchema,
+    //                 't_Index_Logger_' + channelForward,
+    //             );
 
-                let value = await DataLogger.find({
-                    TimeStamp: { $gte: zeroHour, $lt: oneHour },
-                })
-                    .sort({ TimeStamp: 1 })
-                    .limit(1);
+    //             let value = await DataLogger.find({
+    //                 TimeStamp: { $gte: zeroHour, $lt: oneHour },
+    //             })
+    //                 .sort({ TimeStamp: 1 })
+    //                 .limit(1);
 
-                if (value.length > 0) {
-                    if (value[0].Value != null) {
-                        zeroQuantityForward = value[0].Value;
-                    }
-                }
+    //             if (value.length > 0) {
+    //                 if (value[0].Value != null) {
+    //                     zeroQuantityForward = value[0].Value;
+    //                 }
+    //             }
 
-                let value2 = await DataLogger.find({})
-                    .sort({ TimeStamp: -1 })
-                    .limit(1);
+    //             let value2 = await DataLogger.find({})
+    //                 .sort({ TimeStamp: -1 })
+    //                 .limit(1);
 
-                if (value2.length > 0) {
-                    if (value2[0].Value != null) {
-                        currentQuantityForward = value2[0].Value;
-                    }
-                }
-            }
+    //             if (value2.length > 0) {
+    //                 if (value2[0].Value != null) {
+    //                     currentQuantityForward = value2[0].Value;
+    //                 }
+    //             }
+    //         }
 
-            if (channelReverse != '') {
-                const DataLoggerSchema = new mongoose.Schema({
-                    TimeStamp: Date,
-                    Value: Number,
-                });
+    //         if (channelReverse != '') {
+    //             const DataLoggerSchema = new mongoose.Schema({
+    //                 TimeStamp: Date,
+    //                 Value: Number,
+    //             });
 
-                delete mongoose.models.DataLogger;
+    //             delete mongoose.models.DataLogger;
 
-                const DataLogger = mongoose.model(
-                    'DataLogger',
-                    DataLoggerSchema,
-                    't_Index_Logger_' + channelReverse,
-                );
+    //             const DataLogger = mongoose.model(
+    //                 'DataLogger',
+    //                 DataLoggerSchema,
+    //                 't_Index_Logger_' + channelReverse,
+    //             );
 
-                let value = await DataLogger.find({
-                    TimeStamp: { $gte: zeroHour, $lt: oneHour },
-                })
-                    .sort({ TimeStamp: 1 })
-                    .limit(1);
+    //             let value = await DataLogger.find({
+    //                 TimeStamp: { $gte: zeroHour, $lt: oneHour },
+    //             })
+    //                 .sort({ TimeStamp: 1 })
+    //                 .limit(1);
 
-                if (value.length > 0) {
-                    if (value[0].Value != null) {
-                        zeroQuantityReverse = value[0].Value;
-                    }
-                }
+    //             if (value.length > 0) {
+    //                 if (value[0].Value != null) {
+    //                     zeroQuantityReverse = value[0].Value;
+    //                 }
+    //             }
 
-                let value2 = await DataLogger.find({})
-                    .sort({ TimeStamp: -1 })
-                    .limit(1);
+    //             let value2 = await DataLogger.find({})
+    //                 .sort({ TimeStamp: -1 })
+    //                 .limit(1);
 
-                if (value2.length > 0) {
-                    if (value2[0].Value != null) {
-                        currentQuantityReverse = value2[0].Value;
-                    }
-                }
-            }
+    //             if (value2.length > 0) {
+    //                 if (value2[0].Value != null) {
+    //                     currentQuantityReverse = value2[0].Value;
+    //                 }
+    //             }
+    //         }
 
-            quantity =
-                currentQuantityForward -
-                currentQuantityReverse -
-                (zeroQuantityForward - zeroQuantityReverse);
-            if (quantity < 0) {
-                quantity = 0;
-            }
+    //         quantity =
+    //             currentQuantityForward -
+    //             currentQuantityReverse -
+    //             (zeroQuantityForward - zeroQuantityReverse);
+    //         if (quantity < 0) {
+    //             quantity = 0;
+    //         }
 
-            objChannelQuantity.LastValue = quantity.toFixed(2);
-            objChannelQuantity.TimeStamp = commonDate;
+    //         objChannelQuantity.LastValue = quantity.toFixed(2);
+    //         objChannelQuantity.TimeStamp = commonDate;
 
-            result.push(objChannelQuantity);
-        }
-    }
+    //         result.push(objChannelQuantity);
+    //     }
+    // }
 
     res.json(result);
 };

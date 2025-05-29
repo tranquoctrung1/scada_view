@@ -63,18 +63,70 @@ function getDrawingPipe() {
 // Style for pipelines
 const pipelineStyle = (feature) => {
     return {
-        color: feature.properties.Color || 'green',
+        color:
+            feature.properties.DuongKinhN >= 400
+                ? 'blue'
+                : feature.properties.DuongKinhN >= 250
+                ? 'green'
+                : feature.properties.DuongKinhN >= 150
+                ? '#81ecec'
+                : '#7f8c8d',
         weight: 2,
         opacity: 0.8,
     };
 };
 
 function getDataPipeDrawing() {
-    axios
-        .get(urlGetPipesByGroupPipe)
-        .then((res) => {
-            // Draw the converted pipelines on the map
-            L.geoJSON(res.data, {
+    // axios
+    //     .get(urlGetPipesByGroupPipe)
+    //     .then((res) => {
+    //         // Draw the converted pipelines on the map
+    //         L.geoJSON(res.data, {
+    //             style: pipelineStyle,
+    //             onEachFeature: (feature, layer) => {
+    //                 // Add popup with pipeline info
+    //                 if (feature.properties) {
+    //                     const props = feature.properties;
+    //                     layer.bindPopup(`
+    //                     <b>Pipeline ID:</b> ${props.IDDoanOC}<br>
+    //                     <b>Length:</b> ${props.ChieuDaiHC} m<br>
+    //                     <b>Diameter:</b> ${props.DuongKinhN} mm <br>
+    //                 `);
+    //                 }
+    //             },
+    //         }).addTo(map);
+    //     })
+    //     .catch((err) => {
+    //         console.log(err);
+    //     });
+
+    // axios
+    //     .get(urlGetPipes)
+    //     .then((res) => {
+    //         // Draw the converted pipelines on the map
+    //         L.geoJSON(res.data, {
+    //             style: pipelineStyle,
+    //             onEachFeature: (feature, layer) => {
+    //                 // Add popup with pipeline info
+    //                 if (feature.properties) {
+    //                     const props = feature.properties;
+    //                     layer.bindPopup(`
+    //                     <b>Pipeline ID:</b> ${props.IDDoanOC}<br>
+    //                     <b>Length:</b> ${props.ChieuDaiHC} m<br>
+    //                     <b>Diameter:</b> ${props.DuongKinhN} mm <br>
+    //                 `);
+    //                 }
+    //             },
+    //         }).addTo(map);
+    //     })
+    //     .catch((err) => {
+    //         console.log(err);
+    //     });
+
+    fetch('/route.geojson')
+        .then((response) => response.json())
+        .then((geojsonData) => {
+            const geojsonLayer = L.geoJSON(geojsonData, {
                 style: pipelineStyle,
                 onEachFeature: (feature, layer) => {
                     // Add popup with pipeline info
@@ -87,10 +139,11 @@ function getDataPipeDrawing() {
                     `);
                     }
                 },
-            }).addTo(map);
+            });
+            geojsonLayer.addTo(map);
         })
-        .catch((err) => {
-            console.log(err);
+        .catch((error) => {
+            console.error('Lỗi khi tải GeoJSON:', error);
         });
 }
 

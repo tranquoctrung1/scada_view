@@ -480,14 +480,14 @@
     background-color: #e74c3c !important;
 }
 
-/* .leaflet-layer,
+.leaflet-layer,
 .leaflet-control-zoom-in,
 .leaflet-control-zoom-out,
 .leaflet-control-attribution {
     filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
     -webkit-filter: invert(100%) hue-rotate(180deg) brightness(95%)
         contrast(90%);
-} */
+}
 
 .text-white {
     color: whitesmoke;
