@@ -65,13 +65,20 @@ const pipelineStyle = (feature) => {
     return {
         color:
             feature.properties.DuongKinhN >= 400
-                ? 'blue'
+                ? '#0984e3'
                 : feature.properties.DuongKinhN >= 250
-                ? 'green'
+                ? '#4cd137'
                 : feature.properties.DuongKinhN >= 150
                 ? '#81ecec'
                 : '#7f8c8d',
-        weight: 2,
+        weight:
+            feature.properties.DuongKinhN >= 400
+                ? 4
+                : feature.properties.DuongKinhN >= 250
+                ? 3
+                : feature.properties.DuongKinhN >= 150
+                ? 2
+                : 2,
         opacity: 0.8,
     };
 };

@@ -71,7 +71,7 @@ let timeconnectOrigin;
 let timeconnectChange;
 
 const colorScale = chroma
-    .scale(['#e74c3c', '#f1c40f', '#2ecc71', '#2980b9'])
+    .scale(['#d63031', '#e67e22', '#27ae60', '#2980b9'])
     .domain([0, 1, 2, 10]);
 
 function createHeatIcon(color = 'red', radius = 20) {
@@ -536,7 +536,7 @@ function initMap() {
                                 greenIcon = L.divIcon({
                                     className: '',
                                     html: htmlIcon,
-                                    iconSize: [12, heightIcon],
+                                    iconSize: [30, heightIcon],
                                     iconAnchor: [6, heightIcon],
                                 });
                             }
@@ -958,7 +958,7 @@ async function updateMap() {
                             greenIcon = L.divIcon({
                                 className: '',
                                 html: htmlIcon,
-                                iconSize: [12, heightIcon],
+                                iconSize: [30, heightIcon],
                                 iconAnchor: [6, heightIcon],
                             });
                         }
