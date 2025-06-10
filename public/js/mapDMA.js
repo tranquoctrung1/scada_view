@@ -184,26 +184,31 @@ function getDataDMADarwing() {
             prevYear.innerHTML = `${now.getFullYear() - 1}`;
             currentYear.innerHTML = `${now.getFullYear()}`;
 
-            for (let i = 0; i < res.data.length; i++) {
-                L.geoJSON(dataTTN[i], {
-                    style: styleFeature,
-                    onEachFeature: function (feature, layer) {
-                        if (feature.properties.TTN > 25) {
-                            animateFade(layer);
-                        }
-                        if (
-                            feature.properties &&
-                            feature.properties.TTN !== undefined
-                        ) {
-                            layer.bindTooltip(`${feature.properties.TTN} %`, {
-                                permanent: false, // 👈 CHỈ hiện khi hover
-                                direction: 'top',
-                                sticky: true,
-                                className: 'ttn-tooltip',
-                            });
-                        }
-                        // Bind a popup with the DMA information
-                        layer.bindPopup(`
+            for (let i = 0; i < dataTTN.length; i++) {
+                try {
+                    if (dataTTN[i] !== null && dataTTN[i] !== undefined) {
+                        L.geoJSON(dataTTN[i], {
+                            style: styleFeature,
+                            onEachFeature: function (feature, layer) {
+                                if (feature.properties.TTN > 25) {
+                                    animateFade(layer);
+                                }
+                                if (
+                                    feature.properties &&
+                                    feature.properties.TTN !== undefined
+                                ) {
+                                    layer.bindTooltip(
+                                        `${feature.properties.TTN} %`,
+                                        {
+                                            permanent: false, // 👈 CHỈ hiện khi hover
+                                            direction: 'top',
+                                            sticky: true,
+                                            className: 'ttn-tooltip',
+                                        },
+                                    );
+                                }
+                                // Bind a popup with the DMA information
+                                layer.bindPopup(`
                             <div> 
                                 <b>${feature.properties.TenKVCN}</b><br>
                                 ID: ${feature.properties.IDKVCN}<br>
@@ -217,9 +222,13 @@ function getDataDMADarwing() {
                             }" class="chart-popup"></div>
                         `);
 
-                        drawBarChartPopup(feature);
-                    },
-                }).addTo(map);
+                                drawBarChartPopup(feature);
+                            },
+                        }).addTo(map);
+                    }
+                } catch (error) {
+                    console.error('Error processing feature:', dataTTN[i]);
+                }
             }
 
             if (res.data.length > 0) {

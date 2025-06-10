@@ -127,11 +127,13 @@ function getDataDMADarwing() {
         .get(urlGetDrawingDMA)
         .then((res) => {
             for (let i = 1; i < res.data.length; i++) {
-                const editableLayer = L.geoJSON(res.data[i], {
-                    style: styleFeature,
-                    onEachFeature: function (feature, layer) {
-                        // Bind a popup with the DMA information
-                        layer.bindPopup(`
+                try {
+                    if (res.data[i] !== null && res.data[i] !== undefined) {
+                        const editableLayer = L.geoJSON(res.data[i], {
+                            style: styleFeature,
+                            onEachFeature: function (feature, layer) {
+                                // Bind a popup with the DMA information
+                                layer.bindPopup(`
                             <div> 
                                 <b>${feature.properties.TenKVCN}</b><br>
                                 ID: ${feature.properties.IDKVCN}<br>
@@ -141,10 +143,14 @@ function getDataDMADarwing() {
                                 
                             </div>
                         `);
-                    },
-                }).addTo(map);
+                            },
+                        }).addTo(map);
 
-                editableLayer.eachLayer((layer) => editLayer.addLayer(layer));
+                        editableLayer.eachLayer((layer) =>
+                            editLayer.addLayer(layer),
+                        );
+                    }
+                } catch (error) {}
             }
             if (res.data.length > 0) {
                 map.fitBounds(L.geoJSON(res.data[1]).getBounds());

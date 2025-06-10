@@ -20,10 +20,7 @@ const mongoose = require('mongoose');
 const app = express();
 
 // connect mongodb
-mongoose.connect(process.env.CONNECTION_STRING, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
+mongoose.connect(process.env.CONNECTION_STRING, {});
 
 // call router
 
