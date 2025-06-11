@@ -38,6 +38,26 @@ function zoomOut(e) {
     map.zoomOut();
 }
 function initMap() {
+    const baseLayer = L.tileLayer(
+        `https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`,
+        {
+            tileSize: 512,
+            zoomOffset: -1,
+            attribution:
+                '© <a href="https://www.mapbox.com/">Mapbox</a> © <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
+        },
+    );
+
+    // Traffic Layer (Mapbox Traffic V1)
+    const trafficLayer = L.tileLayer(
+        `http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}`,
+        {
+            maxZoom: 18,
+            attribution:
+                'Traffic data © <a href="https://www.mapbox.com/">Mapbox</a>',
+        },
+    );
+
     map = L.map('mapDMA', {
         attributionControl: false,
         contextmenu: true,
@@ -61,6 +81,37 @@ function initMap() {
                 callback: zoomOut,
             },
         ],
+        layers: [baseLayer, trafficLayer],
+    });
+
+    L.control
+        .layers({ 'Giao thông': baseLayer }, { 'Vệ tinh': trafficLayer })
+        .addTo(map);
+
+    map.on('overlayremove', function (e) {
+        let t = document.getElementsByClassName('leaflet-layer');
+
+        for (const item of t) {
+            item.classList.add('dart');
+        }
+        t = document
+            .getElementsByClassName('leaflet-control-zoom-int')
+            .classList.add('dart');
+        for (const item of t) {
+            item.classList.add('dart');
+        }
+        t = document
+            .getElementsByClassName('leaflet-control-zoom-out')
+            .classList.add('dart');
+        for (const item of t) {
+            item.classList.add('dart');
+        }
+        t = document
+            .getElementsByClassName('leaflet-control-attribution')
+            .classList.add('dart');
+        for (const item of t) {
+            item.classList.add('dart');
+        }
     });
 
     L.Control.Watermark = L.Control.extend({

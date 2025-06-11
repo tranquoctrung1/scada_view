@@ -29,28 +29,28 @@ block content
 						div.p-2
 							.progress
 								.progress-bar(style="width: 100%; background-color: yellow")
-								span.ml-2 Áp lực  <= 10 && Áp lực > 5
+								span.ml-2 Áp lực  &le; 10 && Áp lực > 5
 						div.p-2
 							.progress
 								.progress-bar(style="width: 100%; background-color: green")
-								span.ml-2 Áp lực  <= 5 && Áp lực >= 0
+								span.ml-2 Áp lực  &le; 5 && Áp lực &gt; 0
 						div.p-2
 							img(src="/images/blue.png", alt="icon blue") 	
 							span.ml-2 
 								span#minfirst(contenteditable="true") 21
-								| m <= Áp lực
+								| m &le; Áp lực
 						div.p-2
 							img(src="/images/green.png", alt="icon green") 	
 							span.ml-2
 								span#minsecond(contenteditable="true") 15
-								| m <= Áp lực < 
+								| m &le; Áp lực < 
 								span#minfirst2 21
 								| m
 						div.p-2
 							img(src="/images/yellow.png", alt="icon yellow") 	
 							span.ml-2
 								span#minthird(contenteditable="true") 0
-								| m <= Áp lực < 
+								| m &le; Áp lực < 
 								span#minsecond2 15
 								| m
 						div.p-2
@@ -101,7 +101,7 @@ block content
 						i.fa.fa-filter.fa-2x.fa-fw.text-success
 				#panel.panel.d-none
 					#treeViewSite
-						h6.text-white.text-center Tìm Kiếm Site
+						h6.text-white.text-center Tìm Kiếm 
 						div.search-area
 							.input-group.input-group-sm.mb-3
 								input.form-control.search-input(type='text' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm' id="searchSite")
@@ -115,8 +115,21 @@ block content
 								button.btn.btn-success.btn-sm#exportTotalSite(type="button") Xuất CSV
 						//.box-expan
 					#filterSite
-						h5.text-center Lọc Site
+						h5.text-center Lọc
 						#filterSiteSub
+						hr 
+						.form-check 
+							input.form-check-input(type='checkbox' id='showLayer' checked  onchange="onShowLayerChanged(this)")
+							label.form-check-label(for='showLayer') Hiện/Ẩn layer tuyến ống
+						.form-check 
+							input.form-check-input(type='checkbox' id='showLayer400' checked  onchange="onShowLayer400Changed(this)")
+							label.form-check-label(for='showLayer400') Hiện/Ẩn layer tuyến ống đường kính &ge; 400
+						.form-check 
+							input.form-check-input(type='checkbox' id='showLayer250' checked  onchange="onShowLayer250Changed(this)")
+							label.form-check-label(for='showLayer250') Hiện/Ẩn layer tuyến ống đường kính &ge; 250
+						.form-check 
+							input.form-check-input(type='checkbox' id='showLayer150' checked  onchange="onShowLayer150Changed(this)")
+							label.form-check-label(for='showLayer150') Hiện/Ẩn layer tuyến ống đường kính &ge; 150
 			#chart.modal.fade.bd-example-modal-lg(tabindex='-1' role='dialog' aria-labelledby='chartLabel' aria-hidden='true')
 				.modal-dialog.modal-lg(role='document')
 					.modal-content
@@ -235,7 +248,7 @@ block content
 				h6.text-grey Số điểm có đang hoạt đông: 
 					span#totalSiteActing.text-success 
 			.col-sm-3 
-				h6.text-grey Số điểm gữi trể dữ liệu: 
+				h6.text-grey Số điểm gửi trễ dữ liệu: 
 					span#totalSiteDelay.text-warning 
 			.col-sm-3 
 				h6.text-grey Số điểm không có dữ liệu: 

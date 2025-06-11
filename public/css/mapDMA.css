@@ -82,19 +82,23 @@
 }
 
 #legend {
-    opacity: 0.5;
+    opacity: 1;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 5px;
-    background-color: darkgrey;
+    background-color: #ffeaa7;
     color: darkblue;
-
+    border-radius: 10px;
     transition: all 0.5s ease-in-out;
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
     -ms-transition: all 0.5s ease-in-out;
     -o-transition: all 0.5s ease-in-out;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
 }
 
 #legend.hide {
@@ -303,10 +307,10 @@ table td {
     text-shadow: 0 0 3px #000;
 }
 
-.leaflet-layer,
-.leaflet-control-zoom-in,
-.leaflet-control-zoom-out,
-.leaflet-control-attribution {
+.leaflet-layer.dart,
+.leaflet-control-zoom-in.dart,
+.leaflet-control-zoom-out.dart,
+.leaflet-control-attribution.dart {
     filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
     -webkit-filter: invert(100%) hue-rotate(180deg) brightness(95%)
         contrast(90%);
@@ -337,4 +341,15 @@ table td {
     z-index: 1000;
     right: 10px;
     cursor: pointer;
+}
+
+.leaflet-control-layers.leaflet-control {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #636e72;
+    color: white;
+}
+.leaflet-top.leaflet-right {
+    width: 270px;
 }

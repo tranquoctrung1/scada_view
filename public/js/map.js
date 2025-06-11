@@ -101,6 +101,26 @@ function createHeatIcon(color = 'red', radius = 20) {
 }
 
 function initMap() {
+    const baseLayer = L.tileLayer(
+        `https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`,
+        {
+            tileSize: 512,
+            zoomOffset: -1,
+            attribution:
+                '© <a href="https://www.mapbox.com/">Mapbox</a> © <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
+        },
+    );
+
+    // Traffic Layer (Mapbox Traffic V1)
+    const trafficLayer = L.tileLayer(
+        `http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}`,
+        {
+            maxZoom: 18,
+            attribution:
+                'Traffic data © <a href="https://www.mapbox.com/">Mapbox</a>',
+        },
+    );
+
     map = L.map('map', {
         attributionControl: false,
         contextmenu: true,
@@ -124,17 +144,38 @@ function initMap() {
                 callback: zoomOut,
             },
         ],
+        layers: [baseLayer, trafficLayer],
     });
 
-    L.tileLayer(
-        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        // 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-        {
-            attribution:
-                '<strong style="color: #0078a8">Copyright &copy by Bavitech</strong>',
-            maxZoom: 18,
-        },
-    ).addTo(map);
+    L.control
+        .layers({ 'Giao thông': baseLayer }, { 'Vệ tinh': trafficLayer })
+        .addTo(map);
+
+    map.on('overlayremove', function (e) {
+        let t = document.getElementsByClassName('leaflet-layer');
+
+        for (const item of t) {
+            item.classList.add('dart');
+        }
+        t = document
+            .getElementsByClassName('leaflet-control-zoom-int')
+            .classList.add('dart');
+        for (const item of t) {
+            item.classList.add('dart');
+        }
+        t = document
+            .getElementsByClassName('leaflet-control-zoom-out')
+            .classList.add('dart');
+        for (const item of t) {
+            item.classList.add('dart');
+        }
+        t = document
+            .getElementsByClassName('leaflet-control-attribution')
+            .classList.add('dart');
+        for (const item of t) {
+            item.classList.add('dart');
+        }
+    });
 
     L.Control.Watermark = L.Control.extend({
         onAdd: function (map) {
@@ -494,7 +535,7 @@ function initMap() {
                                 TimeStamp: timeStampLostSignal,
                             });
                         }
-                        if (site.DisplayGroup == 'Nha may') {
+                        if (site.DisplayGroup == 'Nhà máy') {
                             img = '/images/factory.png';
                         }
 
@@ -502,7 +543,7 @@ function initMap() {
 
                         //LOAD TO MAP
 
-                        if (site.DisplayGroup === 'Nha may') {
+                        if (site.DisplayGroup === 'Nhà máy') {
                             greenIcon = new L.Icon({
                                 iconUrl: img,
                                 iconSize: [50, 50],
@@ -916,7 +957,7 @@ async function updateMap() {
                             TimeStamp: timeStampLostSignal,
                         });
                     }
-                    if (site.DisplayGroup == 'Nha may') {
+                    if (site.DisplayGroup == 'Nhà máy') {
                         img = '/images/factory.png';
                     }
                     //LOAD TO MAP
@@ -924,7 +965,7 @@ async function updateMap() {
 
                     //LOAD TO MAP
 
-                    if (site.DisplayGroup === 'Nha may') {
+                    if (site.DisplayGroup === 'Nhà máy') {
                         greenIcon = new L.Icon({
                             iconUrl: img,
                             iconSize: [50, 50],
