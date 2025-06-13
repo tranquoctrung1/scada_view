@@ -181,9 +181,23 @@ function styleFeature(feature) {
 
 // random ttn data
 function getRandomTTN(data) {
+    let countMaxTTNGT25 = 0;
+
     for (const item of data) {
-        const randomNumber = Math.floor(Math.random() * 50) + 1;
-        item.properties.TTN = randomNumber;
+        let randomNumber = Math.floor(Math.random() * 50) + 1;
+
+        if (randomNumber > 25) {
+            countMaxTTNGT25++;
+
+            if (countMaxTTNGT25 <= 3) {
+                item.properties.TTN = randomNumber;
+            } else {
+                randomNumber = Math.floor(Math.random() * 10) + 1;
+                item.properties.TTN = randomNumber;
+            }
+        } else {
+            item.properties.TTN = randomNumber;
+        }
     }
     return data;
 }
@@ -283,9 +297,16 @@ function getDataDMADarwing() {
             }
 
             if (res.data.length > 0) {
-                map.fitBounds(L.geoJSON(res.data[0]).getBounds());
+                try {
+                    map.fitBounds(L.geoJSON(res.data[0]).getBounds());
 
-                map.setZoom(13);
+                    map.setZoom(13);
+                } catch (err) {
+                    console.error(err);
+                    map.fitBounds(L.geoJSON(res.data[1]).getBounds());
+
+                    map.setZoom(13);
+                }
             }
         })
         .catch((err) => {
