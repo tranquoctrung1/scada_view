@@ -81,36 +81,50 @@ function initMap() {
                 callback: zoomOut,
             },
         ],
-        layers: [baseLayer, trafficLayer],
+        layers: [baseLayer],
     });
 
     L.control
         .layers({ 'Giao thông': baseLayer }, { 'Vệ tinh': trafficLayer })
         .addTo(map);
 
+    map.on('overlayadd', function (e) {
+        let t = document.getElementsByClassName('leaflet-layer');
+
+        for (const item of t) {
+            item.classList.add('none');
+        }
+        t = document.getElementsByClassName('leaflet-control-zoom-int');
+        for (const item of t) {
+            item.classList.add('none');
+        }
+        t = document.getElementsByClassName('leaflet-control-zoom-out');
+        for (const item of t) {
+            item.classList.add('none');
+        }
+        t = document.getElementsByClassName('leaflet-control-attribution');
+        for (const item of t) {
+            item.classList.add('none');
+        }
+    });
+
     map.on('overlayremove', function (e) {
         let t = document.getElementsByClassName('leaflet-layer');
 
         for (const item of t) {
-            item.classList.add('dart');
+            item.classList.remove('none');
         }
-        t = document
-            .getElementsByClassName('leaflet-control-zoom-int')
-            .classList.add('dart');
+        t = document.getElementsByClassName('leaflet-control-zoom-int');
         for (const item of t) {
-            item.classList.add('dart');
+            item.classList.remove('none');
         }
-        t = document
-            .getElementsByClassName('leaflet-control-zoom-out')
-            .classList.add('dart');
+        t = document.getElementsByClassName('leaflet-control-zoom-out');
         for (const item of t) {
-            item.classList.add('dart');
+            item.classList.remove('none');
         }
-        t = document
-            .getElementsByClassName('leaflet-control-attribution')
-            .classList.add('dart');
+        t = document.getElementsByClassName('leaflet-control-attribution');
         for (const item of t) {
-            item.classList.add('dart');
+            item.classList.remove('none');
         }
     });
 
@@ -300,12 +314,12 @@ function getDataDMADarwing() {
                 try {
                     map.fitBounds(L.geoJSON(res.data[0]).getBounds());
 
-                    map.setZoom(13);
+                    map.setZoom(14);
                 } catch (err) {
                     console.error(err);
                     map.fitBounds(L.geoJSON(res.data[1]).getBounds());
 
-                    map.setZoom(13);
+                    map.setZoom(14);
                 }
             }
         })

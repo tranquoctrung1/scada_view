@@ -34,19 +34,19 @@ block content
 							.progress
 								.progress-bar(style="width: 100%; background-color: green")
 								span.ml-2 Áp lực  &le; 5 && Áp lực &gt; 0
-						div.p-2
+						div.p-2.d-none
 							img(src="/images/blue.png", alt="icon blue") 	
 							span.ml-2 
 								span#minfirst(contenteditable="true") 21
 								| m &le; Áp lực
-						div.p-2
+						div.p-2.d-none
 							img(src="/images/green.png", alt="icon green") 	
 							span.ml-2
 								span#minsecond(contenteditable="true") 15
 								| m &le; Áp lực < 
 								span#minfirst2 21
 								| m
-						div.p-2
+						div.p-2.d-none
 							img(src="/images/yellow.png", alt="icon yellow") 	
 							span.ml-2
 								span#minthird(contenteditable="true") 0
@@ -54,13 +54,13 @@ block content
 								span#minsecond2 15
 								| m
 						div.p-2
-							img(src="/images/grey.png", alt="icon grey") 	
-							span.ml-2 Không có kênh áp lực
+							img(src="/images/green.png", alt="icon grey") 	
+							span.ml-2 Bình thường
 						div.p-2
 							img(src="/images/red.png", alt="icon red") 	
 							span.ml-2 Cảnh báo
 						div.p-2
-							img(src="/images/orange.png", alt="icon orange") 	
+							img(src="/images/yellow.png", alt="icon orange") 	
 							span.ml-2 Mất tín hiệu (> 
 							span#timeconnect(contenteditable="true") 12
 							|h)
@@ -120,7 +120,7 @@ block content
 						hr 
 						.form-check 
 							input.form-check-input(type='checkbox' id='showLayer' checked  onchange="onShowLayerChanged(this)")
-							label.form-check-label(for='showLayer') Hiện/Ẩn layer tuyến ống
+							label.form-check-label(for='showLayer') Hiện/Ẩn tất cả layer tuyến ống
 						.form-check 
 							input.form-check-input(type='checkbox' id='showLayer400' checked  onchange="onShowLayer400Changed(this)")
 							label.form-check-label(for='showLayer400') Hiện/Ẩn layer tuyến ống đường kính &ge; 400
@@ -128,8 +128,11 @@ block content
 							input.form-check-input(type='checkbox' id='showLayer250' checked  onchange="onShowLayer250Changed(this)")
 							label.form-check-label(for='showLayer250') Hiện/Ẩn layer tuyến ống đường kính &ge; 250
 						.form-check 
-							input.form-check-input(type='checkbox' id='showLayer150' checked  onchange="onShowLayer150Changed(this)")
+							input.form-check-input(type='checkbox' id='showLayer150'  onchange="onShowLayer150Changed(this)")
 							label.form-check-label(for='showLayer150') Hiện/Ẩn layer tuyến ống đường kính &ge; 150
+						.form-check 
+							input.form-check-input(type='checkbox' id='showLayerNormal'  onchange="onShowLayerNormalChanged(this)")
+							label.form-check-label(for='showLayerNormal') Hiện/Ẩn layer tuyến ống đường kính &ge; 150
 			#chart.modal.fade.bd-example-modal-lg(tabindex='-1' role='dialog' aria-labelledby='chartLabel' aria-hidden='true')
 				.modal-dialog.modal-lg(role='document')
 					.modal-content

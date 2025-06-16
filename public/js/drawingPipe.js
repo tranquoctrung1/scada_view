@@ -249,8 +249,8 @@ function getDataPipeDrawing() {
 
             geoJsonLayer400.addTo(map);
             geoJsonLayer250.addTo(map);
-            geoJsonLayer150.addTo(map);
-            geoJsonLayerNormal.addTo(map);
+            //geoJsonLayer150.addTo(map);
+            //geoJsonLayerNormal.addTo(map);
         })
         .catch((error) => {
             console.error('Lỗi khi tải GeoJSON:', error);
@@ -294,4 +294,13 @@ function onShowLayer150Changed(e) {
         map.removeLayer(geoJsonLayer150);
     }
 }
+
+function onShowLayerNormalChanged(e) {
+    if (e.checked === true) {
+        map.addLayer(geoJsonLayerNormal);
+    } else {
+        map.removeLayer(geoJsonLayerNormal);
+    }
+}
+
 getDataPipeDrawing();

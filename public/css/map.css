@@ -484,13 +484,21 @@
     background-color: #e74c3c !important;
 }
 
-.leaflet-layer.dart,
-.leaflet-control-zoom-in.dart,
-.leaflet-control-zoom-out.dart,
-.leaflet-control-attribution.dart {
+.leaflet-layer,
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out,
+.leaflet-control-attribution {
     filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
     -webkit-filter: invert(100%) hue-rotate(180deg) brightness(95%)
         contrast(90%);
+}
+
+.leaflet-layer.none,
+.leaflet-control-zoom-in.none,
+.leaflet-control-zoom-out.none,
+.leaflet-control-attribution.none {
+    filter: none;
+    -webkit-filter: none;
 }
 
 .text-white {
@@ -518,7 +526,7 @@
     height: 100%;
     background: currentColor;
     clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-    opacity: 0.5;
+    opacity: 1;
 }
 
 .slider-container {

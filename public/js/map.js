@@ -144,36 +144,50 @@ function initMap() {
                 callback: zoomOut,
             },
         ],
-        layers: [baseLayer, trafficLayer],
+        layers: [baseLayer],
     });
 
     L.control
         .layers({ 'Giao thông': baseLayer }, { 'Vệ tinh': trafficLayer })
         .addTo(map);
 
+    map.on('overlayadd', function (e) {
+        let t = document.getElementsByClassName('leaflet-layer');
+
+        for (const item of t) {
+            item.classList.add('none');
+        }
+        t = document.getElementsByClassName('leaflet-control-zoom-int');
+        for (const item of t) {
+            item.classList.add('none');
+        }
+        t = document.getElementsByClassName('leaflet-control-zoom-out');
+        for (const item of t) {
+            item.classList.add('none');
+        }
+        t = document.getElementsByClassName('leaflet-control-attribution');
+        for (const item of t) {
+            item.classList.add('none');
+        }
+    });
+
     map.on('overlayremove', function (e) {
         let t = document.getElementsByClassName('leaflet-layer');
 
         for (const item of t) {
-            item.classList.add('dart');
+            item.classList.remove('none');
         }
-        t = document
-            .getElementsByClassName('leaflet-control-zoom-int')
-            .classList.add('dart');
+        t = document.getElementsByClassName('leaflet-control-zoom-int');
         for (const item of t) {
-            item.classList.add('dart');
+            item.classList.remove('none');
         }
-        t = document
-            .getElementsByClassName('leaflet-control-zoom-out')
-            .classList.add('dart');
+        t = document.getElementsByClassName('leaflet-control-zoom-out');
         for (const item of t) {
-            item.classList.add('dart');
+            item.classList.remove('none');
         }
-        t = document
-            .getElementsByClassName('leaflet-control-attribution')
-            .classList.add('dart');
+        t = document.getElementsByClassName('leaflet-control-attribution');
         for (const item of t) {
-            item.classList.add('dart');
+            item.classList.remove('none');
         }
     });
 
@@ -382,18 +396,18 @@ function initMap() {
                                 ) {
                                     preStatus = channel.Status;
                                     switch (channel.Status) {
-                                        case 1:
-                                            img = '/images/blue.png';
-                                            colorHeatIcon = 'blue';
-                                            break;
-                                        case 2:
-                                            img = '/images/green.png';
-                                            colorHeatIcon = 'green';
-                                            break;
-                                        case 3:
-                                            img = '/images/yellow.png';
-                                            colorHeatIcon = 'yellow';
-                                            break;
+                                        // case 1:
+                                        //     img = '/images/blue.png';
+                                        //     colorHeatIcon = 'blue';
+                                        //     break;
+                                        // case 2:
+                                        //     img = '/images/green.png';
+                                        //     colorHeatIcon = 'green';
+                                        //     break;
+                                        // case 3:
+                                        //     img = '/images/yellow.png';
+                                        //     colorHeatIcon = 'yellow';
+                                        //     break;
                                         case 0:
                                             img = '/images/grey.png';
                                             break;
@@ -401,7 +415,7 @@ function initMap() {
                                             img = '/images/red.png';
                                             break;
                                         case 6:
-                                            img = '/images/orange.png';
+                                            img = '/images/yellow.png';
                                             timeStampLostSignal = new Date(
                                                 channel.TimeStamp,
                                             );
@@ -527,9 +541,10 @@ function initMap() {
                         // list site not pressure
                         if (img == '/images/grey.png') {
                             siteNotPressure.push(site);
+                            img = '/images/green.png';
                         }
                         // list site lost signal
-                        if (img == '/images/orange.png') {
+                        if (img == '/images/yellow.png') {
                             siteLostSignal.push({
                                 ...site,
                                 TimeStamp: timeStampLostSignal,
@@ -809,15 +824,15 @@ async function updateMap() {
                             ) {
                                 preStatus = channel.Status;
                                 switch (channel.Status) {
-                                    case 1:
-                                        img = '/images/blue.png';
-                                        break;
-                                    case 2:
-                                        img = '/images/green.png';
-                                        break;
-                                    case 3:
-                                        img = '/images/yellow.png';
-                                        break;
+                                    // case 1:
+                                    //     img = '/images/blue.png';
+                                    //     break;
+                                    // case 2:
+                                    //     img = '/images/green.png';
+                                    //     break;
+                                    // case 3:
+                                    //     img = '/images/yellow.png';
+                                    //     break;
                                     case 0:
                                         img = '/images/grey.png';
                                         break;
@@ -825,7 +840,7 @@ async function updateMap() {
                                         img = '/images/red.png';
                                         break;
                                     case 6:
-                                        img = '/images/orange.png';
+                                        img = '/images/yellow.png';
                                         timeStampLostSignal = new Date(
                                             channel.TimeStamp,
                                         );
@@ -949,9 +964,10 @@ async function updateMap() {
                     // list site not pressure
                     if (img == '/images/grey.png') {
                         siteNotPressure.push(site);
+                        img = '/images/green.png';
                     }
                     // list site lost signal
-                    if (img == '/images/orange.png') {
+                    if (img == '/images/yellow.png') {
                         siteLostSignal.push({
                             ...site,
                             TimeStamp: timeStampLostSignal,
