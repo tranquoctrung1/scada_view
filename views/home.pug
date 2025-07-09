@@ -22,15 +22,15 @@ block content
 
 				.legend#legend.hide
 					div 
-						div.p-2
+						div.p-2.d-none
 							.progress
 								.progress-bar(style="width: 100%; background-color: red")
 								span.ml-2 Áp lực  > 10 && Áp lực < 0
-						div.p-2
+						div.p-2.d-none
 							.progress
 								.progress-bar(style="width: 100%; background-color: yellow")
 								span.ml-2 Áp lực  &le; 10 && Áp lực > 5
-						div.p-2
+						div.p-2.d-none
 							.progress
 								.progress-bar(style="width: 100%; background-color: green")
 								span.ml-2 Áp lực  &le; 5 && Áp lực &gt; 0
@@ -62,7 +62,7 @@ block content
 						div.p-2
 							img(src="/images/yellow.png", alt="icon orange") 	
 							span.ml-2 Mất tín hiệu (> 
-							span#timeconnect(contenteditable="true") 12
+							span#timeconnect(contenteditable="true") 2
 							|h)
 					div#hideLegend.hide
 						span  
@@ -74,8 +74,11 @@ block content
 							label Lọc cảnh báo 
 							select.ml-2.form-select(onchange='onFilterAlarmChanged(this)')
 								option(value='noAlarm') Chọn lọc cảnh báo
-								option(value='noPressure') Không có kênh áp lực
-								option(value='lostSignal') Mất tín hiệu
+								option(value='ketDongHo') Kẹt đồng hồ
+								option(value='offline') Offline
+								option(value='lowPressure') Áp thấp &lt; 1.2 bar
+								option(value='normalPressure') Áp trung bình 1.2 - 1.8 bar
+								option(value='highPressure') Áp cao &gt; 1.8 bar
 							button.btn.btn-sm.btn-success.ml-5#btnExportAlarm Xuất file excel
 
 					table#tableAlarmFooter
@@ -132,7 +135,7 @@ block content
 							label.form-check-label(for='showLayer150') Hiện/Ẩn layer tuyến ống đường kính &ge; 150
 						.form-check 
 							input.form-check-input(type='checkbox' id='showLayerNormal'  onchange="onShowLayerNormalChanged(this)")
-							label.form-check-label(for='showLayerNormal') Hiện/Ẩn layer tuyến ống đường kính &ge; 150
+							label.form-check-label(for='showLayerNormal') Hiện/Ẩn layer tuyến ống đường kính &lt; 150
 			#chart.modal.fade.bd-example-modal-lg(tabindex='-1' role='dialog' aria-labelledby='chartLabel' aria-hidden='true')
 				.modal-dialog.modal-lg(role='document')
 					.modal-content

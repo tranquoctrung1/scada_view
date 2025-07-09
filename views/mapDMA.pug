@@ -11,6 +11,14 @@ block content
 		.row.p-0.m-0
 			.col.p-0
 				.map#mapDMA
+				.slider-container#slider
+					label(for='rateRange')
+					b Lọc tỷ lệ TTN
+					| : 
+					span#rangeVal 50
+					|  %
+					.slider-bar-wrapper
+					input#rateRange(type='range' min='0' max='50' value='50' step='1' onchange='onRateRangeChanged(this)')
 				.legend#legend.hide
 					div 
 						div.p-2
@@ -30,18 +38,29 @@ block content
 				div#hideFooter.hide
 					span
 						i.ti-menu-alt
+				.icon-setting
+					.box-icon#config.config
+						i.fa.fa-cog.fa-spin.fa-2x.fa-fw.text-danger
+				#panel.panel.d-none
+					#treeViewSite
+						h6.text-white.text-center Tìm Kiếm 
+						div.search-area
+							.input-group.input-group-sm.mb-3
+								input.form-control.search-input(type='text' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-sm' id="searchSite")
+						div 
+							.box-listtree#listSite.mt-2
 	.container-fluid.footer#footer.hide
 		.row
 			.col-md-2
 				//- #loading
 				//- 	img.loading(src="/images/loading.svg", alt="", srcset="")
-				.text-center Top 5 TTN Thấp Nhất
-				canvas#barChartLowestTTN.chart
+				.text-center Top 5 TTN Cao Nhất
+				canvas#barChartHighestTTN.chart
 			.col-md-2
 				//- #loading2
 				//- 	img.loading(src="/images/loading.svg", alt="", srcset="")
-				.text-center Top 5 TTN Cao Nhất
-				canvas#barChartHighestTTN.chart
+				.text-center Top 5 LLTT Cao Nhất
+				canvas#barChartLowestTTN.chart
 			.col-md-2
 				//- #loading2
 				//- 	img.loading(src="/images/loading.svg", alt="", srcset="")

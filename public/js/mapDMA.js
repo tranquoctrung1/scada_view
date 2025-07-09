@@ -13,10 +13,15 @@ const hideLegend = document.getElementById('hideLegend');
 const hideFooter = document.getElementById('hideFooter');
 const footer = document.getElementById('footer');
 const containerMap = document.getElementById('containerMap');
+const rateRange = document.getElementById('rateRange');
+const slider = document.getElementById('slider');
+const searchSite = document.getElementById('searchSite');
 
 let map = null;
-let top5LowestTTN = [];
+let top5HighestLLTTN = [];
 let top5HighestTTN = [];
+let layersDMA = [];
+let IdAndNameDMA = [];
 
 function hideLable(e) {
     map.eachLayer(function (layer) {
@@ -158,6 +163,19 @@ function initMap() {
 
     L.control.watermark({ position: 'bottomright' }).addTo(map);
 
+    L.Control.Watermark = L.Control.extend({
+        onAdd: function (map) {
+            return slider;
+        },
+        onRemove: function (map) {
+            // Nothing to do here
+        },
+    });
+    L.control.watermark = function (opts) {
+        return new L.Control.Watermark(opts);
+    };
+    L.control.watermark({ position: 'topright' }).addTo(map);
+
     L.tileLayer(
         'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         // 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
@@ -199,6 +217,8 @@ function getRandomTTN(data) {
 
     for (const item of data) {
         let randomNumber = Math.floor(Math.random() * 50) + 1;
+        let randomNumberLL = Math.floor(Math.random() * 1000) + 1;
+        let randomPressure = Math.floor(Math.random() * 10) + 1;
 
         if (randomNumber > 25) {
             countMaxTTNGT25++;
@@ -212,12 +232,28 @@ function getRandomTTN(data) {
         } else {
             item.properties.TTN = randomNumber;
         }
+        item.properties.LLTTN = randomNumberLL;
+        item.properties.Pressure = randomPressure;
     }
     return data;
 }
 
-function getTop5LowestTTN(data) {
-    const sortedData = data.sort((a, b) => a.properties.TTN - b.properties.TTN);
+function getIdAndNameDMA(data) {
+    const temp = [];
+    for (const item of data) {
+        const obj = {
+            IDKVCN: item.properties.IDKVCN,
+            TenKVCN: item.properties.TenKVCN,
+        };
+        temp.push(obj);
+    }
+    return temp;
+}
+
+function getTop5HighestLLTTN(data) {
+    const sortedData = data.sort(
+        (a, b) => b.properties.LLTTN - a.properties.LLTTN,
+    );
     return sortedData.slice(0, 5);
 }
 
@@ -234,13 +270,17 @@ function getDataDMADarwing() {
 
             const dataTTN = getRandomTTN(res.data);
 
-            top5LowestTTN = getTop5LowestTTN(dataTTN);
+            IdAndNameDMA = getIdAndNameDMA(res.data);
+
+            createListtree(IdAndNameDMA);
+
+            top5HighestLLTTN = getTop5HighestLLTTN(dataTTN);
             top5HighestTTN = getTop5HighestTTN(dataTTN);
 
             fillDataTable(dataTTN);
             drawLineChartCompare(dataTTN);
 
-            drawBarChartLowestTTN(top5LowestTTN);
+            drawBarChartLowestTTN(top5HighestLLTTN);
             drawBarChartHighestTTN(top5HighestTTN);
 
             totalPercentLost.innerHTML =
@@ -269,6 +309,7 @@ function getDataDMADarwing() {
                         L.geoJSON(dataTTN[i], {
                             style: styleFeature,
                             onEachFeature: function (feature, layer) {
+                                layersDMA.push(layer);
                                 if (feature.properties.TTN > 25) {
                                     animateFade(layer);
                                 }
@@ -385,14 +426,28 @@ function drawBarChartPopup(data) {
                             color: '#fff', // Optional: change the text color
                         },
                     },
-                    yAxis: {
-                        type: 'value',
-                    },
+                    yAxis: [
+                        {
+                            type: 'value',
+                            name: 'TTN (%)',
+                        },
+                        {
+                            type: 'value',
+                            name: 'LLT (m3)',
+                            position: 'right',
+                        },
+                    ],
                     series: [
                         {
                             data: randomDataTotalTTNCurrentYear(),
-                            type: 'bar',
+                            type: 'line',
                             color: '#e74c3c',
+                        },
+                        {
+                            data: randomDataTotalLLTTNCurrentYear(),
+                            type: 'bar',
+                            color: '#3498db',
+                            yAxisIndex: 1,
                         },
                     ],
                 };
@@ -412,8 +467,8 @@ function drawBarChartLowestTTN(data) {
             labels: data.map((item) => item.properties.IDKVCN),
             datasets: [
                 {
-                    label: 'TTN',
-                    data: data.map((item) => item.properties.TTN),
+                    label: 'LLTTN',
+                    data: data.map((item) => item.properties.LLTTN),
                     backgroundColor: ['rgba(54, 162, 235, 0.6)'],
                     borderColor: 'rgba(0,0,0,0.1)',
                     borderWidth: 1,
@@ -569,6 +624,19 @@ function randomDataTotalTTNCurrentYear() {
     return data;
 }
 
+function randomDataTotalLLTTNCurrentYear() {
+    let data = [];
+
+    let now = new Date();
+    let month = now.getMonth() + 1;
+
+    for (let i = 0; i < month; i++) {
+        data.push(Math.floor(Math.random() * 1000) + 1);
+    }
+
+    return data;
+}
+
 function drawLineChartCompare(data) {
     const ctx = document.getElementById('lineChartCompare').getContext('2d');
     const myChart = new Chart(ctx, {
@@ -627,3 +695,105 @@ hideFooter.addEventListener('click', (e) => {
     containerMap.classList.toggle('hideFooter');
     hideFooter.classList.toggle('hide');
 });
+
+var sliderElement = L.DomUtil.get('slider');
+L.DomEvent.on(sliderElement, 'mousewheel', L.DomEvent.stopPropagation);
+L.DomEvent.disableScrollPropagation(sliderElement);
+L.DomEvent.disableClickPropagation(sliderElement);
+
+function filterDMAByTTNRate(value) {
+    for (const layer of layersDMA) {
+        if (layer.feature.properties.TTN <= value) layer.addTo(map);
+        else map.removeLayer(layer);
+    }
+}
+
+function onRateRangeChanged(e) {
+    const val = parseFloat(e.value);
+    document.getElementById('rangeVal').textContent = val;
+    filterDMAByTTNRate(val);
+}
+
+config.addEventListener('click', function (event) {
+    if ($('#panel').hasClass('d-none')) {
+        $('#panel').removeClass('d-none');
+        $('#panel').slideDown('slow');
+    } else {
+        $('#panel').slideToggle('slow');
+    }
+    $('#treeViewSite').addClass('d-block');
+    $('#treeViewSite').removeClass('d-none');
+    $('#filterSite').addClass('d-none');
+
+    $('#filterSite').removeClass('d-block');
+    $('#config').toggleClass('expanse');
+    $('#settingChannel').removeClass('expanse');
+    $('#filter').removeClass('expanse');
+});
+
+function createListtree(data) {
+    let listSite = document.getElementById('listSite');
+    listSite.innerHTML = '';
+
+    let content = '';
+    if (CheckExistsData(data)) {
+        content += `<ul class="listree">`;
+
+        for (let item of data) {
+            content += `<li><div class="listree-submenu-heading" onclick="openLayer(this)" data-name="${item.IDKVCN}">- ${item.IDKVCN} | ${item.TenKVCN}</div>`;
+            content += `</li>`;
+        }
+        content += `</ul>`;
+    }
+
+    listSite.innerHTML = content;
+}
+
+function debounce(func, wait, immediate) {
+    var timeout;
+    return function () {
+        var context = this,
+            args = arguments;
+        var later = function () {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
+}
+
+searchSite.addEventListener(
+    'keyup',
+    debounce(function (e) {
+        let dataFilter = [];
+        if (e.target.value.trim() == '') {
+            dataFilter = [...IdAndNameDMA];
+        } else {
+            dataFilter = IdAndNameDMA.filter(function (ev) {
+                return (
+                    ev.IDKVCN.toString()
+                        .toLowerCase()
+                        .indexOf(e.target.value.toString().toLowerCase()) !==
+                        -1 ||
+                    ev.TenKVCN.toString()
+                        .toLowerCase()
+                        .indexOf(e.target.value.toString().toLowerCase()) !== -1
+                );
+            });
+        }
+        createListtree(dataFilter);
+    }, 500),
+);
+
+function openLayer(e) {
+    console.log(e.dataset.name);
+    for (const layer of layersDMA) {
+        if (layer.feature.properties.IDKVCN == e.dataset.name) {
+            layer.fire('click');
+            map.fitBounds(layer.getBounds());
+        }
+    }
+}

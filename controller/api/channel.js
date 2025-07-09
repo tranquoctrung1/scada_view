@@ -9,10 +9,10 @@ module.exports.GetChannelByLoggerId = async function (req, res) {
     let site = await SiteModel.find({ LoggerId: loggerid });
     let conditionIcon = await ConditionIconModel.find({});
 
-    let minfirst = 21;
-    let minsecond = 15;
-    let minthird = 0;
-    let timeconnect = 12;
+    let minfirst = 1.8;
+    let minsecond = 1.2;
+    let minthird = 1.2;
+    let timeconnect = 2;
 
     if (conditionIcon.length > 0) {
         let findMinfirst = conditionIcon.find((el) => el.Name === 'minfirst');
@@ -89,10 +89,10 @@ module.exports.GetChannelByLoggerId = async function (req, res) {
                     if (channel.LastValue > minfirst) {
                         status = 1;
                         isError = true;
-                    } else if (channel.LastValue > minsecond) {
+                    } else if (channel.LastValue >= minsecond) {
                         status = 2;
                         isError = true;
-                    } else if (channel.LastValue >= minthird) {
+                    } else if (channel.LastValue < minthird) {
                         status = 3;
                         isError = true;
                     }

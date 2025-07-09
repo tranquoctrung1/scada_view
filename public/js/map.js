@@ -56,10 +56,12 @@ let slider = document.getElementById('slider');
 let pressureRange = document.getElementById('pressureRange');
 const exportTotalSite = document.getElementById('exportTotalSite');
 
-let siteNotPressure = [];
-let siteLostSignal = [];
 let siteAlarm = [];
 let isChoiceAlarm = false;
+let siteOffline = [];
+let siteLowPressure = [];
+let siteNormalPressure = [];
+let siteHighPressure = [];
 
 let minfirstOrigin;
 let minfirstChange;
@@ -257,7 +259,6 @@ function initMap() {
                 let channelAlarm = '';
                 let statusError = 0;
                 let timeStampLostSignal = new Date();
-                let colorHeatIcon = 'green';
                 let pressureChannel = null;
 
                 let find = tempAlarm.data.findIndex(
@@ -396,20 +397,20 @@ function initMap() {
                                 ) {
                                     preStatus = channel.Status;
                                     switch (channel.Status) {
-                                        // case 1:
-                                        //     img = '/images/blue.png';
-                                        //     colorHeatIcon = 'blue';
-                                        //     break;
-                                        // case 2:
-                                        //     img = '/images/green.png';
-                                        //     colorHeatIcon = 'green';
-                                        //     break;
-                                        // case 3:
-                                        //     img = '/images/yellow.png';
-                                        //     colorHeatIcon = 'yellow';
-                                        //     break;
+                                        case 1:
+                                            siteHighPressure.push(site);
+                                            img = '/images/green.png';
+                                            break;
+                                        case 2:
+                                            siteNormalPressure.push(site);
+                                            img = '/images/green.png';
+                                            break;
+                                        case 3:
+                                            siteLowPressure.push(site);
+                                            img = '/images/green.png';
+                                            break;
                                         case 0:
-                                            img = '/images/grey.png';
+                                            img = '/images/green.png';
                                             break;
                                         case 5:
                                             img = '/images/red.png';
@@ -423,6 +424,10 @@ function initMap() {
                                                 timeStampLostSignal.getHours() -
                                                     7,
                                             );
+                                            siteOffline.push({
+                                                ...site,
+                                                TimeStamp: timeStampLostSignal,
+                                            });
                                             break;
                                         default:
                                             img = '/images/green.png';
@@ -538,18 +543,6 @@ function initMap() {
 									
 								</div>`;
 
-                        // list site not pressure
-                        if (img == '/images/grey.png') {
-                            siteNotPressure.push(site);
-                            img = '/images/green.png';
-                        }
-                        // list site lost signal
-                        if (img == '/images/yellow.png') {
-                            siteLostSignal.push({
-                                ...site,
-                                TimeStamp: timeStampLostSignal,
-                            });
-                        }
                         if (site.DisplayGroup == 'Nhà máy') {
                             img = '/images/factory.png';
                         }
@@ -689,8 +682,10 @@ function openMarker(e) {
 }
 
 async function updateMap() {
-    siteLostSignal = [];
-    siteNotPressuredSignal = [];
+    siteHighPressure = [];
+    siteLowPressure = [];
+    siteNormalPressure = [];
+    siteOffline = [];
 
     let tempAlarm = await axios.get(urlGetAlarmForDay);
 
@@ -824,17 +819,20 @@ async function updateMap() {
                             ) {
                                 preStatus = channel.Status;
                                 switch (channel.Status) {
-                                    // case 1:
-                                    //     img = '/images/blue.png';
-                                    //     break;
-                                    // case 2:
-                                    //     img = '/images/green.png';
-                                    //     break;
-                                    // case 3:
-                                    //     img = '/images/yellow.png';
-                                    //     break;
+                                    case 1:
+                                        siteHighPressure.push(site);
+                                        img = '/images/green.png';
+                                        break;
+                                    case 2:
+                                        siteNormalPressure.push(site);
+                                        img = '/images/green.png';
+                                        break;
+                                    case 3:
+                                        siteLowPressure.push(site);
+                                        img = '/images/green.png';
+                                        break;
                                     case 0:
-                                        img = '/images/grey.png';
+                                        img = '/images/green.png';
                                         break;
                                     case 5:
                                         img = '/images/red.png';
@@ -847,6 +845,10 @@ async function updateMap() {
                                         timeStampLostSignal.setHours(
                                             timeStampLostSignal.getHours() - 7,
                                         );
+                                        siteOffline.push({
+                                            ...site,
+                                            TimeStamp: timeStampLostSignal,
+                                        });
                                         break;
                                     default:
                                         img = '/images/green.png';
@@ -961,18 +963,7 @@ async function updateMap() {
 									</div>
 									
 								</div>`;
-                    // list site not pressure
-                    if (img == '/images/grey.png') {
-                        siteNotPressure.push(site);
-                        img = '/images/green.png';
-                    }
-                    // list site lost signal
-                    if (img == '/images/yellow.png') {
-                        siteLostSignal.push({
-                            ...site,
-                            TimeStamp: timeStampLostSignal,
-                        });
-                    }
+
                     if (site.DisplayGroup == 'Nhà máy') {
                         img = '/images/factory.png';
                     }
@@ -1120,24 +1111,30 @@ function createTableData(data) {
 }
 
 function onFilterAlarmChanged(e) {
-    if (e.value === 'noPressure') {
+    if (e.value === 'ketDongHo') {
         isChoiceAlarm = true;
-        createTableDataWithNoPressrure(siteNotPressure);
-    } else if (e.value === 'lostSignal') {
+        createTableDataWithOffline(siteOffline);
+    } else if (e.value === 'offline') {
         isChoiceAlarm = true;
-        createTableDataWithLostSignal(siteLostSignal);
-    } else {
-        createTableData(siteAlarm);
-        isChoiceAlarm = false;
+        createTableDataWithOffline(siteOffline);
+    } else if (e.value === 'lowPressure') {
+        isChoiceAlarm = true;
+        createTableDataWithSiteLowPressure(siteLowPressure);
+    } else if (e.value === 'normalPressure') {
+        isChoiceAlarm = true;
+        createTableDataWithSiteNormalPressure(siteNormalPressure);
+    } else if (e.value === 'highPressure') {
+        isChoiceAlarm = true;
+        createTableDataWithSiteHighPressure(siteHighPressure);
     }
 }
 
-function createTableDataWithNoPressrure(data) {
+function createTableDataWithSiteLowPressure(data) {
     let content = ``;
 
     for (let item of data) {
         content += `
-			<tr class="back-gray">
+			<tr class="back-red">
 				<td class="text-white">${convertDateToString(new Date(Date.now()))}</td>
 				<td class="text-white" style=" cursor:pointer" data-site="${
                     item.SiteId
@@ -1147,7 +1144,7 @@ function createTableDataWithNoPressrure(data) {
 				<td class="text-white">${fillDataIntoInputTag(item.Location)}</td>
 				<td class="text-white">${fillDataIntoInputTag(item.DisplayGroup)}</td>
 				<td class="text-white"></td>
-				<td class="text-white">Không có kênh áp lực</td>
+				<td class="text-white">Áp thấp</td>
 				
 			</tr>`;
     }
@@ -1155,12 +1152,58 @@ function createTableDataWithNoPressrure(data) {
     tableData.innerHTML = content;
 }
 
-function createTableDataWithLostSignal(data) {
+function createTableDataWithSiteNormalPressure(data) {
     let content = ``;
 
     for (let item of data) {
         content += `
-			<tr class="back-orange">
+			<tr class="back-aqua">
+				<td class="text-white">${convertDateToString(new Date(Date.now()))}</td>
+				<td class="text-white" style=" cursor:pointer" data-site="${
+                    item.SiteId
+                }" onclick="openMarker(this)">${fillDataIntoInputTag(
+            item.SiteId,
+        )}</td>
+				<td class="text-white">${fillDataIntoInputTag(item.Location)}</td>
+				<td class="text-white">${fillDataIntoInputTag(item.DisplayGroup)}</td>
+				<td class="text-white"></td>
+				<td class="text-white">Áp trung bình</td>
+				
+			</tr>`;
+    }
+
+    tableData.innerHTML = content;
+}
+
+function createTableDataWithSiteHighPressure(data) {
+    let content = ``;
+
+    for (let item of data) {
+        content += `
+			<tr class="back-red">
+				<td class="text-white">${convertDateToString(new Date(Date.now()))}</td>
+				<td class="text-white" style=" cursor:pointer" data-site="${
+                    item.SiteId
+                }" onclick="openMarker(this)">${fillDataIntoInputTag(
+            item.SiteId,
+        )}</td>
+				<td class="text-white">${fillDataIntoInputTag(item.Location)}</td>
+				<td class="text-white">${fillDataIntoInputTag(item.DisplayGroup)}</td>
+				<td class="text-white"></td>
+				<td class="text-white">Áp cao</td>
+				
+			</tr>`;
+    }
+
+    tableData.innerHTML = content;
+}
+
+function createTableDataWithOffline(data) {
+    let content = ``;
+
+    for (let item of data) {
+        content += `
+			<tr class="back-yellow">
 				<td class="text-white">${convertDateToString(item.TimeStamp)}</td>
 				<td class="text-white" style="cursor:pointer" data-site="${
                     item.SiteId
@@ -1170,7 +1213,7 @@ function createTableDataWithLostSignal(data) {
 				<td class="text-white">${fillDataIntoInputTag(item.Location)}</td>
 				<td class="text-white">${fillDataIntoInputTag(item.DisplayGroup)}</td>
 				<td class="text-white"></td>
-				<td class="text-white">Mất tín hiệu (> 12h)</td>
+				<td class="text-white">Mất tín hiệu (> 2h)</td>
 			</tr>`;
     }
 
