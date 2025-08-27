@@ -395,7 +395,7 @@ module.exports.GetQuantityMonthReport = async function (req, res) {
                 ],
             });
 
-            let startDay = 0;
+            let startDay = 1;
             let startHour = 0;
 
             try {

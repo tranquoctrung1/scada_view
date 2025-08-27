@@ -510,6 +510,9 @@ module.exports.InsertSite = async function (req, res) {
                 IsConnectPipe: data.IsConnectPipe,
                 MeterSerial: data.MeterSerial,
                 LoggerSerial: data.LoggerSerial,
+                GroupIdTelegram: data.GroupIdTelegram,
+                DMA_In: data.DMAIn,
+                DMA_Out: data.DMAOut,
             },
         ]);
 
@@ -549,10 +552,13 @@ module.exports.UpdateSite = async function (req, res) {
             IsConnectPipe: data.IsConnectPipe,
             MeterSerial: data.MeterSerial,
             LoggerSerial: data.LoggerSerial,
+            GroupIdTelegram: data.GroupIdTelegram,
+            DMA_In: data.DMAIn,
+            DMA_Out: data.DMAOut,
         },
     );
 
-    res.json(result.nModified);
+    res.json(result.modifiedCount);
 };
 
 module.exports.DeleteSite = async function (req, res) {
@@ -563,9 +569,9 @@ module.exports.DeleteSite = async function (req, res) {
 
     let result = await SiteModel.deleteOne({ _id: id });
 
-    let result2 = await ConsumerSiteModel.deleteOne({ IdSite: id });
+    await ConsumerSiteModel.deleteOne({ IdSite: id });
 
-    let result3 = await StaffSiteModel.deleteOne({ IdSite: id });
+    await StaffSiteModel.deleteOne({ IdSite: id });
 
     res.json(result.deletedCount);
 };

@@ -22,6 +22,9 @@ var siteSchema = new mongoose.Schema({
     IsConnectPipe: Boolean,
     MeterSerial: String,
     LoggerSerial: String,
+    GroupIdTelegram: String,
+    DMA_In: String,
+    DMA_Out: String,
 });
 
 var Site = mongoose.model('Site', siteSchema, 't_Sites');

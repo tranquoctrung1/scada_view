@@ -19,6 +19,9 @@ let isValve = document.getElementById('isValve');
 let isConnectPipe = document.getElementById('isConnectPipe');
 let serialLogger = document.getElementById('serialLogger');
 let serialMeter = document.getElementById('serialMeter');
+let groupIdTelegram = document.getElementById('groupIdTelegram');
+let DMAIn = document.getElementById('DMAIn');
+let DMAOut = document.getElementById('DMAOut');
 
 let urlGetSiteByDisplayGroup = `${hostname}/GetSiteByDisplayGroup`;
 let urlGetSiteBySiteId = `${hostname}/GetSiteBySiteId`;
@@ -99,6 +102,11 @@ site.addEventListener('change', function (e) {
                 otherDevice.checked = res.data[0].OtherDevice;
                 isDisplay.checked = fillDataIntoInputTag(res.data[0].IsDisplay);
                 isValve.checked = fillDataIntoInputTag(res.data[0].IsValve);
+                groupIdTelegram.value = fillDataIntoInputTag(
+                    res.data[0].GroupIdTelegram,
+                );
+                DMAIn.value = fillDataIntoInputTag(res.data[0].DMA_In);
+                DMAOut.value = fillDataIntoInputTag(res.data[0].DMA_Out);
                 isConnectPipe.checked = fillDataIntoInputTag(
                     res.data[0].IsConnectPipe,
                 );
@@ -133,6 +141,9 @@ function SetEmptySite() {
     isConnectPipe.checked = false;
     serialLogger.value = '';
     serialMeter.value = '';
+    groupIdTelegram.value = '';
+    DMAIn.value = '';
+    DMAOut.value = '';
 }
 
 let btnInsert = document.getElementById('btnInsert');
@@ -166,6 +177,9 @@ btnInsert.addEventListener('click', function (e) {
             IsConnectPipe: isConnectPipe.checked,
             MeterSerial: serialMeter.value,
             LoggerSerial: serialLogger.value,
+            GroupIdTelegram: groupIdTelegram.value,
+            DMAIn: DMAIn.value,
+            DMAOut: DMAOut.value,
         };
 
         let url = `${urlInsertSite}`;
@@ -216,6 +230,9 @@ btnUpdate.addEventListener('click', function (e) {
             IsConnectPipe: isConnectPipe.checked,
             MeterSerial: serialMeter.value,
             LoggerSerial: serialLogger.value,
+            GroupIdTelegram: groupIdTelegram.value,
+            DMAIn: DMAIn.value,
+            DMAOut: DMAOut.value,
         };
 
         let url = `${urlUpdateSite}`;
@@ -264,10 +281,9 @@ let map;
 
 let marker;
 
-map = L.map('map', {}).setView([10.7611111, 106.675], 12);
+map = L.map('map', {}).setView([10.04163, 105.757143], 12);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution:
-        '<a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> <strong><a href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>',
+    attribution: '',
     maxZoom: 18,
 }).addTo(map);
 

@@ -2,6 +2,8 @@ const totalPercentLost = document.getElementById('totalPercentLost');
 const totalLostWater = document.getElementById('totalLostWater');
 
 const urlGetDrawingDMA = `${hostname}/GetDrawingDMA`;
+const urlGetTokenArcGis = `${urlArcGis}/arcgis/tokens/generateToken?username=mdc&password=LUTWRcDuGx8A`;
+const urlServiceArcGisDMA = `${urlArcGis}/arcgis/rest/services/mdc/MapService_View/MapServer/1`;
 
 const totalDMA = document.getElementById('totalDMA');
 const currentMonthYear = document.getElementById('currentMonthYear');
@@ -42,7 +44,7 @@ function zoomIn(e) {
 function zoomOut(e) {
     map.zoomOut();
 }
-function initMap() {
+async function initMap() {
     const baseLayer = L.tileLayer(
         `https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`,
         {
@@ -87,7 +89,7 @@ function initMap() {
             },
         ],
         layers: [baseLayer],
-    });
+    }).setView([10.04163, 105.757143], 13);
 
     L.control
         .layers({ 'Giao thông': baseLayer }, { 'Vệ tinh': trafficLayer })
@@ -185,13 +187,14 @@ function initMap() {
             maxZoom: 18,
         },
     ).addTo(map);
+
+    await getDataDMADarwing();
 }
 
 initMap();
 
 function styleFeature(feature) {
     // Set the style for the feature
-
     let color = '';
     if (feature.properties.TTN > 25) {
         color = 'red';
@@ -262,15 +265,40 @@ function getTop5HighestTTN(data) {
     return sortedData.slice(0, 5);
 }
 
-function getDataDMADarwing() {
+async function getToken() {
+    const response = await axios.post(urlGetTokenArcGis);
+
+    return response.data;
+}
+
+async function getDataDMADarwing() {
+    const token = await getToken();
+
     axios
-        .get(urlGetDrawingDMA)
+        .get(urlServiceArcGisDMA + '/query', {
+            params: {
+                where: '1=1',
+                outFields: '*',
+                outSR: 4326,
+                f: 'json',
+                token: token,
+            },
+        })
         .then((res) => {
-            res.data.shift();
+            const esriJson = res.data;
 
-            const dataTTN = getRandomTTN(res.data);
+            const geojsonFeatures = esriJson.features.map((f) =>
+                Terraformer.ArcGIS.parse(f),
+            );
 
-            IdAndNameDMA = getIdAndNameDMA(res.data);
+            const geojson = {
+                type: 'FeatureCollection',
+                features: geojsonFeatures,
+            };
+
+            const dataTTN = getRandomTTN(geojson.features);
+
+            IdAndNameDMA = getIdAndNameDMA(geojson.features);
 
             createListtree(IdAndNameDMA);
 
@@ -288,7 +316,7 @@ function getDataDMADarwing() {
             totalLostWater.innerHTML =
                 Math.floor(Math.random() * 50) + 1 + ' %';
 
-            totalDMA.innerHTML = res.data.length;
+            totalDMA.innerHTML = geojson.features.length;
 
             const now = new Date();
             const now2 = new Date();
@@ -398,7 +426,6 @@ function animateFade(layer) {
 
     fade();
 }
-getDataDMADarwing();
 
 function drawBarChartPopup(data) {
     map.on('popupopen', function (e) {
@@ -789,7 +816,6 @@ searchSite.addEventListener(
 );
 
 function openLayer(e) {
-    console.log(e.dataset.name);
     for (const layer of layersDMA) {
         if (layer.feature.properties.IDKVCN == e.dataset.name) {
             layer.fire('click');

@@ -8,10 +8,20 @@ let sites = [];
 
 let userName = document.getElementById('userName');
 
-if (userName == null || userName == undefined || userName.trim() == '') {
-    userName = 'admin';
+const params = new URLSearchParams(window.location.search);
+
+if (
+    params.get('uid') != null &&
+    params.get('uid') != undefined &&
+    params.get('uid').trim() != ''
+) {
+    userName = params.get('uid');
 } else {
-    userName = userName.innerHTML;
+    if (userName == null || userName == undefined || userName.trim() == '') {
+        userName = 'admin';
+    } else {
+        userName = userName.innerHTML;
+    }
 }
 
 let markers = [];
