@@ -4,6 +4,8 @@ const totalLostWater = document.getElementById('totalLostWater');
 const urlGetDrawingDMA = `${hostname}/GetDrawingDMA`;
 const urlGetTokenArcGis = `${urlArcGis}/arcgis/tokens/generateToken?username=mdc&password=LUTWRcDuGx8A`;
 const urlServiceArcGisDMA = `${urlArcGis}/arcgis/rest/services/mdc/MapService_View/MapServer/1`;
+const urlGetQuantityDMA = `${hostname}/GetQuantityDMA`;
+const urlGetBillingDMA = `${hostname}/GetBillingDMA`;
 
 const totalDMA = document.getElementById('totalDMA');
 const currentMonthYear = document.getElementById('currentMonthYear');
@@ -24,6 +26,10 @@ let top5HighestLLTTN = [];
 let top5HighestTTN = [];
 let layersDMA = [];
 let IdAndNameDMA = [];
+let dataDMA = [];
+let totalLostDMA = 0;
+let LKLostWater = 0;
+let listStatisticDMA = [];
 
 function hideLable(e) {
     map.eachLayer(function (layer) {
@@ -196,7 +202,9 @@ initMap();
 function styleFeature(feature) {
     // Set the style for the feature
     let color = '';
-    if (feature.properties.TTN > 25) {
+    if (feature.properties.TTN === 'NO DATA') {
+        color = '#95a5a6';
+    } else if (feature.properties.TTN > 25) {
         color = 'red';
     } else if (feature.properties.TTN > 10) {
         color = 'yellow';
@@ -214,28 +222,130 @@ function styleFeature(feature) {
     };
 }
 
+async function getBillingDMA() {
+    const response = await axios.get(urlGetBillingDMA);
+
+    if (response.data.length > 0) {
+        dataDMA = response.data;
+    }
+}
+
+async function getQuantityDMA(dma, start, end) {
+    const totalMilisecondStart = start.getTime();
+    const totlMilisecondEnd = end.getTime();
+
+    const response = await axios.get(
+        `${urlGetQuantityDMA}/${dma}/${totalMilisecondStart}/${totlMilisecondEnd}`,
+    );
+
+    return response.data;
+}
+
 // random ttn data
-function getRandomTTN(data) {
-    let countMaxTTNGT25 = 0;
+async function getRandomTTN(data) {
+    await getBillingDMA();
+
+    const now = new Date(Date.now());
+    const start = new Date(now.getFullYear(), 0, 1, 0, 0, 0);
+    const end = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0);
 
     for (const item of data) {
-        let randomNumber = Math.floor(Math.random() * 50) + 1;
-        let randomNumberLL = Math.floor(Math.random() * 1000) + 1;
-        let randomPressure = Math.floor(Math.random() * 10) + 1;
+        const filterDMA = dataDMA.filter(
+            (el) => el.MADMA === item.properties.IDKVCN,
+        );
 
-        if (randomNumber > 25) {
-            countMaxTTNGT25++;
+        if (filterDMA.length > 0) {
+            const dataQuantity = await getQuantityDMA(
+                item.properties.IDKVCN,
+                start,
+                end,
+            );
 
-            if (countMaxTTNGT25 <= 3) {
-                item.properties.TTN = randomNumber;
-            } else {
-                randomNumber = Math.floor(Math.random() * 10) + 1;
-                item.properties.TTN = randomNumber;
+            const obj = {};
+            obj.IDKVCN = item.properties.IDKVCN;
+            obj.TenKVCN = item.properties.TenKVCN;
+            obj.Consume = 0;
+            obj.Quantity = 0;
+
+            if (dataQuantity.length > 0) {
+                for (let i = 0; i < dataQuantity.length - 1; i++) {
+                    const time = new Date(dataQuantity[i].TimeStamp);
+
+                    const find = filterDMA.find(
+                        (el) =>
+                            el.THANG === time.getMonth() + 1 &&
+                            el.NAM === time.getFullYear(),
+                    );
+
+                    if (find !== undefined) {
+                        obj.Consume += find.TONGM3TT;
+                        obj.Quantity += dataQuantity[i].Value;
+                    }
+                }
+            }
+
+            if (obj.Consume > 0) {
+                LKLostWater +=
+                    ((obj.Quantity - obj.Consume) / obj.Consume) * 100;
+            }
+
+            obj.ConsumePrevMonth = 0;
+            obj.QuantityPrevMonth = 0;
+            obj.TTNPrevMonth = 0;
+            obj.ConsumeCurrentMonth = 0;
+            obj.QuantityCurrentMonth = 0;
+            obj.TTNCurrentMonth = 0;
+
+            const findPrevMonth = filterDMA.find(
+                (el) =>
+                    el.THANG === now.getMonth() && el.NAM === now.getFullYear(),
+            );
+
+            if (findPrevMonth !== undefined) {
+                if (dataQuantity.length > 0) {
+                    obj.ConsumePrevMonth = findPrevMonth.TONGM3TT;
+                    obj.QuantityPrevMonth =
+                        dataQuantity[dataQuantity.length - 2].Value;
+                    obj.TTNPrevMonth =
+                        ((obj.QuantityPrevMonth - obj.ConsumePrevMonth) /
+                            obj.ConsumePrevMonth) *
+                        100;
+                }
+            }
+
+            const find = filterDMA.find(
+                (el) =>
+                    el.THANG === now.getMonth() + 1 &&
+                    el.NAM === now.getFullYear(),
+            );
+
+            if (find !== undefined) {
+                if (dataQuantity.length > 0) {
+                    let quantity = dataQuantity[dataQuantity.length - 1].Value;
+                    let consume = find.TONGM3TT;
+                    obj.ConsumeCurrentMonth = find.TONGM3TT;
+                    obj.QuantityCurrentMonth = quantity;
+                    let ttn = ((quantity - consume) / consume) * 100;
+                    obj.TTNCurrentMonth = ttn;
+                    item.properties.TTN = parseFloat(ttn.toFixed(2));
+                    item.properties.LLTTN = quantity - consume;
+
+                    totalLostDMA += ttn;
+                } else {
+                    item.properties.TTN = 'NO DATA';
+                    item.properties.LLTTN = 'NO DATA';
+                }
+            }
+            if (obj.TTNCurrentMonth !== 0 && obj.TTNPrevMonth !== 0) {
+                listStatisticDMA.push(obj);
             }
         } else {
-            item.properties.TTN = randomNumber;
+            item.properties.TTN = 'NO DATA';
+            item.properties.LLTTN = 'NO DATA';
         }
-        item.properties.LLTTN = randomNumberLL;
+
+        let randomPressure = Math.floor(Math.random() * 10) + 1;
+
         item.properties.Pressure = randomPressure;
     }
     return data;
@@ -250,18 +360,29 @@ function getIdAndNameDMA(data) {
         };
         temp.push(obj);
     }
-    return temp;
+    return temp.sort((a, b) =>
+        a.IDKVCN.toLowerCase().localeCompare(b.IDKVCN.toLowerCase()),
+    );
 }
 
 function getTop5HighestLLTTN(data) {
-    const sortedData = data.sort(
+    const filteredData = data.filter(
+        (item) => item.properties.LLTTN !== 'NO DATA',
+    );
+    const sortedData = filteredData.sort(
         (a, b) => b.properties.LLTTN - a.properties.LLTTN,
     );
+
     return sortedData.slice(0, 5);
 }
 
 function getTop5HighestTTN(data) {
-    const sortedData = data.sort((a, b) => b.properties.TTN - a.properties.TTN);
+    const filteredData = data.filter(
+        (item) => item.properties.TTN !== 'NO DATA',
+    );
+    const sortedData = filteredData.sort(
+        (a, b) => b.properties.TTN - a.properties.TTN,
+    );
     return sortedData.slice(0, 5);
 }
 
@@ -284,7 +405,7 @@ async function getDataDMADarwing() {
                 token: token,
             },
         })
-        .then((res) => {
+        .then(async (res) => {
             const esriJson = res.data;
 
             const geojsonFeatures = esriJson.features.map((f) =>
@@ -296,7 +417,7 @@ async function getDataDMADarwing() {
                 features: geojsonFeatures,
             };
 
-            const dataTTN = getRandomTTN(geojson.features);
+            const dataTTN = await getRandomTTN(geojson.features);
 
             IdAndNameDMA = getIdAndNameDMA(geojson.features);
 
@@ -305,16 +426,14 @@ async function getDataDMADarwing() {
             top5HighestLLTTN = getTop5HighestLLTTN(dataTTN);
             top5HighestTTN = getTop5HighestTTN(dataTTN);
 
-            fillDataTable(dataTTN);
+            fillDataTable(listStatisticDMA);
             drawLineChartCompare(dataTTN);
 
             drawBarChartLowestTTN(top5HighestLLTTN);
             drawBarChartHighestTTN(top5HighestTTN);
 
-            totalPercentLost.innerHTML =
-                Math.floor(Math.random() * 30) + 1 + ' %';
-            totalLostWater.innerHTML =
-                Math.floor(Math.random() * 50) + 1 + ' %';
+            totalPercentLost.innerHTML = totalLostDMA.toFixed(2) + ' %';
+            totalLostWater.innerHTML = LKLostWater.toFixed(2) + ' %';
 
             totalDMA.innerHTML = geojson.features.length;
 
@@ -428,7 +547,7 @@ function animateFade(layer) {
 }
 
 function drawBarChartPopup(data) {
-    map.on('popupopen', function (e) {
+    map.on('popupopen', async function (e) {
         if (data.properties.IDKVCN !== null) {
             var chartDom = document.getElementById(
                 `barChart${data.properties.IDKVCN}`,
@@ -436,6 +555,10 @@ function drawBarChartPopup(data) {
             if (chartDom !== null) {
                 var myChart = echarts.init(chartDom);
                 var option;
+
+                let dataTTN = await randomDataTotalTTNCurrentYear(
+                    data.properties.IDKVCN,
+                );
 
                 option = {
                     xAxis: {
@@ -466,12 +589,12 @@ function drawBarChartPopup(data) {
                     ],
                     series: [
                         {
-                            data: randomDataTotalTTNCurrentYear(),
+                            data: dataTTN[0],
                             type: 'line',
                             color: '#e74c3c',
                         },
                         {
-                            data: randomDataTotalLLTTNCurrentYear(),
+                            data: dataTTN[1],
                             type: 'bar',
                             color: '#3498db',
                             yAxisIndex: 1,
@@ -587,26 +710,23 @@ function fillDataTable(data) {
     let content = '';
 
     for (const item of data) {
-        let waterSupply = Math.floor(Math.random() * 10000) + 1;
-        let waterLoss = Math.floor(Math.random() * 10000) + 1;
-
-        let trend = Math.floor(Math.random() * 2);
+        let trend = item.TTNCurrentMonth > item.TTNPrevMonth ? 1 : 0;
 
         let contentTrend =
-            trend === 0
+            trend === 1
                 ? '<span class="arrow-up">&uArr; </span>Tăng'
                 : '<span class="arrow-down">&dArr; </span> Giảm';
 
-        let backgroundColor = trend === 0 ? 'trend-up' : 'trend-down';
-
-        let waterLossPercent = Math.floor((waterLoss / waterSupply) * 100) + 1;
+        let backgroundColor = trend === 1 ? 'trend-up' : 'trend-down';
 
         content += `
             <tr class="${backgroundColor}">
-                <td>${item.properties.TenKVCN}</td>
-                <td>${waterSupply}</td>
-                <td>${waterLoss}</td>
-                <td>${waterLossPercent}</td>
+                <td>${item.TenKVCN}</td>
+                <td>${item.QuantityCurrentMonth}</td>
+                <td>${item.ConsumeCurrentMonth}</td>
+                <td>${
+                    item.TTNCurrentMonth ? item.TTNCurrentMonth.toFixed(2) : ''
+                }</td>
                 <td>${contentTrend}</td>
             </tr>
         `;
@@ -638,17 +758,38 @@ function randomLabelTotalTTNCurrentYear() {
     return data;
 }
 
-function randomDataTotalTTNCurrentYear() {
-    let data = [];
+async function randomDataTotalTTNCurrentYear(dma) {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 1, 0, 0, 0);
+    const end = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0);
 
-    let now = new Date();
-    let month = now.getMonth() + 1;
-
-    for (let i = 0; i < month; i++) {
-        data.push(Math.floor(Math.random() * 50) + 1);
+    const response = await axios.get(
+        `${urlGetQuantityDMA}/${dma}/${start.getTime()}/${end.getTime()}`,
+    );
+    let dataTTN = [];
+    let dataLLTTN = [];
+    for (let i = 0; i < now.getMonth() + 1; i++) {
+        const find = dataDMA.find(
+            (el) =>
+                el.MADMA === dma &&
+                el.THANG === i + 1 &&
+                el.NAM === now.getFullYear(),
+        );
+        if (find !== undefined) {
+            if (response.data[i] != undefined) {
+                let quantity = response.data[i].Value;
+                let consume = find.TONGM3TT;
+                let ttn = ((quantity - consume) / consume) * 100;
+                dataTTN.push(parseFloat(ttn.toFixed(2)));
+                dataLLTTN.push(quantity - consume);
+            }
+        } else {
+            dataTTN.push(0);
+            dataLLTTN.push(0);
+        }
     }
 
-    return data;
+    return [dataTTN, dataLLTTN];
 }
 
 function randomDataTotalLLTTNCurrentYear() {

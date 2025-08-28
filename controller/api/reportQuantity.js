@@ -1410,3 +1410,379 @@ module.exports.GetQuantityMonthTotalSite = async function (req, res) {
         console.log(err);
     }
 };
+
+module.exports.GetQuantityDMA = async function (req, res) {
+    let start = req.params.start;
+    let end = req.params.end;
+    let dma = req.params.dma;
+
+    let result = [];
+
+    let startDate = new Date(parseInt(start));
+    let endDate = new Date(parseInt(end));
+
+    let spaceMonth = (endDate.getFullYear() - startDate.getFullYear()) * 12;
+    spaceMonth -= startDate.getMonth();
+    spaceMonth += endDate.getMonth();
+    spaceMonth += 1;
+
+    let siteIn = await SiteModel.find({ DMA_In: dma });
+    let siteOut = await SiteModel.find({ DMA_Out: dma });
+    if (siteIn.length > 0 || siteOut.length > 0) {
+        {
+            for (let i = 0; i < spaceMonth; i++) {
+                let tt = new Date(startDate);
+                let tt2 = new Date(startDate);
+                let tt3 = new Date(startDate);
+                let tt4 = new Date(startDate);
+                tt.setMonth(tt.getMonth() + i - 1);
+                tt3.setMonth(tt3.getMonth() + i);
+                tt2.setMonth(tt2.getMonth() + i);
+                tt4.setMonth(tt4.getMonth() + i + 1);
+
+                let obj = {};
+                obj.TimeStamp = tt3;
+                obj.Value = 0;
+
+                for (const site of siteIn) {
+                    if (site.LoggerId != null && site.LoggerId != undefined) {
+                        let listChannels = await ChannelModel.find({
+                            $and: [
+                                { LoggerId: site.LoggerId },
+                                {
+                                    $or: [
+                                        { ForwardFlow: { $eq: true } },
+                                        { ReverseFlow: { $eq: true } },
+                                    ],
+                                },
+                            ],
+                        });
+
+                        let startDay = 1;
+                        let startHour = 0;
+
+                        try {
+                            startDay = site.StartDay;
+                        } catch (err) {
+                            console.log(err);
+                        }
+
+                        try {
+                            startHour = site.StartHour;
+                        } catch (err) {
+                            console.log(err);
+                        }
+
+                        let t = new Date(tt);
+                        let t2 = new Date(tt2);
+                        let t3 = new Date(tt3);
+                        let t4 = new Date(tt4);
+                        t3.setDate(t.getDate() + startDay - 1);
+                        t3.setHours(t3.getHours() + startHour);
+
+                        t.setDate(t.getDate() + startDay - 1);
+                        t.setHours(t.getHours() + startHour);
+
+                        t2.setDate(t2.getDate() + startDay - 1);
+                        t2.setHours(t2.getHours() + startHour);
+
+                        t4.setDate(t4.getDate() + startDay - 1);
+                        t4.setHours(t4.getHours() + startHour);
+
+                        let indexManual = await DataManualModel.find({
+                            SiteId: site.SiteId,
+                            TimeStamp: t3,
+                        });
+
+                        let obj2 = {};
+                        if (indexManual.length > 0) {
+                            obj.Value += indexManual[0].Value;
+                            obj2.ForwardFlowBefore = {};
+                            obj2.ForwardFlowBefore.TimeStamp = t;
+                            obj2.ForwardFlowBefore.Value = 0;
+
+                            obj2.ForwardFlowAfter = {};
+                            obj2.ForwardFlowAfter.TimeStamp = t2;
+                            obj2.ForwardFlowAfter.Value = 0;
+
+                            obj2.ReverseFlowBefore = {};
+                            obj2.ReverseFlowBefore.TimeStamp = t;
+                            obj2.ReverseFlowBefore.Value = 0;
+
+                            obj2.ReverseFlowAfter = {};
+                            obj2.ReverseFlowAfter.TimeStamp = t2;
+                            obj2.ReverseFlowAfter.Value = 0;
+                        } else {
+                            obj2.ForwardFlowBefore = {};
+                            obj2.ForwardFlowBefore.TimeStamp = t;
+                            obj2.ForwardFlowBefore.Value = 0;
+
+                            obj2.ForwardFlowAfter = {};
+                            obj2.ForwardFlowAfter.TimeStamp = t2;
+                            obj2.ForwardFlowAfter.Value = 0;
+
+                            obj2.ReverseFlowBefore = {};
+                            obj2.ReverseFlowBefore.TimeStamp = t;
+                            obj2.ReverseFlowBefore.Value = 0;
+
+                            obj2.ReverseFlowAfter = {};
+                            obj2.ReverseFlowAfter.TimeStamp = t2;
+                            obj2.ReverseFlowAfter.Value = 0;
+                            for (let channel of listChannels) {
+                                const DataLoggerSchema = new mongoose.Schema({
+                                    TimeStamp: Date,
+                                    Value: Number,
+                                });
+
+                                delete mongoose.models.DataLogger;
+
+                                const DataLogger = mongoose.model(
+                                    'DataLogger',
+                                    DataLoggerSchema,
+                                    't_Index_Logger_' + channel.ChannelId,
+                                );
+
+                                let value = await DataLogger.find({
+                                    TimeStamp: { $gte: t, $lte: t2 },
+                                })
+                                    .sort({ TimeStamp: 1 })
+                                    .limit(1);
+
+                                let value2 = await DataLogger.find({
+                                    TimeStamp: { $gte: t2, $lt: t4 },
+                                })
+                                    .sort({ TimeStamp: 1 })
+                                    .limit(1);
+
+                                if (channel.ForwardFlow == true) {
+                                    if (value.length > 0) {
+                                        obj2.ForwardFlowBefore.Value =
+                                            value[0].Value;
+                                    }
+
+                                    if (value2.length > 0) {
+                                        obj2.ForwardFlowAfter.Value =
+                                            value2[0].Value;
+                                    }
+                                } else if (channel.ReverseFlow == true) {
+                                    if (value.length > 0) {
+                                        obj2.ReverseFlowBefore.Value =
+                                            value[0].Value;
+                                    }
+                                    if (value2.length > 0) {
+                                        obj2.ReverseFlowAfter.Value =
+                                            value2[0].Value;
+                                    }
+                                }
+                            }
+
+                            let indexForwardAfter =
+                                obj2.ForwardFlowAfter != undefined
+                                    ? obj2.ForwardFlowAfter.Value
+                                    : 0;
+                            let indexReverseAfter =
+                                obj2.ReverseFlowAfter != undefined
+                                    ? obj2.ReverseFlowAfter.Value
+                                    : 0;
+                            let indexForwardBefore =
+                                obj2.ForwardFlowBefore != undefined
+                                    ? obj2.ForwardFlowBefore.Value
+                                    : 0;
+                            let indexReverseBefore =
+                                obj2.ReverseFlowBefore != undefined
+                                    ? obj2.ReverseFlowBefore.Value
+                                    : 0;
+                            if (
+                                indexForwardAfter == 0 &&
+                                indexReverseAfter == 0 &&
+                                indexForwardBefore < indexReverseBefore
+                            ) {
+                                obj.Value += 0;
+                            } else {
+                                obj.Value +=
+                                    indexForwardAfter -
+                                    indexReverseAfter -
+                                    (indexForwardBefore - indexReverseBefore);
+
+                                if (obj.Value < 0) {
+                                    obj.Value += 0;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                for (const site of siteOut) {
+                    if (site.LoggerId != null && site.LoggerId != undefined) {
+                        let listChannels = await ChannelModel.find({
+                            $and: [
+                                { LoggerId: site.LoggerId },
+                                {
+                                    $or: [
+                                        { ForwardFlow: { $eq: true } },
+                                        { ReverseFlow: { $eq: true } },
+                                    ],
+                                },
+                            ],
+                        });
+
+                        let startDay = 1;
+                        let startHour = 0;
+
+                        try {
+                            startDay = site.StartDay;
+                        } catch (err) {
+                            console.log(err);
+                        }
+
+                        try {
+                            startHour = site.StartHour;
+                        } catch (err) {
+                            console.log(err);
+                        }
+
+                        let t = new Date(tt);
+                        let t2 = new Date(tt2);
+                        let t3 = new Date(tt3);
+                        let t4 = new Date(tt4);
+                        t3.setDate(t.getDate() + startDay - 1);
+                        t3.setHours(t3.getHours() + startHour);
+                        t.setDate(t.getDate() + startDay - 1);
+                        t.setHours(t.getHours() + startHour);
+                        t2.setDate(t2.getDate() + startDay - 1);
+                        t2.setHours(t2.getHours() + startHour);
+                        t4.setDate(t4.getDate() + startDay - 1);
+                        t4.setHours(t4.getHours() + startHour);
+
+                        let indexManual = await DataManualModel.find({
+                            SiteId: site.SiteId,
+                            TimeStamp: t3,
+                        });
+
+                        let obj2 = {};
+
+                        if (indexManual.length > 0) {
+                            obj.Value -= indexManual[0].Value;
+                            obj2.ForwardFlowBefore = {};
+                            obj2.ForwardFlowBefore.TimeStamp = t;
+                            obj2.ForwardFlowBefore.Value = 0;
+
+                            obj2.ForwardFlowAfter = {};
+                            obj2.ForwardFlowAfter.TimeStamp = t2;
+                            obj2.ForwardFlowAfter.Value = 0;
+
+                            obj2.ReverseFlowBefore = {};
+                            obj2.ReverseFlowBefore.TimeStamp = t;
+                            obj2.ReverseFlowBefore.Value = 0;
+
+                            obj2.ReverseFlowAfter = {};
+                            obj2.ReverseFlowAfter.TimeStamp = t2;
+                            obj2.ReverseFlowAfter.Value = 0;
+                        } else {
+                            obj2.ForwardFlowBefore = {};
+                            obj2.ForwardFlowBefore.TimeStamp = t;
+                            obj2.ForwardFlowBefore.Value = 0;
+
+                            obj2.ForwardFlowAfter = {};
+                            obj2.ForwardFlowAfter.TimeStamp = t2;
+                            obj2.ForwardFlowAfter.Value = 0;
+
+                            obj2.ReverseFlowBefore = {};
+                            obj2.ReverseFlowBefore.TimeStamp = t;
+                            obj2.ReverseFlowBefore.Value = 0;
+
+                            obj2.ReverseFlowAfter = {};
+                            obj2.ReverseFlowAfter.TimeStamp = t2;
+                            obj2.ReverseFlowAfter.Value = 0;
+                            for (let channel of listChannels) {
+                                const DataLoggerSchema = new mongoose.Schema({
+                                    TimeStamp: Date,
+                                    Value: Number,
+                                });
+
+                                delete mongoose.models.DataLogger;
+
+                                const DataLogger = mongoose.model(
+                                    'DataLogger',
+                                    DataLoggerSchema,
+                                    't_Index_Logger_' + channel.ChannelId,
+                                );
+
+                                let value = await DataLogger.find({
+                                    TimeStamp: { $gte: t, $lte: t2 },
+                                })
+                                    .sort({ TimeStamp: 1 })
+                                    .limit(1);
+
+                                let value2 = await DataLogger.find({
+                                    TimeStamp: { $gte: t2, $lt: t4 },
+                                })
+                                    .sort({ TimeStamp: 1 })
+                                    .limit(1);
+
+                                if (channel.ForwardFlow == true) {
+                                    if (value.length > 0) {
+                                        obj2.ForwardFlowBefore.Value =
+                                            value[0].Value;
+                                    }
+
+                                    if (value2.length > 0) {
+                                        obj2.ForwardFlowAfter.Value =
+                                            value2[0].Value;
+                                    }
+                                } else if (channel.ReverseFlow == true) {
+                                    if (value.length > 0) {
+                                        obj2.ReverseFlowBefore.Value =
+                                            value[0].Value;
+                                    }
+                                    if (value2.length > 0) {
+                                        obj2.ReverseFlowAfter.Value =
+                                            value2[0].Value;
+                                    }
+                                }
+                            }
+
+                            let indexForwardAfter =
+                                obj2.ForwardFlowAfter != undefined
+                                    ? obj2.ForwardFlowAfter.Value
+                                    : 0;
+                            let indexReverseAfter =
+                                obj2.ReverseFlowAfter != undefined
+                                    ? obj2.ReverseFlowAfter.Value
+                                    : 0;
+                            let indexForwardBefore =
+                                obj2.ForwardFlowBefore != undefined
+                                    ? obj2.ForwardFlowBefore.Value
+                                    : 0;
+                            let indexReverseBefore =
+                                obj2.ReverseFlowBefore != undefined
+                                    ? obj2.ReverseFlowBefore.Value
+                                    : 0;
+
+                            if (
+                                indexForwardAfter == 0 &&
+                                indexReverseAfter == 0 &&
+                                indexForwardBefore < indexReverseBefore
+                            ) {
+                                obj.Value -= 0;
+                            } else {
+                                obj.Value -=
+                                    indexForwardAfter -
+                                    indexReverseAfter -
+                                    (indexForwardBefore - indexReverseBefore);
+
+                                if (obj.Value < 0) {
+                                    obj.Value -= 0;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                result.push(obj);
+            }
+        }
+    }
+
+    res.json(result);
+};

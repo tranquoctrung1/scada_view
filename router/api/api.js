@@ -48,6 +48,7 @@ const ListPointPipeApi = require('../../controller/api/listPointPipe');
 const DrawingPipeApi = require('../../controller/api/drawingPipe');
 const DrawingDMAApi = require('../../controller/api/drawingDMA');
 const MeterApi = require('../../controller/api/meter');
+const BillingDMAApi = require('../../controller/api/billingDMA');
 
 router.get('/GetAllSite', SiteApi.GetAllSite);
 router.get('/GetSiteByUId/:userid', SiteApi.GetSiteByUid);
@@ -452,5 +453,12 @@ router.post(
 );
 
 router.post('/DeleteDeviceMeter/:id', MeterApi.DeleteDeviceMeter);
+
+router.get(
+    '/GetQuantityDMA/:dma/:start/:end',
+    QuantiryReportApi.GetQuantityDMA,
+);
+
+router.get('/GetBillingDMA', BillingDMAApi.GetBillingDMA);
 
 module.exports = router;
