@@ -248,6 +248,7 @@ async function getRandomTTN(data) {
     const now = new Date(Date.now());
     const start = new Date(now.getFullYear(), 0, 1, 0, 0, 0);
     const end = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0);
+    end.setMonth(end.getMonth() - 1);
 
     for (const item of data) {
         const filterDMA = dataDMA.filter(
@@ -296,9 +297,13 @@ async function getRandomTTN(data) {
             obj.QuantityCurrentMonth = 0;
             obj.TTNCurrentMonth = 0;
 
+            const tnow = new Date(Date.now());
+            tnow.setMonth(tnow.getMonth() - 2);
+
             const findPrevMonth = filterDMA.find(
                 (el) =>
-                    el.THANG === now.getMonth() && el.NAM === now.getFullYear(),
+                    el.THANG === tnow.getMonth() + 1 &&
+                    el.NAM === tnow.getFullYear(),
             );
 
             if (findPrevMonth !== undefined) {
@@ -313,10 +318,13 @@ async function getRandomTTN(data) {
                 }
             }
 
+            const ttnow = new Date(Date.now());
+            ttnow.setMonth(ttnow.getMonth() - 1);
+
             const find = filterDMA.find(
                 (el) =>
-                    el.THANG === now.getMonth() + 1 &&
-                    el.NAM === now.getFullYear(),
+                    el.THANG === ttnow.getMonth() + 1 &&
+                    el.NAM === ttnow.getFullYear(),
             );
 
             if (find !== undefined) {
@@ -369,6 +377,7 @@ function getTop5HighestLLTTN(data) {
     const filteredData = data.filter(
         (item) => item.properties.LLTTN !== 'NO DATA',
     );
+
     const sortedData = filteredData.sort(
         (a, b) => b.properties.LLTTN - a.properties.LLTTN,
     );
@@ -383,6 +392,7 @@ function getTop5HighestTTN(data) {
     const sortedData = filteredData.sort(
         (a, b) => b.properties.TTN - a.properties.TTN,
     );
+
     return sortedData.slice(0, 5);
 }
 
@@ -438,8 +448,9 @@ async function getDataDMADarwing() {
             totalDMA.innerHTML = geojson.features.length;
 
             const now = new Date();
+            now.setMonth(now.getMonth() - 1);
             const now2 = new Date();
-            now2.setMonth(now.getMonth() - 1);
+            now2.setMonth(now.getMonth() - 2);
             currentMonthYear.innerHTML = `${
                 now.getMonth() + 1
             }/${now.getFullYear()}`;
@@ -749,7 +760,7 @@ function randomLabelTotalTTNCurrentYear() {
     let data = [];
 
     let now = new Date();
-    let month = now.getMonth() + 1;
+    let month = now.getMonth();
 
     for (let i = 0; i < month; i++) {
         data.push(`T${i + 1}`);
@@ -768,7 +779,7 @@ async function randomDataTotalTTNCurrentYear(dma) {
     );
     let dataTTN = [];
     let dataLLTTN = [];
-    for (let i = 0; i < now.getMonth() + 1; i++) {
+    for (let i = 0; i < now.getMonth(); i++) {
         const find = dataDMA.find(
             (el) =>
                 el.MADMA === dma &&

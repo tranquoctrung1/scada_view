@@ -1462,13 +1462,23 @@ module.exports.GetQuantityDMA = async function (req, res) {
                         let startHour = 0;
 
                         try {
-                            startDay = site.StartDay;
+                            if (
+                                site.StartDay != null &&
+                                site.StartDay != undefined
+                            ) {
+                                startDay = site.StartDay;
+                            }
                         } catch (err) {
                             console.log(err);
                         }
 
                         try {
-                            startHour = site.StartHour;
+                            if (
+                                site.StartHour != null &&
+                                site.StartHour != undefined
+                            ) {
+                                startHour = site.StartHour;
+                            }
                         } catch (err) {
                             console.log(err);
                         }
@@ -1630,13 +1640,23 @@ module.exports.GetQuantityDMA = async function (req, res) {
                         let startHour = 0;
 
                         try {
-                            startDay = site.StartDay;
+                            if (
+                                site.StartDay != null &&
+                                site.StartDay != undefined
+                            ) {
+                                startDay = site.StartDay;
+                            }
                         } catch (err) {
                             console.log(err);
                         }
 
                         try {
-                            startHour = site.StartHour;
+                            if (
+                                site.StartHour != null &&
+                                site.StartHour != undefined
+                            ) {
+                                startHour = site.StartHour;
+                            }
                         } catch (err) {
                             console.log(err);
                         }
