@@ -20,7 +20,7 @@ module.exports.loginValidation = async function (req, res, next) {
                     userid: result[0]._id,
                 },
                 process.env.JWT_KEY,
-                //{ expiresIn: "1h" }
+                { expiresIn: '1h' },
             );
 
             res.cookie('access_token', 'Bearer ' + token);
